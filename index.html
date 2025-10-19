@@ -156,11 +156,18 @@
             </div>
         </div>
         <div id="panel-content" class="p-4 space-y-2 overflow-y-auto h-[calc(100%-160px)]">
-            <!-- NEW: Menu items are here -->
+            <!-- Menu items are here -->
             <button onclick="openPremiumPage()" class="neo-card w-full p-4 rounded-xl flex items-center justify-between hover:bg-slate-800 transition">
                 <div class="flex items-center gap-3">
                     <div class="p-2 rounded-lg bg-yellow-500/10 text-yellow-500"><i data-lucide="gem" class="w-5 h-5"></i></div>
                     <span class="font-medium">Get Premium</span>
+                </div>
+                <i data-lucide="chevron-right" class="w-5 h-5 text-slate-600"></i>
+            </button>
+            <button onclick="openRedeemCodeModal()" class="neo-card w-full p-4 rounded-xl flex items-center justify-between hover:bg-slate-800 transition">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 rounded-lg bg-gift-500/10 text-green-500"><i data-lucide="gift" class="w-5 h-5"></i></div>
+                    <span class="font-medium">Redeem Code</span>
                 </div>
                 <i data-lucide="chevron-right" class="w-5 h-5 text-slate-600"></i>
             </button>
@@ -169,7 +176,7 @@
                     <div class="p-2 rounded-lg bg-emerald-500/10 text-emerald-500"><i data-lucide="heart" class="w-5 h-5"></i></div>
                     <span class="font-medium">Donate</span>
                 </div>
-                <i data-lucide="external-link" class="w-5 h-5 text-slate-600"></i>
+                <i data-lucide="chevron-right" class="w-5 h-5 text-slate-600"></i>
             </button>
         </div>
         <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-800 bg-slate-900">
@@ -425,7 +432,7 @@
 
                 <div class="neo-card p-5 rounded-2xl mt-4 bg-slate-800/30">
                      <h3 class="font-bold text-slate-300 mb-4 flex items-center gap-2"><i data-lucide="activity" class="w-4 h-4"></i> Recent Activities</h3>
-                     <div id="activity-log" class="space-y-3 text-sm text-slate-500 text-center py-4">
+                     <div id="activity-log" class="space-y-3 text-sm text-slate-500 text-center py-4 max-h-60 overflow-y-auto">
                          No recent activities found.
                      </div>
                 </div>
@@ -491,6 +498,22 @@
                 </div>
            </div>
 
+            <!-- NEW: DONATE VIEW -->
+            <div id="view-donate" class="app-view space-y-6">
+                <div class="flex items-center gap-3 mb-6">
+                    <button onclick="switchView('view-dashboard')" class="p-2 rounded-full bg-slate-800 text-slate-400"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+                    <h2 class="text-xl font-bold">Donate for a Cause</h2>
+                </div>
+                <div class="neo-card p-4 rounded-2xl text-center">
+                    <img src="https://i.postimg.cc/13Yv5J5r/360-F-689366496-5-V3-N3-N5-Qe-Su-Yv-V0-Ey-Jv-Y7-Hkl-Za-YAb-Wo-S5.jpg" alt="Donate for a cause" class="rounded-xl w-full h-auto object-cover mb-4">
+                    <p class="text-slate-400 text-sm mb-4">আপনারเล็กน้อย সাহায্য তাদের মুখে হাসি ফোটাতে পারে।</p>
+                    <div class="space-y-3">
+                        <input type="number" id="donate-amount" placeholder="ENTER Donate Amount (min ৳0.01)" class="neo-input w-full p-3 rounded-xl text-center">
+                        <button id="btn-exec-donate" class="action-btn w-full py-3 rounded-xl text-lg">DONATE NOW</button>
+                    </div>
+                </div>
+            </div>
+
 
             <!-- NEWS VIEW -->
             <div id="view-news" class="app-view space-y-4">
@@ -546,6 +569,7 @@
         const MIN_DEPOSIT_AMT = 500;
         const P2P_FEE_PERCENT = 0.05; // 5%
         const MIN_P2P_AMT = 20;
+        const MIN_DONATE_AMT = 0.01;
         const FAKE_STOCK_START = 958;
         const ADMIN_ID = "CUb4r6eg1RV6Ljkj5U2V1cSswng1";
         
@@ -709,16 +733,22 @@
             document.querySelectorAll('.app-view').forEach(el => el.classList.remove('active-view'));
             document.getElementById(viewId).classList.add('active-view');
 
-            document.querySelectorAll('.dock-item').forEach(btn => {
-                btn.classList.toggle('nav-active', btn.dataset.target === viewId);
-            });
+            // Only update dock for main views, not subviews
+            const mainViews = ['view-dashboard', 'view-marketplace', 'view-deposit', 'view-news', 'view-profile'];
+            if (mainViews.includes(viewId)) {
+                document.querySelectorAll('.dock-item').forEach(btn => {
+                    btn.classList.toggle('nav-active', btn.dataset.target === viewId);
+                });
+            }
 
             if(viewId === 'view-marketplace') loadMarketplace();
             if(viewId === 'view-deposit') loadDepositHistory();
             if(viewId === 'view-profile') loadProfileStats();
             if(viewId === 'view-news') loadNewsFeed();
             if(viewId === 'view-premium') loadPremiumTiers();
-             window.scrollTo(0,0);
+            if(viewId === 'view-features') loadActivityLog();
+
+            window.scrollTo(0,0);
         }
         
         // --- PREMIUM TIER FUNCTIONS ---
@@ -893,17 +923,19 @@
                         let cashback = 0;
                         if (userDoc.data().isPremium && premiumTiers[userDoc.data().premiumTier]?.benefits.mailCashback > 0) {
                             cashback = price * premiumTiers[userDoc.data().premiumTier].benefits.mailCashback;
-                            finalCost = price - cashback;
                         }
 
-                        if(userDoc.data().balance < finalCost) throw "Insufficient balance during transaction.";
+                        // The final cost is price, cashback is applied after purchase.
+                        if(userDoc.data().balance < price) throw "Insufficient balance during transaction.";
 
                         const q = query(collection(db, stockKey), where("isSold", "==", false), limit(1));
                         const stockSnap = await getDocs(q);
                         if(stockSnap.empty) throw "OUT_OF_STOCK";
 
                         const itemDoc = stockSnap.docs[0];
-                        t.update(userRef, { balance: userDoc.data().balance - finalCost });
+                        // Deduct price, then add cashback
+                        const newBalance = userDoc.data().balance - price + cashback;
+                        t.update(userRef, { balance: newBalance });
                         t.update(itemDoc.ref, { isSold: true, soldTo: userData.tgChatId, soldAt: serverTimestamp() });
 
                         const logRef = doc(collection(db, "mail_purchases"));
@@ -1062,8 +1094,7 @@
 
         // --- HELPER FUNCTIONS ---
         window.openPremiumPage = () => {
-            document.getElementById('main-side-panel').classList.remove('open');
-            document.getElementById('panel-overlay').classList.remove('open');
+            closeSidePanel();
             switchView('view-premium');
         };
 
@@ -1073,10 +1104,15 @@
         }
 
         window.openDonatePage = () => {
-            const donateLink = "https://t.me/your_donation_username";
-            window.open(donateLink, '_blank');
+            closeSidePanel();
+            switchView('view-donate');
         }
 
+        window.closeSidePanel = () => {
+            document.getElementById('main-side-panel').classList.remove('open');
+            document.getElementById('panel-overlay').classList.remove('open');
+        }
+        
         window.showModal = (html) => {
             const modal = document.getElementById('nexus-modal');
             document.getElementById('modal-body').innerHTML = html;
@@ -1171,13 +1207,28 @@
 
             btn.disabled = true; btn.textContent = 'PROCESSING...';
             try {
-                // This still creates a request for an admin to process.
+                // This creates a request for an admin to process.
                 // For a fully automated system, this would need to integrate with a recharge API.
-                await addDoc(collection(db, "recharge_requests"), {
-                    userId: userData.tgChatId, userName: userData.name,
-                    operator: operator, mobileNumber: number,
-                    amount: amount, status: "pending", createdAt: serverTimestamp()
+                await runTransaction(db, async (transaction) => {
+                    const userRef = doc(db, "users", userData.tgChatId);
+                    const userDoc = await transaction.get(userRef);
+
+                    if (!userDoc.exists()) throw new Error("User not found.");
+                    if (userDoc.data().balance < amount) throw new Error("Insufficient balance.");
+
+                    // Deduct balance immediately
+                    const newBalance = userDoc.data().balance - amount;
+                    transaction.update(userRef, { balance: newBalance });
+                    
+                    // Log the request
+                    const reqRef = doc(collection(db, "recharge_requests"));
+                    transaction.set(reqRef, {
+                        userId: userData.tgChatId, userName: userData.name,
+                        operator: operator, mobileNumber: number,
+                        amount: amount, status: "pending", createdAt: serverTimestamp()
+                    });
                 });
+                
                 showModal(`<div class="text-center space-y-3"><i data-lucide="check-circle" class="w-12 h-12 text-emerald-500 mx-auto"></i><h3 class="text-lg font-bold text-white">Recharge Request Sent!</h3><p class="text-slate-400">Your recharge of ৳${amount} for ${number} is being processed.</p><button onclick="closeModal(); switchView('view-features');" class="action-btn w-full py-2 rounded-xl">OK</button></div>`);
                 document.getElementById('recharge-operator').value = '';
                 document.getElementById('recharge-number').value = '';
@@ -1186,6 +1237,105 @@
                 showToast("An error occurred: " + e.message, "error");
             } finally {
                 btn.disabled = false; btn.textContent = 'RECHARGE NOW';
+            }
+        }
+        
+        async function executeDonation() {
+            const amount = parseFloat(document.getElementById('donate-amount').value);
+            const btn = document.getElementById('btn-exec-donate');
+
+            if (!amount) return showToast("Please enter a donation amount.", "warning");
+            if (amount < MIN_DONATE_AMT) return showToast(`Minimum donation is ৳${MIN_DONATE_AMT}.`, "warning");
+            if (userData.balance < amount) return showToast("Insufficient balance to make this donation.", "error");
+            
+            btn.disabled = true; btn.textContent = 'PROCESSING...';
+
+            try {
+                 await runTransaction(db, async (transaction) => {
+                    const userRef = doc(db, "users", userData.tgChatId);
+                    const userDoc = await transaction.get(userRef);
+
+                    if (!userDoc.exists()) throw new Error("User not found.");
+                    if (userDoc.data().balance < amount) throw new Error("Insufficient balance.");
+
+                    const newBalance = userDoc.data().balance - amount;
+                    transaction.update(userRef, { balance: newBalance });
+
+                    const donationRef = doc(collection(db, "donations"));
+                    transaction.set(donationRef, {
+                        userId: userData.tgChatId,
+                        userName: userData.name,
+                        amount: amount,
+                        donatedAt: serverTimestamp()
+                    });
+                });
+                
+                showModal(`<div class="text-center space-y-3"><i data-lucide="heart" class="w-12 h-12 text-emerald-500 mx-auto"></i><h3 class="text-lg font-bold text-white">Thank You!</h3><p class="text-slate-400">Your generous donation of ৳${amount.toFixed(2)} has been received.</p><button onclick="closeModal(); switchView('view-dashboard');" class="action-btn w-full py-2 rounded-xl">OK</button></div>`);
+                document.getElementById('donate-amount').value = '';
+
+            } catch (e) {
+                showToast("Donation failed: " + e.message, "error");
+            } finally {
+                btn.disabled = false; btn.textContent = 'DONATE NOW';
+            }
+        }
+
+        window.openRedeemCodeModal = () => {
+            closeSidePanel();
+            showModal(`
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold text-white">Redeem a Code</h3>
+                    <p class="text-sm text-slate-400">Enter your gift or promo code below to claim your reward.</p>
+                    <input type="text" id="redeem-code-input" placeholder="Enter Code" class="neo-input w-full p-3 rounded-xl uppercase tracking-widest text-center">
+                    <button id="btn-exec-redeem" class="action-btn w-full py-3 rounded-xl">REDEEM</button>
+                </div>
+            `);
+            document.getElementById('btn-exec-redeem').onclick = executeRedeemCode;
+        };
+
+        async function executeRedeemCode() {
+            const codeInput = document.getElementById('redeem-code-input');
+            const code = codeInput.value.trim().toUpperCase();
+            const btn = document.getElementById('btn-exec-redeem');
+
+            if (!code) return showToast("Please enter a code.", "warning");
+
+            btn.disabled = true; btn.textContent = "VERIFYING...";
+
+            try {
+                await runTransaction(db, async (transaction) => {
+                    const codeRef = doc(db, "redeem_codes", code);
+                    const codeDoc = await transaction.get(codeRef);
+
+                    if (!codeDoc.exists()) throw new Error("Invalid code.");
+                    
+                    const codeData = codeDoc.data();
+                    if (codeData.isUsed) throw new Error("This code has already been used.");
+                    if (codeData.usedBy) throw new Error("This code has already been claimed.");
+                    
+                    const userRef = doc(db, "users", userData.tgChatId);
+                    const userDoc = await transaction.get(userRef);
+                    if (!userDoc.exists()) throw new Error("User not found.");
+
+                    const newBalance = userDoc.data().balance + codeData.rewardAmount;
+                    transaction.update(userRef, { balance: newBalance });
+                    transaction.update(codeRef, { 
+                        isUsed: true, 
+                        usedBy: userData.tgChatId,
+                        usedAt: serverTimestamp()
+                    });
+                });
+
+                closeModal();
+                showToast("Code redeemed successfully! Your balance has been updated.", "success");
+
+            } catch(e) {
+                showToast("Redeem failed: " + e.message, "error");
+            } finally {
+                // The modal will be closed on success, so no need to reset the button state if it doesn't exist.
+                if (document.getElementById('btn-exec-redeem')) {
+                     btn.disabled = false; btn.textContent = "REDEEM";
+                }
             }
         }
 
@@ -1199,10 +1349,7 @@
                 document.getElementById('main-side-panel').classList.add('open');
                 document.getElementById('panel-overlay').classList.add('open');
             });
-            document.getElementById('panel-overlay').addEventListener('click', () => {
-                document.getElementById('main-side-panel').classList.remove('open');
-                document.getElementById('panel-overlay').classList.remove('open');
-            });
+            document.getElementById('panel-overlay').addEventListener('click', closeSidePanel);
             document.getElementById('btn-notifications').addEventListener('click', loadNotifications);
             document.getElementById('modal-close').addEventListener('click', closeModal);
             document.getElementById('modal-backdrop').addEventListener('click', closeModal);
@@ -1210,6 +1357,7 @@
             
             document.getElementById('btn-exec-p2p').addEventListener('click', executeP2PTransfer);
             document.getElementById('btn-exec-recharge').addEventListener('click', executeRecharge);
+            document.getElementById('btn-exec-donate').addEventListener('click', executeDonation);
 
             document.getElementById('p2p-amount').addEventListener('input', (e) => {
                 const val = parseFloat(e.target.value) || 0;
@@ -1243,6 +1391,63 @@
 
         // --- PLACEHOLDER LOADERS FOR OTHER VIEWS ---
         async function loadProfileStats() { /* Placeholder */ }
+
+        async function loadActivityLog() {
+            const el = document.getElementById('activity-log');
+            el.innerHTML = '<div class="loader-ring w-6 h-6 border-2 mx-auto"></div>';
+
+            try {
+                // Get P2P transfers
+                const p2pQuery = query(
+                    collection(db, "p2p_logs"), 
+                    where("fromId", "==", userData.tgChatId), 
+                    orderBy("createdAt", "desc"), 
+                    limit(5)
+                );
+                const p2pSnap = await getDocs(p2pQuery);
+                const p2pLogs = p2pSnap.docs.map(d => ({...d.data(), type: 'p2p'}));
+
+                // Get Recharge requests
+                const rechargeQuery = query(
+                    collection(db, "recharge_requests"), 
+                    where("userId", "==", userData.tgChatId), 
+                    orderBy("createdAt", "desc"), 
+                    limit(5)
+                );
+                const rechargeSnap = await getDocs(rechargeQuery);
+                const rechargeLogs = rechargeSnap.docs.map(d => ({...d.data(), type: 'recharge'}));
+
+                const allLogs = [...p2pLogs, ...rechargeLogs]
+                    .sort((a, b) => b.createdAt.seconds - a.createdAt.seconds)
+                    .slice(0, 10);
+
+                if (allLogs.length === 0) {
+                    el.innerHTML = 'No recent activities found.';
+                    return;
+                }
+
+                el.innerHTML = allLogs.map(log => {
+                    const date = log.createdAt.toDate().toLocaleDateString();
+                    if (log.type === 'p2p') {
+                        return `<div class="text-left p-2 rounded-lg bg-slate-900/50">
+                                    <p class="text-slate-300">Sent ৳${log.amount} to <span class="font-mono">${log.toId}</span></p>
+                                    <p class="text-slate-500 text-xs">${date}</p>
+                                </div>`;
+                    }
+                    if (log.type === 'recharge') {
+                         const statusColors = { pending: 'text-yellow-500', completed: 'text-emerald-500', failed: 'text-red-500' };
+                        return `<div class="text-left p-2 rounded-lg bg-slate-900/50">
+                                    <p class="text-slate-300">Recharge ৳${log.amount} to <span class="font-mono">${log.mobileNumber}</span></p>
+                                    <p class="text-xs ${statusColors[log.status] || 'text-slate-500'}">${log.status.toUpperCase()} - ${date}</p>
+                                </div>`;
+                    }
+                }).join('');
+
+            } catch (error) {
+                console.error("Error loading activity log:", error);
+                el.innerHTML = '<p class="text-red-500">Could not load activities.</p>';
+            }
+        }
 
         async function loadNewsFeed() {
             const el = document.getElementById('news-feed');
