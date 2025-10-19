@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF--8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NEXUS MARKET</title>
     <meta name="monetag" content="a41ceca9ffc67edad031c0024f85ef59">
@@ -342,7 +342,7 @@
                         <div>
                              <h4 class="font-bold text-indigo-300 mb-1">IMPORTANT NOTE</h4>
                              <p class="text-xs text-indigo-200/70 leading-relaxed">
-                                শুধুমাত্র <span class="text-white font-bold">SEND MONEY</span> করবেন। ক্যাশ ইন বা রিচার্জ করলে ব্যালেন্স অ্যাড হবে না। মিনিমাম ডিপোজিট <span class="text-white font-bold">৳ ৫০০</span>।
+                                শুধুমাত্র <span class="text-white font-bold">SEND MONEY</span> করবেন। ক্যাশ ইন বা রিচার্জ করলে ব্যালেন্স অ্যাড হবে না। মিনিমাম ডিপোজিট <span class="text-white font-bold" id="min-deposit-note">৳ 500</span>।
                              </p>
                         </div>
                     </div>
@@ -531,6 +531,10 @@
                 </div>
                 <div class="neo-card p-4 rounded-2xl text-center">
                     <img src="https://i.postimg.cc/13Yv5J5r/360_F_689366496_5_V3_N3_N5_Qe_Su_Yv_V0_Ey_Jv_Y7_Hkl_Za_YAb_Wo_S5.jpg" alt="Donate for a cause" class="rounded-xl w-full h-auto object-cover mb-4">
+                    <div class="my-4 p-4 rounded-xl bg-slate-900/50">
+                        <p class="text-sm text-slate-400">TOTAL Foundation</p>
+                        <p id="total-donations" class="text-3xl font-bold text-emerald-400">৳0.00</p>
+                    </div>
                     <p class="text-slate-400 text-sm mb-4">আপনারเล็กน้อย সাহায্য তাদের মুখে হাসি ফোটাতে পারে।</p>
                     <div class="space-y-3">
                         <input type="number" id="donate-amount" placeholder="ENTER Donate Amount (min ৳0.01)" class="neo-input w-full p-3 rounded-xl text-center">
@@ -629,7 +633,7 @@
         import { getFirestore, doc, setDoc, getDoc, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, limit, runTransaction, onSnapshot, updateDoc, Timestamp, writeBatch } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
         // --- CONFIGURATION ---
-        const MIN_DEPOSIT_AMT = 500;
+        let MIN_DEPOSIT_AMT = 500;
         const P2P_FEE_PERCENT = 0.05; // 5%
         const MIN_P2P_AMT = 20;
         const MIN_DONATE_AMT = 0.01;
@@ -725,6 +729,11 @@
         async function loadConfig() {
              const cfg = await getDoc(doc(db, "config", "main"));
              sysConfig = cfg.exists() ? cfg.data() : { mails: [], otpLink: "" };
+             if (sysConfig.minDeposit) {
+                MIN_DEPOSIT_AMT = sysConfig.minDeposit;
+                document.getElementById('min-deposit-note').textContent = `৳ ${MIN_DEPOSIT_AMT}`;
+                document.getElementById('dep-amount').placeholder = `Amount (Min ${MIN_DEPOSIT_AMT} BDT)`;
+            }
              if(document.getElementById('view-marketplace').classList.contains('active-view')) loadMarketplace();
         }
 
@@ -789,6 +798,7 @@
             if(viewId === 'view-premium') loadPremiumTiers();
             if(viewId === 'view-features') loadActivityLog();
             if(viewId === 'view-lottery') loadLotteryParticipants();
+            if(viewId === 'view-donate') loadTotalDonations();
 
             window.scrollTo(0,0);
         }
@@ -1398,8 +1408,13 @@
             closeSidePanel();
             showModal(`
                 <div class="space-y-4">
-                    <h3 class="text-lg font-bold text-white">Redeem a Code</h3>
-                    <p class="text-sm text-slate-400">Enter your gift or promo code below to claim your reward.</p>
+                    <div class="text-center">
+                        <div class="inline-block p-3 rounded-full bg-green-500/10 text-green-500">
+                            <i data-lucide="gift" class="w-8 h-8"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-white text-center">Redeem a Code</h3>
+                    <p class="text-sm text-slate-400 text-center">Enter your gift or promo code below to claim your reward.</p>
                     <input type="text" id="redeem-code-input" placeholder="Enter Code" class="neo-input w-full p-3 rounded-xl uppercase tracking-widest text-center">
                     <button id="btn-exec-redeem" class="action-btn w-full py-3 rounded-xl">REDEEM</button>
                 </div>
@@ -1543,6 +1558,13 @@
                     listEl.innerHTML = '<p class="text-slate-500 text-center text-sm py-4">Lottery not active.</p>';
                 }
             });
+        }
+        
+        async function loadTotalDonations() {
+            const totalDonationsEl = document.getElementById('total-donations');
+            const snap = await getDocs(collection(db, "donations"));
+            const total = snap.docs.reduce((sum, doc) => sum + doc.data().amount, 0);
+            totalDonationsEl.textContent = `৳${total.toFixed(2)}`;
         }
 
 
