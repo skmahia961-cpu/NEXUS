@@ -3,85 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DIGITAL NEXUS</title>
+    <!-- পরিবর্তন শুরু: অ্যাপের নতুন নাম -->
+    <title>QUICK VAULT</title>
+    <!-- পরিবর্তন শেষ -->
     <meta name="monetag" content="a41ceca9ffc67edad031c0024f85ef59">
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- পরিবর্তন শুরু: নতুন ফন্ট যোগ করা হয়েছে -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- পরিবর্তন শেষ -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
+        /* পরিবর্তন শুরু: নতুন ফন্ট এবং কালার স্কিম */
         :root {
-            --primary-color: #14b8a6; /* Teal */
-            --secondary-color: #8b5cf6; /* Purple */
-            --gradient-start: var(--primary-color);
-            --gradient-end: var(--secondary-color);
-            --card-border-color: #e5e7eb;
-            --card-hover-border-color: rgba(20, 184, 166, 0.4);
+            --primary-color: #14b8a6; /* Teal 500 */
+            --primary-dark: #0d9488; /* Teal 600 */
         }
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f9fafb;
-            color: #1f2937;
-            -webkit-user-select: none; /* Safari */
-            -ms-user-select: none; /* IE 10+ */
-            user-select: none; /* Standard syntax */
-            -webkit-touch-callout: none; /* iOS Safari */
+            font-family: 'Poppins', sans-serif;
+            background-color: #f7fdfc;
+            color: #333333;
+            -webkit-user-select: none; -ms-user-select: none; user-select: none;
+            -webkit-touch-callout: none;
         }
+        /* পরিবর্তন শেষ */
         input, textarea, #mail-details-content, #mail-purchase-history .font-mono, #profile-id-btn {
-            -webkit-user-select: text; /* Safari */
-            -ms-user-select: text; /* IE 10+ */
-            user-select: text; /* Standard syntax */
-            -webkit-touch-callout: default;
+            -webkit-user-select: text; -ms-user-select: text; user-select: text; -webkit-touch-callout: default;
         }
         #header-profile-pic, #profile-pic, #header-initials-avatar, #profile-initials-avatar {
             pointer-events: none;
         }
+        /* পরিবর্তন শুরু: কার্ডের নতুন ডিজাইন */
         .card-bg {
             background-color: #ffffff;
-            border: 1px solid var(--card-border-color);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e0e7ff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.04);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 16px;
         }
         .card-bg:hover {
-            border-color: var(--card-hover-border-color);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-            transform: translateY(-2px);
+            border-color: rgba(20, 184, 166, 0.4);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
         }
+        /* পরিবর্তন শেষ */
+        /* পরিবর্তন শুরু: নতুন কালার থিম */
         .text-accent-gradient {
-            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+            background: linear-gradient(to right, var(--primary-color), var(--primary-dark));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         .btn, .btn-gradient, .btn-outline-accent {
-            transition: all 0.2s ease-in-out;
-            transform: scale(1);
-            border: none;
-            cursor: pointer;
+            transition: all 0.2s ease-in-out; transform: scale(1); border: none; border-radius: 12px;
         }
         .btn:active, .btn-gradient:active, .btn-outline-accent:active { transform: scale(0.96); }
         .btn-gradient {
-            background-image: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
-            color: #ffffff;
-            font-weight: bold;
+            background-image: linear-gradient(to right, var(--primary-color), var(--primary-dark));
+            color: #ffffff; font-weight: bold;
             box-shadow: 0 4px 15px rgba(20, 184, 166, 0.2);
         }
         .btn-gradient:hover {
             box-shadow: 0 6px 20px rgba(20, 184, 166, 0.3);
-            background-image: linear-gradient(to right, var(--gradient-end), var(--gradient-start));
+            background-image: linear-gradient(to right, var(--primary-dark), var(--primary-color));
         }
         .input-field {
-            background-color: #f3f4f6;
-            border: 1px solid #d1d5db;
-            color: #1f2937;
-            transition: all 0.2s ease;
+            background-color: #f3f4f6; border: 1px solid #e5e7eb; color: #333333; transition: all 0.2s ease;
         }
         .input-field:focus {
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.3);
             outline: none;
         }
+        /* পরিবর্তন শেষ */
         .main-page { display: none; }
         .main-page.active { display: flex; animation: fadeIn 0.5s ease-in-out; }
         .sub-page { display: none; }
@@ -89,43 +85,27 @@
 
         .bottom-nav {
              border-top: 1px solid #e0e0e0;
-             background-color: rgba(255, 255, 255, 0.85);
-             backdrop-filter: blur(12px);
-             -webkit-backdrop-filter: blur(12px);
-             position: fixed;
-             bottom: 0;
-             left: 0;
-             right: 0;
-             max-width: 672px;
-             margin: 0 auto;
-             display: flex;
-             justify-content: space-around;
-             align-items: center;
-             padding: 12px 16px;
-             z-index: 50;
+             background-color: rgba(255, 255, 255, 0.9);
+             backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+             position: fixed; bottom: 0; left: 0; right: 0;
+             max-width: 672px; margin: 0 auto; display: flex;
+             justify-content: space-around; align-items: center;
+             padding: 12px 16px; z-index: 50;
         }
-        .nav-link-main { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #6b7280; font-size: 0.75rem; font-weight: 500; padding: 8px; border-radius: 12px; transition: all 0.2s ease; position: relative; cursor: pointer; background: none; border: none; }
-        .nav-link-main:hover { color: #333333; }
-        .nav-link-main.active { color: var(--primary-color); }
-        .nav-link-main .icon { width: 24px; height: 24px; }
-        .center-home-link {
-            position: relative; transform: translateY(-20px) scale(1.1);
-            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
-            border-radius: 50%; width: 64px; height: 64px;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 20px rgba(20, 184, 166, 0.4); transition: all 0.3s ease; color: #ffffff;
-        }
+        .nav-link-premium { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #6b7280; font-size: 0.75rem; font-weight: 500; padding: 8px; border-radius: 12px; transition: all 0.2s ease; position: relative; cursor: pointer; background: none; border: none; }
+        .nav-link-premium:hover { color: #333333; }
+        .nav-link-premium.active { color: var(--primary-color); }
+        .nav-link-premium .icon { width: 24px; height: 24px; }
+        /* পরিবর্তন শুরু: নতুন কালার থিম */
+        .center-home-link { position: relative; transform: translateY(-20px) scale(1.1); background: rgba(20, 184, 166, 0.2); border: 1px solid rgba(20, 184, 166, 0.5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(20, 184, 166, 0.4); transition: all 0.3s ease; color: #ffffff; }
         .center-home-link:hover { transform: translateY(-20px) scale(1.15); }
-        .center-home-link .icon { width: 32px; height: 32px; color: #fff; }
+        .center-home-link .icon { width: 32px; height: 32px; color: var(--primary-dark); }
+        /* পরিবর্তন শেষ */
         .header {
             border-bottom: 1px solid #e0e0e0;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 1rem;
-            position: sticky;
-            top: 0;
-            z-index: 10;
+            background: linear-gradient(to right, #ffffff, #f9f9f9);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            padding: 1rem; position: sticky; top: 0; z-index: 10;
         }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -135,60 +115,159 @@
         .slide { min-width: 100%; position: relative; }
         .slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .dots { position: absolute; bottom: 12px; width: 100%; text-align: center; z-index: 10; }
-        .dot { display: inline-block; height: 8px; width: 8px; margin: 0 4px; background: rgba(255,255,255,0.6); border-radius: 50%; cursor: pointer; transition: all 0.3s; }
-        .dot.active { background: var(--primary-color); width: 24px; }
+        .dot { display: inline-block; height: 8px; width: 8px; margin: 0 4px; background: #bbb; border-radius: 50%; cursor: pointer; transition: background 0.3s; }
+        .dot.active { background: var(--primary-color); }
+        /* পরিবর্তন শুরু: নতুন কালার থিম */
         .marquee {
-            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
-            color: white; padding: 8px 0; white-space: nowrap; overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background-color: var(--primary-color);
+            color: white; padding: 8px 0; white-space: nowrap;
+            overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
+        /* পরিবর্তন শেষ */
         .marquee-content { display: inline-block; padding-left: 100%; animation: marquee 20s linear infinite; }
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
-
-        #loader { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 1.5rem; transition: opacity 0.5s ease; background-color: #f9fafb;}
+        #loader { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 1.5rem; transition: opacity 0.5s ease; }
         #loader .logo-container { animation: popIn 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards, breath 2.5s ease-in-out infinite 1s; }
         #loader .loader-text { animation: fadeInText 1s ease-in-out 0.5s forwards; opacity: 0; font-weight: bold; font-size: 1.5rem; }
         #loader-reviews { position: absolute; bottom: 30px; font-size: 0.9rem; color: #6b7280; opacity: 0; transition: opacity 0.5s ease-in-out; }
         @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         @keyframes fadeInText { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes breath { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-
+        .video-container-16-9 { position: relative; padding-top: 56.25%; height: 0; overflow: hidden; border-radius: 8px; background-color: #e0e0e0; }
+        .review-card-new { background-color: #f9f9f9; border: 1px solid #eee; }
+        .star-rating i { color: #facc15; }
+        /* পরিবর্তন শুরু: নতুন কালার থিম */
         .premium-loader-spinner {
             width: 56px; height: 56px; border-radius: 50%;
             background: conic-gradient(#0000 10%, var(--primary-color));
             -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 9px), #000 0);
             animation: spin 1s infinite linear;
         }
+        /* পরিবর্তন শেষ */
         .loading-container { display: flex; justify-content: center; align-items: center; padding: 2.5rem; }
         @keyframes spin { to { transform: rotate(1turn); } }
-
+        .modal-close-btn {
+            position: absolute; top: 12px; right: 12px; background-color: #e5e7eb; color: #4b5563;
+            border-radius: 9999px; padding: 4px; transition: background-color 0.2s; cursor: pointer;
+        }
+        .modal-close-btn:hover { background-color: #d1d5db; }
         .premium-title {
             background: linear-gradient(to right, #6366f1, #a855f7, #ec4899);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; padding: 0 4px;
         }
+        .premium-status-badge { font-weight: bold; padding: 4px 12px; border-radius: 9999px; font-size: 0.9rem; margin-top: 8px; }
+        .premium-status-badge.gold { background: linear-gradient(to right, #fde047, #facc15, #eab308); color: #713f12; border: 1px solid #ca8a04; }
+        .premium-status-badge.gray { background-color: #e5e7eb; color: #4b5563; border: 1px solid #d1d5db; }
+        .notification-badge {
+            position: absolute; top: -5px; right: -5px; background-color: #ef4444; color: white;
+            border-radius: 9999px; width: 20px; height: 20px; font-size: 12px; font-weight: bold;
+            display: flex; align-items: center; justify-content: center; border: 2px solid white;
+        }
+        #menu-overlay {
+            position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px);
+            z-index: 80; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        #menu-overlay.open { opacity: 1; visibility: visible; }
+        #slide-out-menu {
+            position: fixed; top: 0; left: 0; bottom: 0; width: 80%; max-width: 320px;
+            background: #ffffff; z-index: 90; transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        #slide-out-menu.open { transform: translateX(0); }
+        .menu-header { padding: 1.5rem; border-bottom: 1px solid #e5e7eb; text-align: center; }
+        .menu-accordion-toggle {
+            display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px;
+            text-decoration: none; color: #111827; font-weight: 600; font-size: 1rem;
+            transition: all 0.2s ease-in-out; background: none; border: none; width: 100%;
+            text-align: left; cursor: pointer; border-bottom: 1px solid #e5e7eb;
+        }
+        /* পরিবর্তন শুরু: নতুন কালার থিম */
+        .menu-accordion-toggle:hover, .menu-accordion-toggle.active { background-color: #f9fafb; color: var(--primary-color); }
+        /* পরিবর্তন শেষ */
+        .menu-accordion-toggle .icon { width: 24px; height: 24px; }
+        .menu-accordion-toggle .chevron { transition: transform 0.3s ease; }
+        .menu-accordion-toggle.active .chevron { transform: rotate(180deg); }
+        .menu-accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background-color: #f9fafb; }
+        .menu-accordion-content .content-inner { padding: 1rem; border-bottom: 1px solid #e5e7eb; display: flex; flex-direction: column; gap: 0.75rem; }
+        .support-link-card {
+            display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 10px;
+            text-decoration: none; color: #333; font-weight: 500; transition: background-color 0.2s, transform 0.2s;
+        }
+        .support-link-card:hover { background-color: #e9ecef; transform: translateX(4px); }
+        .support-link-card img { width: 36px; height: 36px; border-radius: 8px; }
+        .btn-premium-buy {
+            background: linear-gradient(to right, #8b5cf6, #d946ef); color: white; font-weight: bold;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+        .btn-premium-buy:hover {
+             box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+             background: linear-gradient(to right, #7c3aed, #c026d3); color: white;
+        }
+        .modal-overlay {
+            position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center; z-index: 70;
+            padding: 1rem; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content {
+            background-color: #ffffff; border-radius: 1rem; padding: 1.5rem;
+            width: 100%; max-width: 24rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transform: scale(0.95); opacity: 0; transition: transform 0.3s, opacity 0.3s;
+        }
+        .modal-overlay.active .modal-content { transform: scale(1); opacity: 1; }
     </style>
 </head>
 <body class="max-w-md mx-auto">
 
-    <div id="loader" class="fixed inset-0 z-[100]">
+    <div id="loader" class="fixed inset-0 bg-f8f8f8 flex items-center justify-center z-[100]">
         <div class="text-center">
             <div class="logo-container">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--primary-color)] mx-auto">
-                    <path d="M10.66 10.34a6 6 0 1 0 7.07-7.07"/>
-                    <path d="M13.34 13.66a6 6 0 1 0-7.07 7.07"/>
-                    <path d="M10.66 13.66a6 6 0 1 0 0-3.32"/>
-                    <path d="M13.34 10.34a6 6 0 1 0 0 3.32"/>
+                <!-- পরিবর্তন শুরু: নতুন লোগো -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--primary-color)] mx-auto">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                 </svg>
+                <!-- পরিবর্তন শেষ -->
             </div>
-            <h1 class="text-accent-gradient loader-text mt-4">DIGITAL NEXUS</h1>
+            <!-- পরিবর্তন শুরু: নতুন নাম -->
+            <h1 class="text-accent-gradient loader-text mt-4">QUICK VAULT</h1>
+            <!-- পরিবর্তন শেষ -->
         </div>
-        <div id="loader-reviews">"খুবই বিশ্বস্ত একটি সাইট।" - মোঃ রায়হান</div>
+        <!-- পরিবর্তন শুরু: নতুন রিভিউ টেক্সট -->
+        <div id="loader-reviews">"এখন পর্যন্ত সেরা একটি সার্ভিস।" - মোঃ আকাশ</div>
+        <!-- পরিবর্তন শেষ -->
     </div>
 
-    <!-- All other modals and the main app structure from the original file would go here -->
-    <!-- For brevity, I'll only include the main structure and JS changes -->
+    <div id="menu-overlay"></div>
+    <aside id="slide-out-menu">
+        <div class="menu-header">
+            <img src="https://i.postimg.cc/W1v47PR8/images-5.png" alt="Logo" class="w-16 h-16 mx-auto mb-2 rounded-full">
+            <!-- পরিবর্তন শুরু: নতুন নাম -->
+            <h2 class="text-xl font-bold text-accent-gradient">Help Desk</h2>
+            <p class="text-sm text-gray-500 mt-1">যেকোনো প্রয়োজনে আমাদের সাথে থাকুন</p>
+            <!-- পরিবর্তন শেষ -->
+        </div>
+        <nav id="menu-options" class="flex-grow overflow-y-auto">
+             <!-- All menu options including accordions will be loaded here by JS -->
+        </nav>
+        <div class="p-4 mt-auto border-t">
+            <h3 class="text-center font-semibold text-gray-700 mb-3 text-sm">Follow Us</h3>
+            <div class="flex justify-center items-center gap-6">
+                <a href="https://youtube.com" target="_blank" class="p-3 bg-gray-100 rounded-full hover:bg-gray-200 transition-all"><i data-lucide="youtube" class="w-6 h-6 text-red-600"></i></a>
+                <a href="https://tiktok.com" target="_blank" class="p-3 bg-gray-100 rounded-full hover:bg-gray-200 transition-all"><svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.01-1.58-.01-3.16 0-4.75l-.04 1.38c-.7 2.12-2.2 3.53-4.13 4.45v5.05c-.62.33-1.28.6-1.94.82v-5.07c.01-1.03-.02-2.07-.01-3.1 0-2.31-1.08-4.28-2.7-5.66-1.6-1.37-3.6-2.01-5.59-1.82V4.88c1.87.08 3.74.38 5.48 1.14.01 1.57.01 3.14 0 4.71l.04-1.38c.68-2.11 2.19-3.52 4.12-4.44V.02z"/></svg></a>
+                <a href="https://telegram.org" target="_blank" class="p-3 bg-gray-100 rounded-full hover:bg-gray-200 transition-all"><i data-lucide="send" class="w-6 h-6 text-sky-500"></i></a>
+            </div>
+        </div>
+        <div class="p-4 text-center text-xs text-gray-400 border-t">
+            <!-- পরিবর্তন শুরু: নতুন নাম -->
+            QUICK VAULT &copy; 2025
+            <!-- পরিবর্তন শেষ -->
+        </div>
+    </aside>
+
     <div id="app-container" class="min-h-screen flex-col main-page">
-        <!-- =========== HEADER =========== -->
         <header class="header flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <div class="relative">
@@ -196,12 +275,12 @@
                     <div id="header-initials-avatar" class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center border-2 border-teal-300"><span id="header-initials" class="text-xl font-bold text-gray-500"></span></div>
                 </div>
                 <div>
-                    <h1 id="header-welcome-name" class="text-lg font-bold text-gray-800">স্বাগতম!</h1>
+                    <h1 id="header-welcome-name" class="text-lg font-bold text-gray-800">Welcome!</h1>
                     <p id="header-balance-display" class="font-semibold text-gray-700 text-sm">৳0.00</p>
                 </div>
             </div>
             <div class="flex items-center space-x-2">
-                <button id="header-deposit-btn" class="btn-gradient px-4 py-2 rounded-full text-sm font-bold shadow-lg">ডিপোজিট</button>
+                <button id="header-deposit-btn" class="btn-gradient px-4 py-2 rounded-full text-sm font-bold shadow-lg">Deposit</button>
                 <button id="notification-btn" class="relative p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors">
                     <i data-lucide="bell" class="w-5 h-5 text-gray-700"></i>
                     <span id="notification-badge" class="notification-badge hidden">0</span>
@@ -211,27 +290,28 @@
                 </button>
             </div>
         </header>
-        <!-- =========== END OF HEADER =========== -->
 
         <main class="flex-grow pb-20">
             <div id="home-page" class="space-y-6 sub-page">
                 <div class="p-4">
                     <div class="banner-wrapper">
                         <div class="banner-inner" id="slides">
-                             <div class="slide active"><a href="https://t.me/EXPERTearn_team" target="_blank"><img src="https://placehold.co/1080x720/14b8a6/ffffff/png?text=Promotion+1" alt="Slide 1"></a></div>
-                            <div class="slide"><a href="https://t.me/EXPERTearn_team" target="_blank"><img src="https://placehold.co/1080x720/8b5cf6/ffffff/png?text=Offer+For+You" alt="Slide 2"></a></div>
-                            <div class="slide"><a href="https://t.me/EXPERTearn_team" target="_blank"><img src="https://placehold.co/1080x720/f43f5e/ffffff/png?text=Join+Us" alt="Slide 3"></a></div>
+                             <div class="slide active"><a href="https://t.me/EXPERTearn_team" target="_blank"><img src="https://i.postimg.cc/zBp8rCX9/Yellow-Orange-Modern-Marketing-Courses-You-Tube-Thumbnail-20250910-185659-0000.png" alt="Slide 1"></a></div>
+                            <div class="slide"><a href="https://t.me/EXPERTearn_team" target="_blank"><img src="https://i.postimg.cc/W1syFD8p/Grey-Blue-Illustration-Refer-a-Friend-Instagram-Post-1080-x-720-px-20250917-223749-0000.png" alt="Slide 2"></a></div>
+                            <div class="slide"><a href="https://t.me/EXPERTearn_team" target="_blank"><img src="https://i.postimg.cc/52HsFwvV/Black-and-Orange-Money-You-Tube-Thumbnail-20250917-224706-0000.png" alt="Slide 3"></a></div>
                         </div>
                         <div class="dots" id="dots"></div>
                     </div>
                 </div>
                 <div class="p-4 space-y-6">
-                    <div class="card-bg p-5 rounded-xl text-center">
-                        <p class="text-gray-600 text-sm mb-1">আপনার বর্তমান ব্যালেন্স</p>
+                    <div class="card-bg p-5 text-center">
+                        <p class="text-gray-600 text-sm mb-1">Your Balance</p>
                         <p id="balance-display" class="text-4xl font-bold text-[#333333] mb-4">৳0.00</p>
                         <div class="grid grid-cols-2 gap-4">
-                            <button onclick="navigateTo('mail-page')" class="w-full p-3 rounded-lg font-bold border-2 border-teal-600 text-teal-600 hover:bg-teal-50 transition-colors btn">প্রোডাক্ট কিনুন</button>
-                            <button id="home-deposit-btn" class="w-full p-3 rounded-lg btn-gradient">টাকা যোগ করুন</button>
+                             <!-- পরিবর্তন শুরু: বাটন টেক্সট পরিবর্তন -->
+                            <button onclick="navigateTo('mail-page')" class="w-full p-3 font-bold border-2 border-[var(--primary-dark)] text-[var(--primary-dark)] hover:bg-teal-50 transition-colors btn">BROWSE VAULT</button>
+                            <!-- পরিবর্তন শেষ -->
+                            <button id="home-deposit-btn" class="w-full p-3 btn-gradient">Deposit</button>
                         </div>
                     </div>
                     <div id="ads-section" class="space-y-3" style="display: none;">
@@ -244,85 +324,303 @@
             </div>
 
             <div id="pay-page" class="p-4 space-y-6 sub-page">
-                <h2 class="text-xl font-bold text-center text-gray-800">ফান্ডিং হাব</h2>
-                <div class="card-bg p-5 rounded-xl space-y-5">
+                <h2 class="text-xl font-bold text-center text-gray-800">Pay Center</h2>
+                <div class="card-bg p-5 space-y-5">
                     <div>
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-semibold text-lg flex items-center gap-2"><i data-lucide="wallet" class="w-6 h-6 text-[var(--primary-color)]"></i><span>ডিপোজিট করুন</span></h3>
+                            <h3 class="font-semibold text-lg flex items-center gap-2"><i data-lucide="wallet" class="w-6 h-6 text-[var(--primary-color)]"></i><span>Make a Deposit</span></h3>
                             <button id="deposit-details-btn" class="btn-outline-accent px-3 py-1 rounded-lg text-sm">বিস্তারিত</button>
                         </div>
-                         <p class="text-lg font-semibold text-gray-700 mb-4 text-center p-3 rounded-lg border border-dashed border-teal-500/50 bg-teal-500/10">নিচের নাম্বারে <span class="text-teal-600 animate-pulse">সেন্ডমানি</span> করুন</p>
-                        <!-- Payment methods remain the same -->
+                        <p class="text-lg font-semibold text-gray-700 mb-4 text-center p-3 rounded-lg border border-dashed border-teal-500/50 bg-teal-500/10">নিচের নাম্বারে <span class="text-teal-600 animate-pulse">সেন্ডমানি</span> করুন</p>
                         <div class="grid grid-cols-2 gap-3 mb-5">
-                            <div class="bg-gray-100 p-3 rounded-lg text-center"><img src="https://i.postimg.cc/Jh9s6jWw/20250922-113350.png" alt="Nagad" class="w-10 h-10 rounded-full mx-auto mb-2"><p class="font-bold text-md">নগদ</p><p class="text-gray-600 font-mono tracking-wider text-sm my-1">01864260513</p><button onclick="copyToClipboard('01864260513', this)" class="w-full text-xs p-1 mt-1 bg-gray-200 rounded hover:bg-gray-300 transition-colors flex items-center justify-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i><span>কপি</span></button></div>
-                            <div class="bg-gray-100 p-3 rounded-lg text-center"><img src="https://i.postimg.cc/tCwGVkdH/20250922-113514.png" alt="bKash" class="w-10 h-10 rounded-full mx-auto mb-2"><p class="font-bold text-md">বিকাশ</p><p class="text-gray-600 font-mono tracking-wider text-sm my-1">01827750260</p><button onclick="copyToClipboard('01827750260', this)" class="w-full text-xs p-1 mt-1 bg-gray-200 rounded hover:bg-gray-300 transition-colors flex items-center justify-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i><span>কপি</span></button></div>
-                            <div class="bg-gray-100 p-3 rounded-lg text-center"><img src="https://i.postimg.cc/htsw10Tj/20250922-113924.png" alt="Rocket" class="w-10 h-10 rounded-full mx-auto mb-2"><p class="font-bold text-md">রকেট</p><p class="text-gray-600 font-mono tracking-wider text-sm my-1">018277502604</p><button onclick="copyToClipboard('018277502604', this)" class="w-full text-xs p-1 mt-1 bg-gray-200 rounded hover:bg-gray-300 transition-colors flex items-center justify-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i><span>কপি</span></button></div>
-                            <div class="bg-gray-100 p-3 rounded-lg text-center"><img src="https://i.postimg.cc/L6LFLfxY/20250922-113752.png" alt="Binance Pay" class="w-10 h-10 rounded-full mx-auto mb-2"><p class="font-bold text-md">Binance Pay</p><p class="text-gray-600 font-mono tracking-wider text-sm my-1">শীঘ্রই আসছে..</p><button class="w-full text-xs p-1 mt-1 bg-gray-200 rounded hover:bg-gray-300 transition-colors flex items-center justify-center gap-1" disabled><i data-lucide="copy" class="w-3 h-3"></i><span>কপি আইডি</span></button></div>
+                            <div class="bg-gray-100 p-3 rounded-lg text-center"><img src="https://i.postimg.cc/Jh9s6jWw/20250922-113350.png" alt="Nagad" class="w-10 h-10 rounded-full mx-auto mb-2"><p class="font-bold text-md">নগদ</p><p class="text-gray-600 font-mono tracking-wider text-sm my-1">01864260513</p><button onclick="copyToClipboard('01864260513', this)" class="w-full text-xs p-1 mt-1 bg-gray-200 rounded hover:bg-gray-300 transition-colors flex items-center justify-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i><span>Copy</span></button></div>
+                            <div class="bg-gray-100 p-3 rounded-lg text-center"><img src="https://i.postimg.cc/tCwGVkdH/20250922-113514.png" alt="bKash" class="w-10 h-10 rounded-full mx-auto mb-2"><p class="font-bold text-md">বিকাশ</p><p class="text-gray-600 font-mono tracking-wider text-sm my-1">01827750260</p><button onclick="copyToClipboard('01827750260', this)" class="w-full text-xs p-1 mt-1 bg-gray-200 rounded hover:bg-gray-300 transition-colors flex items-center justify-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i><span>Copy</span></button></div>
+                            <div class="bg-gray-100 p-3 rounded-lg text-center"><img src="https://i.postimg.cc/htsw10Tj/20250922-113924.png" alt="Rocket" class="w-10 h-10 rounded-full mx-auto mb-2"><p class="font-bold text-md">রকেট</p><p class="text-gray-600 font-mono tracking-wider text-sm my-1">018277502604</p><button onclick="copyToClipboard('018277502604', this)" class="w-full text-xs p-1 mt-1 bg-gray-200 rounded hover:bg-gray-300 transition-colors flex items-center justify-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i><span>Copy</span></button></div>
+                            <div class="bg-gray-100 p-3 rounded-lg text-center"><img src="https://i.postimg.cc/L6LFLfxY/20250922-113752.png" alt="Binance Pay" class="w-10 h-10 rounded-full mx-auto mb-2"><p class="font-bold text-md">Binance Pay</p><p class="text-gray-600 font-mono tracking-wider text-sm my-1">Coming soon..</p><button onclick="copyToClipboard('Coming soon..', this)" class="w-full text-xs p-1 mt-1 bg-gray-200 rounded hover:bg-gray-300 transition-colors flex items-center justify-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i><span>Copy ID</span></button></div>
                         </div>
                         <p class="text-sm text-gray-600 mb-4 text-center border-t border-gray-300 pt-4">টাকা পাঠানোর পর নিচের ফর্মটি পূরণ করুন:</p>
                         <div class="space-y-4">
                              <div><label for="deposit-method" class="block text-sm font-medium text-gray-600 mb-2">পেমেন্ট মাধ্যম</label><select id="deposit-method" class="w-full p-3 rounded-lg input-field"><option value="">কোন মাধ্যমে টাকা পাঠিয়েছেন?</option><option value="Nagad">নগদ</option><option value="bKash">বিকাশ</option><option value="Rocket">রকেট</option><option value="Binance">Binance</option></select></div>
-                            <div><label for="deposit-amount" class="block text-sm font-medium text-gray-600 mb-2">টাকার পরিমাণ (BDT)</label><input id="deposit-amount" type="number" placeholder="ন্যূনতম পরিমাণ ৳50" class="w-full p-3 rounded-lg input-field"></div>
+                            <!-- পরিবর্তন শুরু: ন্যূনতম ডিপোজিটের জন্য placeholder আপডেট -->
+                            <div><label for="deposit-amount" class="block text-sm font-medium text-gray-600 mb-2">টাকার পরিমাণ (BDT)</label><input id="deposit-amount" type="number" placeholder="e.g., 100" class="w-full p-3 rounded-lg input-field"></div>
+                             <!-- পরিবর্তন শেষ -->
                             <div><label for="sender-number" class="block text-sm font-medium text-gray-600 mb-2">আপনার পেমেন্ট নম্বর</label><input id="sender-number" type="text" placeholder="যে নম্বর থেকে টাকা পাঠিয়েছেন" class="w-full p-3 rounded-lg input-field"></div>
                             <div><label for="deposit-txid" class="block text-sm font-medium text-gray-600 mb-2">Transaction ID (TrxID)</label><input id="deposit-txid" type="text" placeholder="টাকা পাঠানোর পর পাওয়া TrxID" class="w-full p-3 rounded-lg input-field"></div>
-                            <button id="deposit-btn" class="w-full p-3 rounded-lg btn-gradient">ডিপোজিট সাবমিট করুন</button>
+                            <button id="deposit-btn" class="w-full p-3 btn-gradient">Submit Deposit</button>
                         </div>
                     </div>
                 </div>
-                <div class="mt-6"><h3 class="text-lg font-semibold mb-3">পেমেন্ট হিস্টোরি</h3><div id="payment-history-list" class="space-y-3"></div></div>
+                <div class="mt-6"><h3 class="text-lg font-semibold mb-3">Payment History</h3><div id="payment-history-list" class="space-y-3"></div></div>
             </div>
-
-             <div id="mail-page" class="sub-page">
+            <div id="mail-page" class="sub-page">
                  <div class="marquee mt-4">
+                    <!-- পরিবর্তন শুরু: নতুন মারকিউ টেক্সট -->
                     <p class="marquee-content">
-                        💌 DIGITAL NEXUS-এ আপনাকে স্বাগতম! ✨ আমাদের সকল সার্ভিস এখন লাইভ! 📩 এখানে পাবেন সেরা কোয়ালিটির ডিজিটাল প্রোডাক্ট। ⚡ যেকোনো সমস্যায় দ্রুত সমাধান। 🕐 আমরা ২৪/৭ ঘণ্টা সার্ভিস দিয়ে থাকি। 💬 প্রয়োজনে আমাদের সাপোর্ট টিমের সাথে যোগাযোগ করুন। 💎 DIGITAL NEXUS — বিশ্বাস ও গুণমানের প্রতীক!
+                        💌 QUICK VAULT-এ স্বাগতম! ✨ আমাদের সকল সেবা এখন আগের থেকেও দ্রুত এবং নির্ভরযোগ্য। ⚡ যেকোনো সমস্যায় তাৎক্ষণিক সমাধান। 🕐 ২৪/৭ ঘণ্টা সাপোর্ট টিম। 💬 QUICK VAULT — আপনার আস্থার ডিজিটাল সমাধান!
                     </p>
+                    <!-- পরিবর্তন শেষ -->
                 </div>
                 <div class="p-4 space-y-6">
-                    <p class="text-gray-600 text-center mb-4">সহজে এবং সাশ্রয়ী মূল্যে ডিজিটাল প্রোডাক্ট কিনুন</p>
+                    <p class="text-gray-600 text-center mb-4">সহজে এবং সাশ্রয়ী মূল্যে আপনার প্রয়োজনীয় সেবা নিন</p>
                     <div class="grid grid-cols-2 gap-4 mb-6">
                         <button onclick="handleLoginMailClick()" class="w-full p-3 rounded-lg font-bold text-white bg-gradient-to-r from-blue-500 to-indigo-600 shadow-lg btn flex items-center justify-center gap-2">
-                            <i data-lucide="log-in" class="w-5 h-5"></i><span>লগইন মেইল</span>
+                            <i data-lucide="log-in" class="w-5 h-5"></i><span>LOGIN MAIL</span>
                         </button>
                          <button onclick="handleOtpMailClick()" class="w-full p-3 rounded-lg font-bold text-white bg-gradient-to-r from-green-500 to-emerald-600 shadow-lg btn flex items-center justify-center gap-2">
-                            <i data-lucide="shield-check" class="w-5 h-5"></i><span>OTP মেইল</span>
+                            <i data-lucide="shield-check" class="w-5 h-5"></i><span>OTP MAIL</span>
                         </button>
                     </div>
                     <div id="mail-list" class="space-y-4"></div>
                      <div>
                         <div class="flex justify-between items-center mb-3 mt-6">
-                            <h3 class="text-lg font-semibold">ক্রয়ের ইতিহাস (শেষ ৪ ঘণ্টা)</h3>
+                            <h3 class="text-lg font-semibold">Buy History (Last 4 Hours)</h3>
                             <div class="flex items-center gap-2">
-                               <button id="copy-history-btn" class="btn-outline-accent p-2 rounded-lg text-sm flex items-center gap-1"><i data-lucide="copy" class="w-4 h-4"></i><span>কপি</span></button>
-                               <button id="download-history-btn" class="btn-outline-accent p-2 rounded-lg text-sm flex items-center gap-1"><i data-lucide="download" class="w-4 h-4"></i><span>ডাউনলোড</span></button>
+                               <button id="copy-history-btn" class="btn-outline-accent p-2 rounded-lg text-sm flex items-center gap-1"><i data-lucide="copy" class="w-4 h-4"></i><span>Copy Now</span></button>
+                               <button id="download-history-btn" class="btn-outline-accent p-2 rounded-lg text-sm flex items-center gap-1"><i data-lucide="download" class="w-4 h-4"></i><span>Download</span></button>
                             </div>
                         </div>
                         <div id="mail-purchase-history" class="space-y-3"></div>
                     </div>
                 </div>
             </div>
+            <div id="updates-page" class="p-4 space-y-6 sub-page">
+                <h2 class="text-xl font-bold text-center text-gray-800">Update</h2>
+                <div id="updates-content" class="space-y-4"></div>
 
-            <!-- Other pages would be similarly updated -->
+                <div class="mt-8">
+                    <h3 class="text-lg font-semibold text-center mb-4 text-gray-800">Customer Reviews</h3>
+                    <div id="reviews-list" class="space-y-4"></div>
+                </div>
+            </div>
+            <div id="tutorial-page" class="p-4 space-y-6 sub-page">
+                <h2 class="text-xl font-bold text-center text-gray-800">Tutorials</h2>
+                <p class="text-sm text-gray-600 text-center">নিচের তালিকা থেকে আপনার প্রয়োজনীয় ভিডিওটি দেখুন।</p>
+                <div id="tutorial-list" class="space-y-5"></div>
+            </div>
+            <div id="profile-page" class="p-4 space-y-6 sub-page">
+                <div class="card-bg p-6 flex flex-col items-center text-center">
+                    <div class="relative mb-4">
+                        <img id="profile-pic" class="w-24 h-24 rounded-full border-2 border-[var(--primary-color)] object-cover hidden" src="" alt="Profile Picture">
+                        <div id="profile-initials-avatar" class="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center border-2 border-[var(--primary-color)]"><span id="profile-initials" class="text-3xl font-bold text-gray-500"></span></div>
+                    </div>
+                    <h3 id="profile-name" class="text-2xl font-bold text-gray-800">Loading...</h3>
+                    <button id="profile-id-btn" class="text-sm text-gray-500 mt-2 bg-gray-100 px-3 py-1 rounded-full hover:bg-gray-200 transition-colors">ID: 123456</button>
+                    <div id="premium-status-container" class="mt-3"></div>
+                </div>
+
+                <div class="space-y-3">
+                    <button id="more-features-btn" class="w-full card-bg p-4 flex justify-between items-center text-left text-lg font-semibold">
+                        <span class="flex items-center gap-3"><i data-lucide="zap" class="w-6 h-6 text-gray-600"></i><span>More Features</span></span>
+                        <i data-lucide="arrow-right" class="w-5 h-5 text-gray-400"></i>
+                    </button>
+                    <button id="source-code-btn" class="w-full card-bg p-4 flex justify-between items-center text-left text-lg font-semibold">
+                        <span class="flex items-center gap-3"><i data-lucide="code" class="w-6 h-6 text-gray-600"></i><span>Source Code</span></span>
+                        <i data-lucide="arrow-right" class="w-5 h-5 text-gray-400"></i>
+                    </button>
+                </div>
+                
+                <div class="pt-4">
+                    <h3 class="text-center font-bold text-gray-700 mb-3">Official Social Media</h3>
+                    <div class="flex justify-center items-center gap-6">
+                        <a href="https://youtube.com" target="_blank" class="p-3 bg-gray-100 rounded-full hover:bg-gray-200 transition-all"><i data-lucide="youtube" class="w-6 h-6 text-red-600"></i></a>
+                        <a href="https://tiktok.com" target="_blank" class="p-3 bg-gray-100 rounded-full hover:bg-gray-200 transition-all"><svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.01-1.58-.01-3.16 0-4.75l-.04 1.38c-.7 2.12-2.2 3.53-4.13 4.45v5.05c-.62.33-1.28.6-1.94.82v-5.07c.01-1.03-.02-2.07-.01-3.1 0-2.31-1.08-4.28-2.7-5.66-1.6-1.37-3.6-2.01-5.59-1.82V4.88c1.87.08 3.74.38 5.48 1.14.01 1.57.01 3.14 0 4.71l.04-1.38c.68-2.11 2.19-3.52 4.12-4.44V.02z"/></svg></a>
+                        <a href="https://telegram.org" target="_blank" class="p-3 bg-gray-100 rounded-full hover:bg-gray-200 transition-all"><i data-lucide="send" class="w-6 h-6 text-sky-500"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div id="features-page" class="p-4 space-y-8 sub-page">
+                <div class="grid grid-cols-2 gap-4 text-center">
+                    <div class="card-bg p-4">
+                        <p class="text-sm text-gray-400 mb-1">TOTAL RECHARGE</p>
+                        <p id="total-recharge-display" class="text-2xl font-bold text-purple-500">৳0.00</p>
+                    </div>
+                    <div class="card-bg p-4">
+                        <p class="text-sm text-gray-400 mb-1">TOTAL SEND</p>
+                        <p id="total-send-display" class="text-2xl font-bold text-orange-500">৳0.00</p>
+                    </div>
+                    <div class="card-bg p-4">
+                        <p class="text-sm text-gray-400 mb-1">TOTAL ডিপোজিট</p>
+                        <p id="total-deposit-display" class="text-2xl font-bold text-sky-500">৳0.00</p>
+                    </div>
+                     <div class="card-bg p-4">
+                        <p class="text-sm text-gray-400 mb-1">TOTAL Receive</p>
+                        <p id="total-receive-display" class="text-2xl font-bold text-yellow-500">৳0.00</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <button id="features-deposit-btn" class="p-3 rounded-lg font-bold text-white bg-gradient-to-r from-green-500 to-emerald-500 shadow-lg btn">Deposit</button>
+                    <button id="features-recharge-btn" class="p-3 rounded-lg font-bold text-white bg-gradient-to-r from-purple-500 to-indigo-500 shadow-lg btn">Mobile Recharge</button>
+                    <button id="features-receive-btn" class="p-3 rounded-lg font-bold text-white bg-gradient-to-r from-blue-500 to-sky-500 shadow-lg btn flex items-center justify-center gap-1"><i data-lucide="arrow-down-to-line" class="w-4 h-4"></i><span>Receive</span></button>
+                    <button id="features-send-btn" class="p-3 rounded-lg font-bold text-white bg-gradient-to-r from-amber-500 to-orange-500 shadow-lg btn">SEND</button>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-3">Balance Transfer History</h3>
+                    <div id="transfer-history-list" class="space-y-3"></div>
+                </div>
+            </div>
+            <div id="admin-page" class="p-4 space-y-6 sub-page">
+                <h2 class="text-xl font-bold text-center text-gray-800">Admin Panel</h2>
+                <div class="card-bg p-5 space-y-4">
+                    <h3 class="font-semibold text-lg text-gray-800">Add New Mails</h3>
+                    <p class="text-sm text-gray-600">ফরম্যাট: <code class="bg-gray-100 p-1 rounded text-gray-700">email/password/refresh_token/client_id</code></p>
+                    <div><label for="mail-type-select" class="block text-sm font-medium text-gray-600 mb-1">Mail Type</label><select id="mail-type-select" class="w-full p-3 rounded-lg input-field"></select></div>
+                    <div><label for="mail-data-textarea" class="block text-sm font-medium text-gray-600 mb-1">Mail Data (one per line)</label><textarea id="mail-data-textarea" rows="10" placeholder="mail@example.com/password/refresh_token/client_id" class="w-full p-3 rounded-lg input-field font-mono text-xs"></textarea></div>
+                    <button id="add-mails-btn" class="w-full p-3 btn-gradient">Add Mails to Stock</button>
+                </div>
+                <div class="card-bg p-5 space-y-4">
+                    <h3 class="font-semibold text-lg text-gray-800">Create Redeem Code</h3>
+                    <div><label for="redeem-code-input" class="block text-sm font-medium text-gray-600 mb-1">Code</label><input type="text" id="redeem-code-input" placeholder="Enter a unique code or leave blank to generate" class="w-full p-3 rounded-lg input-field"></div>
+                    <div><label for="redeem-type-select" class="block text-sm font-medium text-gray-600 mb-1">Code Type</label><select id="redeem-type-select" class="w-full p-3 rounded-lg input-field"><option value="balance">Balance</option><option value="premium">Premium</option></select></div>
+                    <div><label for="redeem-value-input" class="block text-sm font-medium text-gray-600 mb-1">Value</label><input type="number" id="redeem-value-input" placeholder="Amount (BDT) or Days (Premium)" class="w-full p-3 rounded-lg input-field"></div>
+                    <button id="create-redeem-code-btn" class="w-full p-3 btn-gradient">Create Code</button>
+                </div>
+            </div>
+            <div id="recharge-page" class="p-4 space-y-6 sub-page">
+                 <div class="relative flex items-center justify-center mb-4">
+                    <button onclick="navigateTo('features-page')" class="absolute left-0 p-2 rounded-full hover:bg-gray-100 transition-colors"><i data-lucide="arrow-left" class="w-6 h-6 text-gray-700"></i></button>
+                    <h2 class="text-xl font-bold text-center text-gray-800">Mobile Recharge</h2>
+                </div>
+                <div class="card-bg p-5 space-y-5">
+                    <div>
+                        <h3 class="font-semibold text-lg flex items-center gap-2 mb-4"><i data-lucide="smartphone" class="w-6 h-6 text-[var(--primary-color)]"></i><span>রিচার্জ করুন</span></h3>
+                        <p class="text-sm text-center text-red-600 bg-red-100 p-2 rounded-lg mb-4">প্রতিটি রিচার্জে 5% ফি প্রযোজ্য।</p>
+                        <div class="space-y-4">
+                            <div><label for="recharge-number" class="block text-sm font-medium text-gray-600 mb-2">মোবাইল নম্বর</label><input id="recharge-number" type="tel" placeholder="e.g., 018********" class="w-full p-3 rounded-lg input-field"></div>
+                            <div><label for="recharge-amount" class="block text-sm font-medium text-gray-600 mb-2">টাকার পরিমাণ (BDT)</label><input id="recharge-amount" type="number" placeholder="Minimum ৳20" class="w-full p-3 rounded-lg input-field"><p id="recharge-fee-display" class="text-sm text-green-600 mt-1 h-5"></p></div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div><label for="recharge-operator" class="block text-sm font-medium text-gray-600 mb-2">অপারেটর</label><select id="recharge-operator" class="w-full p-3 rounded-lg input-field"><option value="">Select Operator</option><option value="Grameenphone">Grameenphone</option><option value="Robi">Robi</option><option value="Airtel">Airtel</option><option value="Banglalink">Banglalink</option><option value="Teletalk">Teletalk</option></select></div>
+                                <div><label for="recharge-type" class="block text-sm font-medium text-gray-600 mb-2">সিমের ধরন</label><select id="recharge-type" class="w-full p-3 rounded-lg input-field"><option value="Prepaid">Prepaid</option><option value="Postpaid">Postpaid</option></select></div>
+                            </div>
+                            <button id="submit-recharge-btn" class="w-full p-3 btn-gradient">Submit Recharge</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6"><h3 class="text-lg font-semibold mb-3">Recharge History</h3><div id="recharge-history-list" class="space-y-3"></div></div>
+            </div>
+            <div id="send-page" class="p-4 space-y-6 sub-page">
+                <div class="relative flex items-center justify-center mb-4"><button onclick="navigateTo('features-page')" class="absolute left-0 p-2 rounded-full hover:bg-gray-100 transition-colors"><i data-lucide="arrow-left" class="w-6 h-6 text-gray-700"></i></button><h2 class="text-xl font-bold text-center text-gray-800">Send Balance</h2></div>
+                <div class="card-bg p-5 space-y-5">
+                    <div>
+                        <h3 class="font-semibold text-lg flex items-center gap-2 mb-4"><i data-lucide="send" class="w-6 h-6 text-[var(--primary-color)]"></i><span>ব্যালেন্স পাঠান</span></h3>
+                        <p class="text-sm text-center text-red-600 bg-red-100 p-2 rounded-lg mb-4">প্রতিটি সেন্ডে 5% ফি প্রযোজ্য।</p>
+                        <div class="space-y-4">
+                            <div><label for="send-recipient-id" class="block text-sm font-medium text-gray-600 mb-2">প্রাপকের আইডি (Recipient ID)</label><input id="send-recipient-id" type="text" placeholder="Recipient's Telegram ID" class="w-full p-3 rounded-lg input-field"></div>
+                            <div><label for="send-amount" class="block text-sm font-medium text-gray-600 mb-2">টাকার পরিমাণ (BDT)</label><input id="send-amount" type="number" placeholder="Minimum ৳20" class="w-full p-3 rounded-lg input-field"><p id="send-fee-display" class="text-sm text-green-600 mt-1 h-5"></p></div>
+                            <button id="submit-send-btn" class="w-full p-3 btn-gradient">Submit Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </main>
         
         <nav class="bottom-nav">
-            <button class="nav-link-main" data-page="updates-page"><i data-lucide="bell" class="icon"></i><span>আপডেট</span></button>
-            <button class="nav-link-main" data-page="tutorial-page"><i data-lucide="video" class="icon"></i><span>টিউটোরিয়াল</span></button>
-            <button class="nav-link-main center-home-link active" data-page="home-page"><i data-lucide="home" class="icon"></i></button>
-            <button class="nav-link-main" data-page="mail-page"><i data-lucide="mail" class="icon"></i><span>প্রোডাক্ট</span></button>
-            <button class="nav-link-main" data-page="profile-page"><i data-lucide="user" class="icon"></i><span>প্রোফাইল</span></button>
-            <button id="admin-nav-link" class="nav-link-main hidden" data-page="admin-page"><i data-lucide="shield" class="icon"></i><span>অ্যাডমিন</span></button>
+            <button class="nav-link-premium" data-page="updates-page"><i data-lucide="bell" class="icon"></i><span>Updates</span></button>
+            <button class="nav-link-premium" data-page="tutorial-page"><i data-lucide="video" class="icon"></i><span>Tutorial</span></button>
+            <button class="nav-link-premium center-home-link active" data-page="home-page"><i data-lucide="home" class="icon"></i></button>
+             <!-- পরিবর্তন শুরু: বাটন টেক্সট পরিবর্তন -->
+            <button class="nav-link-premium" data-page="mail-page"><i data-lucide="archive" class="icon"></i><span>Vault</span></button>
+            <!-- পরিবর্তন শেষ -->
+            <button class="nav-link-premium" data-page="profile-page"><i data-lucide="user" class="icon"></i><span>Profile</span></button>
+            <button id="admin-nav-link" class="nav-link-premium hidden" data-page="admin-page"><i data-lucide="shield" class="icon"></i><span>Admin</span></button>
         </nav>
     </div>
 
-    <!-- Modals are largely unchanged in structure, so they are omitted for brevity -->
-    <!-- The JavaScript below contains all the logic updates -->
+    <!-- =========== MODALS START HERE =========== -->
+    <div id="custom-alert" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[70] p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-lg p-6 w-full max-w-sm text-center border border-gray-200 text-gray-800">
+            <p id="alert-message" class="mb-5 whitespace-pre-wrap text-gray-700"></p>
+            <button id="alert-ok-btn" class="btn-gradient px-8 py-2">OK</button>
+        </div>
+    </div>
+    
+    <div id="redeem-code-modal" class="modal-overlay">
+        <div class="modal-content space-y-4">
+            <h3 class="text-xl font-bold text-center text-accent-gradient">Redeem Your Code</h3>
+            <div>
+                <label for="redeem-code-entry" class="block text-sm font-medium text-gray-600 mb-2">Enter Code</label>
+                <input id="redeem-code-entry" type="text" placeholder="e.g., BONUS25" class="w-full p-3 rounded-lg input-field uppercase tracking-widest text-center">
+            </div>
+            <button id="submit-redeem-code-btn" class="w-full p-3 btn-gradient">Redeem</button>
+        </div>
+    </div>
+
+    <div id="notification-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[70] p-4 backdrop-blur-sm">
+        <div class="card-bg p-6 w-full max-w-sm space-y-4">
+            <h3 class="text-xl font-bold text-center text-accent-gradient mb-4">Notifications</h3>
+            <div id="notification-list" class="space-y-3 max-h-80 overflow-y-auto"></div>
+            <button id="notification-ok-btn" class="w-full p-3 btn-gradient mt-4">Close</button>
+        </div>
+    </div>
+
+    <div id="deposit-details-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[70] p-4 backdrop-blur-sm">
+        <div class="card-bg p-6 w-full max-w-sm space-y-4">
+            <h3 class="text-xl font-bold text-center text-accent-gradient mb-4">How to Deposit</h3>
+            <div class="text-gray-700 space-y-3">
+                <p>আসসালামু আলাইকুম, আপনাকে স্বাগতম</p>
+                <ol class="list-decimal list-inside space-y-2 text-sm">
+                    <li>প্রথমে আপনি যে মাধ্যমে টাকা পাঠাতে চান সেটি নির্বাচন করুন।</li>
+                    <li>এরপর প্রদর্শিত নম্বরে আপনার কাঙ্খিত পরিমাণ টাকা পাঠান।</li>
+                    <li>টাকা পাঠানোর পর, নিচের ফর্মটি পূরণ করুন।</li>
+                    <li>আপনার পাঠানো টাকার মাধ্যম, পরিমাণ, নম্বর এবং Transaction ID (TxID) সঠিকভাবে লিখুন।</li>
+                    <li>সবশেষে "Submit Deposit" বাটনে ক্লিক করুন।</li>
+                </ol>
+                <p class="text-xs text-gray-500 mt-4">আপনার ডিপোজিট দ্রুত যাচাই করে ব্যালেন্সে যোগ করা হবে।</p>
+            </div>
+            <button id="deposit-details-ok-btn" class="w-full p-3 btn-gradient mt-4">Got It!</button>
+        </div>
+    </div>
+    
+    <div id="mail-details-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[70] p-4 backdrop-blur-sm">
+        <div class="card-bg p-6 w-full max-w-sm space-y-4 relative">
+            <h3 id="mail-details-title" class="text-2xl font-bold text-center text-accent-gradient">Vault Item Details</h3>
+            <div id="mail-details-content" class="text-gray-700 bg-gray-100 p-4 rounded-lg whitespace-pre-wrap text-sm leading-relaxed max-h-60 overflow-y-auto"></div>
+            <button id="mail-details-ok-btn" class="w-full p-3 btn-gradient mt-4">Got It!</button>
+        </div>
+    </div>
+
+    <div id="insufficient-balance-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[70] p-4 backdrop-blur-sm">
+        <div class="card-bg p-6 w-full max-w-sm text-center space-y-4 relative">
+            <button id="close-insufficient-balance-modal" class="modal-close-btn"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <i data-lucide="wallet" class="w-12 h-12 text-amber-500 mx-auto"></i>
+            <h3 class="text-xl font-bold text-gray-800">ব্যালেন্স কম!</h3>
+            <p class="text-gray-600">স্টক সীমিত, তাই দ্রুত কিনুন। দেরি করলে স্টক শেষ হয়ে যেতে পারে! এখনই ডিপোজিট করে আপনার আইটেমটি সংগ্রহ করুন।</p>
+            <button id="insufficient-balance-deposit-btn" class="w-full p-3 btn-gradient mt-4">Deposit Now</button>
+        </div>
+    </div>
+
+    <div id="purchase-success-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[70] p-4 backdrop-blur-sm">
+        <div class="card-bg p-6 w-full max-w-sm space-y-4 relative">
+            <button id="close-purchase-success-modal" class="modal-close-btn"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <i data-lucide="check-circle-2" class="w-12 h-12 text-green-500 mx-auto"></i>
+            <h3 class="text-xl font-bold text-gray-800 text-center">সফলভাবে কেনা হয়েছে!</h3>
+            <div class="space-y-3 pt-2">
+                <div class="flex items-center justify-between bg-gray-100 p-2.5 rounded-lg">
+                    <span class="font-mono text-sm text-gray-800 truncate" id="purchase-success-email"></span>
+                    <button onclick="copyToClipboard(document.getElementById('purchase-success-email').textContent, this)" class="ml-2 p-2 rounded-md hover:bg-gray-200"><i data-lucide="copy" class="w-4 h-4 text-gray-600"></i></button>
+                </div>
+                <div class="flex items-center justify-between bg-gray-100 p-2.5 rounded-lg">
+                    <span class="font-mono text-sm text-gray-800" id="purchase-success-password"></span>
+                    <button onclick="copyToClipboard(document.getElementById('purchase-success-password').textContent, this)" class="ml-2 p-2 rounded-md hover:bg-gray-200"><i data-lucide="copy" class="w-4 h-4 text-gray-600"></i></button>
+                </div>
+            </div>
+            <p class="text-xs text-gray-500 text-center pt-2">এই তথ্য আপনার ক্রয় হিস্টিতে (শেষ ৪ ঘণ্টা) সেভ করা হয়েছে।</p>
+            <button id="purchase-success-buy-again-btn" class="w-full p-3 btn-gradient mt-4">আবার কিনুন</button>
+        </div>
+    </div>
+
 
     <script type="module">
+        // =================================================================
+        // পরিবর্তন শুরু: নতুন কনফিগারেশন ভ্যারিয়েবল
+        // =================================================================
         const ADMIN_UID = "CUb4r6eg1RV6Ljkj5U2V1cSswng1";
-        const MINIMUM_DEPOSIT_AMOUNT = 50; // New minimum deposit amount
-        let stockFluctuationInterval = null; // To hold the interval timer
-
+        const MINIMUM_DEPOSIT = 50; // এখানে ন্যূনতম ডিপোজিটের পরিমাণ সেট করুন
+        const STOCK_BASE = 958; // স্টক এখান থেকে শুরু হবে
+        // =================================================================
+        // পরিবর্তন শেষ
+        // =================================================================
+        
         const firebaseConfig = {
             apiKey: "AIzaSyCoCy08FL_sHHdA0f2cJg0BaF-iYAhFuk0",
             authDomain: "mail-store-4692b.firebaseapp.com",
@@ -354,13 +652,13 @@
                 window.Telegram.WebApp.expand();
                 currentUserTg = window.Telegram.WebApp.initDataUnsafe.user;
                 if (!currentUserTg) {
-                    showAlert("টেলিগ্রাম ব্যবহারকারীর তথ্য পাওয়া যায়নি। অনুগ্রহ করে টেলিগ্রাম থেকে এই অ্যাপটি খুলুন।");
+                    showAlert("Telegram user data not found. Please open this app from Telegram.");
                     loader.style.display = 'none';
                     return;
                 }
             } catch (e) {
                 console.error("Telegram WebApp script failed to initialize or user data not available.", e);
-                showAlert("টেলিগ্রাম মিনি অ্যাপ শুরু করতে ত্রুটি হয়েছে। অনুগ্রহ করে টেলিগ্রাম থেকে আবার চেষ্টা করুন।");
+                showAlert("Error initializing Telegram Mini App. Please try again from Telegram.");
                 loader.style.display = 'none';
                 return;
             }
@@ -368,12 +666,19 @@
             setupEventListeners();
             setupBanner();
             await initUserSession();
+            
+            // পরিবর্তন শুরু: ডায়নামিক স্টক পরিবর্তনের ফাংশন চালু করা
+            setInterval(fluctuateStock, 4500); // প্রতি ৪.৫ সেকেন্ড পর পর স্টক পরিবর্তন হবে
+            // পরিবর্তন শেষ
+
             loader.style.opacity = '0';
             setTimeout(() => { loader.style.display = 'none'; }, 500);
         };
 
         function cycleReviewsOnLoader() {
-            const reviews = ['"খুবই বিশ্বস্ত একটি সাইট।" - মোঃ রায়হান', '"দ্রুত ডেলিভারি এবং চমৎকার সাপোর্ট।" - ফারিয়া', '"ব্যবহার করা খুবই সহজ। Recommended!" - সুমন আহমেদ'];
+             // পরিবর্তন শুরু: নতুন রিভিউ টেক্সট
+            const reviews = ['"এখন পর্যন্ত সেরা একটি সার্ভিস।" - মোঃ আকাশ', '"খুব দ্রুত ডেলিভারি এবং চমৎকার সাপোর্ট।" - সাদিয়া', '"ব্যবহার করা খুবই সহজ। আমি সন্তুষ্ট!" - রিফাত আহমেদ'];
+            // পরিবর্তন শেষ
             let reviewIndex = 0;
             const reviewEl = document.getElementById('loader-reviews');
             setInterval(() => {
@@ -386,37 +691,12 @@
             }, 4000);
         }
 
-        // Initialize stock fluctuation simulation
-        function initializeStockFluctuation() {
-            if (stockFluctuationInterval) {
-                clearInterval(stockFluctuationInterval);
-            }
-            stockFluctuationInterval = setInterval(() => {
-                const stockElements = document.querySelectorAll('.stock-display');
-                stockElements.forEach(el => {
-                    let currentStock = parseInt(el.textContent);
-                    if (isNaN(currentStock)) return;
-                    
-                    const fluctuation = Math.floor(Math.random() * 5) - 2; // -2, -1, 0, 1, 2
-                    let newStock = currentStock + fluctuation;
-
-                    // Ensure stock doesn't go below the base
-                    if (newStock < 958) {
-                        newStock = 958 + Math.floor(Math.random() * 3);
-                    }
-                    
-                    el.textContent = newStock;
-                });
-            }, 5000); // Fluctuate every 5 seconds
-        }
-
         async function initUserSession() {
             if (!currentUserTg) {
-                showAlert("টেলিগ্রাম ব্যবহারকারীর তথ্য অনুপস্থিত।");
+                showAlert("Telegram user data is missing. Cannot proceed.");
                 return;
             }
-            // ... (rest of the initUserSession function remains the same)
-             const tgChatId = String(currentUserTg.id);
+            const tgChatId = String(currentUserTg.id);
             const userRef = doc(db, "users", tgChatId);
             try {
                 const userSnap = await getDoc(userRef);
@@ -453,11 +733,11 @@
                 navigateTo('home-page');
             } catch (error) {
                 console.error("Error initializing user session:", error);
-                showAlert("আপনার সেশন শুরু করতে ব্যর্থ হয়েছে। আবার চেষ্টা করুন।");
+                showAlert("Failed to initialize your session. Please try again.");
                 loader.style.display = 'none';
             }
         }
-        
+
         async function fetchAppConfig() {
             const configRef = doc(db, "config", "main");
             const configSnap = await getDoc(configRef);
@@ -466,7 +746,21 @@
 
         function updateHeaderUI() {
             if (!currentUserTg) return;
-            // ... (this function is visually updated by CSS changes, logic is the same)
+            const profilePic = document.getElementById('header-profile-pic');
+            const avatarDiv = document.getElementById('header-initials-avatar');
+            const welcomeName = document.getElementById('header-welcome-name');
+            if (currentUserTg.photo_url) {
+                profilePic.src = currentUserTg.photo_url;
+                profilePic.classList.remove('hidden');
+                avatarDiv.classList.add('hidden');
+            } else {
+                const initials = (currentUserTg.first_name?.[0] || '') + (currentUserTg.last_name?.[0] || '');
+                document.getElementById('header-initials').textContent = initials.toUpperCase();
+                profilePic.classList.add('hidden');
+                avatarDiv.classList.remove('hidden');
+            }
+            const firstName = currentUserTg.first_name || 'User';
+            welcomeName.textContent = `Hi, ${firstName}!`;
         }
 
         function updateUI() {
@@ -474,30 +768,30 @@
             const balance = (userData.balance || 0).toFixed(2);
             document.getElementById('balance-display').textContent = `৳${balance}`;
             document.getElementById('header-balance-display').textContent = `৳${balance}`;
+
+            // পরিবর্তন শুরু: ন্যূনতম ডিপোজিটের placeholder সেট করা
+            const depositAmountInput = document.getElementById('deposit-amount');
+            if (depositAmountInput) {
+                depositAmountInput.placeholder = `e.g., 100 (Minimum ৳${MINIMUM_DEPOSIT})`;
+            }
+            // পরিবর্তন শেষ
+
             updateHeaderUI();
         }
 
-        function navigateTo(pageId) {
-            // Clear stock fluctuation interval when leaving the mail page
-            if (pageId !== 'mail-page' && stockFluctuationInterval) {
-                clearInterval(stockFluctuationInterval);
-                stockFluctuationInterval = null;
-            }
-            if (pageId === 'mail-page') {
-                // Initialize fluctuation when navigating to the mail page
-                loadMailStore().then(() => {
-                    initializeStockFluctuation();
-                });
-            }
+        function showMainPage(pageId) {
+            document.querySelectorAll('.main-page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
 
-            // ... (rest of navigateTo function remains mostly the same)
+        function navigateTo(pageId) {
             if (pageId !== 'mail-page' && insufficientBalanceInterval) {
                 clearInterval(insufficientBalanceInterval);
                 insufficientBalanceInterval = null;
             }
             document.querySelectorAll('.sub-page').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
-            document.querySelectorAll('.nav-link-main[data-page]').forEach(link => {
+            document.querySelectorAll('.nav-link-premium[data-page]').forEach(link => {
                 link.classList.toggle('active', link.dataset.page === pageId);
             });
             
@@ -510,6 +804,7 @@
             }
             const pageLoadFunctions = {
                 'pay-page': loadPaymentHistory,
+                'mail-page': loadMailStore,
                 'updates-page': () => { loadUpdates(); loadReviews(); },
                 'admin-page': populateAdminMailTypes,
                 'profile-page': loadProfilePage,
@@ -518,10 +813,392 @@
                 'recharge-page': () => { loadRechargeHistory(); setupDynamicAmountHandlers('recharge'); },
                 'send-page': () => { setupDynamicAmountHandlers('send'); }
             };
-             if (pageLoadFunctions[pageId] && pageId !== 'mail-page') { // mail-page is handled separately now
-                pageLoadFunctions[pageId]();
-             }
+            if (pageLoadFunctions[pageId]) pageLoadFunctions[pageId]();
             lucide.createIcons();
+        }
+        window.navigateTo = navigateTo;
+        
+        async function createPersonalNotification(title, message) {
+            try { await addDoc(collection(db, "notifications"), { userId: userData.tgChatId, title: title, message: message, createdAt: serverTimestamp() }); }
+            catch (e) { console.error("Failed to create personal notification:", e); }
+        }
+        
+        async function loadProfilePage() {
+            const profilePic = document.getElementById('profile-pic');
+            const avatarDiv = document.getElementById('profile-initials-avatar');
+            const premiumStatusContainer = document.getElementById('premium-status-container');
+            const profileIdBtn = document.getElementById('profile-id-btn');
+            if (currentUserTg) {
+                if (currentUserTg.photo_url) {
+                    profilePic.src = currentUserTg.photo_url;
+                    profilePic.classList.remove('hidden');
+                    avatarDiv.classList.add('hidden');
+                } else {
+                    const initials = (currentUserTg.first_name?.[0] || '') + (currentUserTg.last_name?.[0] || '');
+                    document.getElementById('profile-initials').textContent = initials.toUpperCase();
+                    profilePic.classList.add('hidden');
+                    avatarDiv.classList.remove('hidden');
+                }
+                document.getElementById('profile-name').textContent = `${currentUserTg.first_name} ${currentUserTg.last_name || ''}`.trim();
+                profileIdBtn.textContent = `ID: ${currentUserTg.id}`;
+                profileIdBtn.onclick = () => copyToClipboard(String(currentUserTg.id), profileIdBtn, 'Telegram ID Copied!');
+            }
+            if (userData.isPremium) {
+                const expiryDate = userData.premiumExpiresAt.toDate().toLocaleDateString('en-GB');
+                premiumStatusContainer.innerHTML = `<div class="premium-status-badge gold">Premium (Expires: ${expiryDate})</div>`;
+            } else {
+                premiumStatusContainer.innerHTML = `<div class="premium-status-badge gray">Not Premium</div>`;
+            }
+        }
+        
+        async function loadSupportMenu() {
+            const menuContainer = document.getElementById('menu-options');
+            menuContainer.innerHTML = getLoadingHTML();
+            let menuHtml = '';
+
+            if (userData.isPremium) {
+                const expiryDate = userData.premiumExpiresAt.toDate().toLocaleDateString('en-GB');
+                menuHtml += `<div class="p-4 flex items-center gap-4 bg-gray-50 border-b border-gray-200">
+                                <i data-lucide="shield-check" class="w-8 h-8 text-yellow-500"></i>
+                                <div><span class="font-bold">Premium Active</span><p class="text-xs text-gray-500 mt-1">Expires: ${expiryDate}</p></div>
+                             </div>`;
+            }
+
+            // SUPPORT TEAM Accordion
+            menuHtml += `<div class="menu-accordion-item">
+                            <button class="menu-accordion-toggle">
+                                <span class="flex items-center gap-4"><i data-lucide="headphones" class="icon"></i>SUPPORT TEAM</span>
+                                <i data-lucide="chevron-down" class="chevron"></i>
+                            </button>
+                            <div class="menu-accordion-content"><div class="content-inner" id="support-links-container">${getLoadingHTML()}</div></div>
+                         </div>`;
+            
+            // More Function Accordion (conditional)
+            if (!userData.isPremium) {
+                menuHtml += `<div class="menu-accordion-item">
+                                <button class="menu-accordion-toggle">
+                                    <span class="flex items-center gap-4"><i data-lucide="layers" class="icon"></i>More Function</span>
+                                    <i data-lucide="chevron-down" class="chevron"></i>
+                                </button>
+                                <div class="menu-accordion-content">
+                                    <div class="content-inner">
+                                        <button id="menu-buy-premium-btn" class="w-full p-3 text-sm rounded-lg btn-premium-buy flex items-center justify-center gap-2"><i data-lucide="gem"></i><span>BUY Premium (৳10)</span></button>
+                                        <button id="menu-redeem-bonus-btn" class="w-full p-3 text-sm rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold flex items-center justify-center gap-2"><i data-lucide="gift"></i><span>Redeem Bonus</span></button>
+                                    </div>
+                                </div>
+                            </div>`;
+            }
+
+            // More Apps Accordion
+            const apps = [{ name: 'App One', link: '#', iconUrl: 'https://via.placeholder.com/40' }, { name: 'App Two', link: '#', iconUrl: 'https://via.placeholder.com/40' }];
+            const appsHtml = apps.map(app => `<a href="${app.link}" target="_blank" class="support-link-card"><img src="${app.iconUrl}" alt="${app.name}" class="rounded-md"><span>${app.name}</span></a>`).join('');
+            menuHtml += `<div class="menu-accordion-item">
+                            <button class="menu-accordion-toggle">
+                                <span class="flex items-center gap-4"><i data-lucide="grid" class="icon"></i>More Apps</span>
+                                <i data-lucide="chevron-down" class="chevron"></i>
+                            </button>
+                            <div class="menu-accordion-content"><div class="content-inner">${appsHtml}</div></div>
+                         </div>`;
+
+            menuContainer.innerHTML = menuHtml;
+            setupMenuAccordions();
+            lucide.createIcons();
+            
+            if (!userData.isPremium) {
+                document.getElementById('menu-buy-premium-btn').addEventListener('click', () => { handleBuyPremium(); toggleMenu(); });
+                document.getElementById('menu-redeem-bonus-btn').addEventListener('click', () => {
+                    toggleMenu();
+                    document.getElementById('redeem-code-entry').value = '';
+                    showModal('redeem-code-modal');
+                });
+            }
+            
+            try {
+                const q = query(collection(db, "support_channels"), orderBy("order", "asc"));
+                const snapshot = await getDocs(q);
+                const supportContainer = document.getElementById('support-links-container');
+                if (!snapshot.empty) {
+                    supportContainer.innerHTML = snapshot.docs.map(doc => {
+                        const channel = doc.data();
+                        return `<a href="${channel.link}" target="_blank" class="support-link-card"><img src="${channel.iconUrl}" alt="${channel.name} logo"><span>${channel.name}</span></a>`;
+                    }).join('');
+                } else {
+                    supportContainer.innerHTML = '<p class="text-sm text-gray-500">No support channels found.</p>';
+                }
+            } catch (e) {
+                document.getElementById('support-links-container').innerHTML = '<p class="text-center text-red-600">Failed to load links.</p>';
+                console.error("Error loading support channels:", e);
+            }
+        }
+
+        function setupMenuAccordions() {
+            const accordions = document.querySelectorAll('.menu-accordion-toggle');
+            accordions.forEach(acc => {
+                acc.addEventListener('click', function() {
+                    const content = this.nextElementSibling;
+                    const isActive = this.classList.contains('active');
+                    accordions.forEach(otherAcc => {
+                        if (otherAcc !== this) {
+                            otherAcc.classList.remove('active');
+                            otherAcc.nextElementSibling.style.maxHeight = null;
+                        }
+                    });
+                    if (!isActive) {
+                        this.classList.add('active');
+                        content.style.maxHeight = content.scrollHeight + "px";
+                    } else {
+                        this.classList.remove('active');
+                        content.style.maxHeight = null;
+                    }
+                });
+            });
+        }
+        
+        async function handleBuyPremium() {
+            const premiumCost = 10;
+            if (userData.isPremium) return showAlert("আপনি ইতিমধ্যে একজন প্রিমিয়াম ব্যবহারকারী।");
+            if (userData.balance < premiumCost) return showAlert(`প্রিমিয়াম কেনার জন্য আপনার পর্যাপ্ত ব্যালেন্স নেই। আপনার প্রয়োজন ৳${premiumCost.toFixed(2)}।`);
+            if (confirm(`আপনি কি ৳${premiumCost.toFixed(2)} দিয়ে ২০ দিনের জন্য প্রিমিয়াম সাবস্ক্রিপশন কিনতে চান?`)) {
+                loader.style.display = 'flex';
+                try {
+                    await runTransaction(db, async (transaction) => {
+                        const userRef = doc(db, "users", userData.tgChatId);
+                        const userDoc = await transaction.get(userRef);
+                        if (!userDoc.exists() || userDoc.data().balance < premiumCost) throw new Error("অপর্যাপ্ত ব্যালেন্স।");
+                        let newExpiryDate = (userDoc.data().isPremium && userDoc.data().premiumExpiresAt.toDate() > new Date()) ? userDoc.data().premiumExpiresAt.toDate() : new Date();
+                        newExpiryDate.setDate(newExpiryDate.getDate() + 20);
+                        const newBalance = userDoc.data().balance - premiumCost;
+                        transaction.update(userRef, { balance: newBalance, isPremium: true, premiumExpiresAt: Timestamp.fromDate(newExpiryDate) });
+                        transaction.set(doc(collection(db, "premium_purchases")), { userId: userData.tgChatId, cost: premiumCost, purchasedAt: serverTimestamp(), expiresAt: Timestamp.fromDate(newExpiryDate) });
+                        userData.balance = newBalance;
+                        userData.isPremium = true;
+                        userData.premiumExpiresAt = Timestamp.fromDate(newExpiryDate);
+                    });
+                    showAlert("অভিনন্দন! আপনি এখন একজন প্রিমিয়াম ব্যবহারকারী।");
+                    updateUI(); loadProfilePage(); loadSupportMenu();
+                    navigateTo(document.querySelector('.sub-page.active').id);
+                } catch (error) { showAlert(`প্রিমিয়াম কিনতে সমস্যা হয়েছে: ${error.message}`); } 
+                finally { loader.style.display = 'none'; }
+            }
+        }
+
+        function conditionallyLoadGlobalAds() {
+            document.querySelectorAll('script[src*="groleegni.net"], script[src*="forfrogadiertor.com"], script[src*="gizokraijaw.net"]').forEach(s => s.remove());
+            if (userData && userData.isPremium) return;
+            const adScripts = [
+                { dataset: { zone: '10056419' }, src: 'https://groleegni.net/vignette.min.js' },
+                { dataset: { zone: '10056422' }, src: 'https://forfrogadiertor.com/tag.min.js' },
+                { dataset: { zone: '9793049' }, src: 'https://gizokraijaw.net/vignette.min.js' }
+            ];
+            adScripts.forEach(ad => {
+                const script = document.createElement('script');
+                Object.keys(ad.dataset).forEach(key => { script.dataset[key] = ad.dataset[key]; });
+                script.src = ad.src;
+                document.body.appendChild(script);
+            });
+        }
+        
+        function toggleMenu() {
+            const menu = document.getElementById('slide-out-menu');
+            const overlay = document.getElementById('menu-overlay');
+            menu.classList.toggle('open');
+            overlay.classList.toggle('open');
+        }
+
+        function setupEventListeners() {
+            document.querySelectorAll('.nav-link-premium[data-page]').forEach(link => link.addEventListener('click', (e) => { e.preventDefault(); navigateTo(link.dataset.page); }));
+            document.getElementById('header-deposit-btn').addEventListener('click', () => navigateTo('pay-page'));
+            document.getElementById('notification-btn').addEventListener('click', showNotifications);
+            document.getElementById('notification-ok-btn').addEventListener('click', hideNotifications);
+            document.getElementById('deposit-btn').addEventListener('click', handleDepositRequest);
+            document.getElementById('home-deposit-btn').addEventListener('click', () => navigateTo('pay-page'));
+            document.getElementById('add-mails-btn').addEventListener('click', handleAddMails);
+            document.getElementById('create-redeem-code-btn').addEventListener('click', handleCreateRedeemCode);
+            document.getElementById('download-history-btn').addEventListener('click', handleDownloadHistory);
+            document.getElementById('copy-history-btn').addEventListener('click', handleCopyHistory);
+            document.getElementById('deposit-details-btn').addEventListener('click', () => document.getElementById('deposit-details-modal').classList.remove('hidden'));
+            document.getElementById('deposit-details-ok-btn').addEventListener('click', () => document.getElementById('deposit-details-modal').classList.add('hidden'));
+            document.getElementById('hamburger-menu-btn').addEventListener('click', toggleMenu);
+            document.getElementById('menu-overlay').addEventListener('click', toggleMenu);
+            document.getElementById('more-features-btn').addEventListener('click', () => navigateTo('features-page'));
+            document.getElementById('source-code-btn').addEventListener('click', () => window.Telegram.WebApp.openLink('https://t.me/bd_Storebot/Botshop'));
+            document.getElementById('features-deposit-btn').addEventListener('click', () => navigateTo('pay-page'));
+            document.getElementById('features-recharge-btn').addEventListener('click', () => navigateTo('recharge-page'));
+            document.getElementById('features-receive-btn').addEventListener('click', handleReceive);
+            document.getElementById('features-send-btn').addEventListener('click', () => navigateTo('send-page'));
+            document.getElementById('submit-recharge-btn').addEventListener('click', handleRechargeRequest);
+            document.getElementById('submit-send-btn').addEventListener('click', handleSendRequest);
+            document.getElementById('mail-details-ok-btn').addEventListener('click', () => document.getElementById('mail-details-modal').classList.add('hidden'));
+            document.getElementById('close-insufficient-balance-modal').addEventListener('click', () => document.getElementById('insufficient-balance-modal').classList.add('hidden'));
+            document.getElementById('insufficient-balance-deposit-btn').addEventListener('click', () => { document.getElementById('insufficient-balance-modal').classList.add('hidden'); navigateTo('pay-page'); });
+            document.getElementById('alert-ok-btn').addEventListener('click', () => document.getElementById('custom-alert').classList.add('hidden'));
+            const hidePurchaseSuccessModal = () => document.getElementById('purchase-success-modal').classList.add('hidden');
+            document.getElementById('purchase-success-buy-again-btn').addEventListener('click', hidePurchaseSuccessModal);
+            document.getElementById('close-purchase-success-modal').addEventListener('click', hidePurchaseSuccessModal);
+            document.getElementById('submit-redeem-code-btn').addEventListener('click', handleRedeemCode);
+            document.querySelectorAll('.modal-overlay').forEach(overlay => {
+                overlay.addEventListener('click', (e) => { if (e.target === overlay) hideModal(overlay.id); });
+            });
+            window.addEventListener('contextmenu', function (e) {
+                if (!e.target.closest('input, textarea, #mail-details-content, #mail-purchase-history .font-mono, #profile-id-btn')) {
+                    e.preventDefault();
+                }
+            });
+        }
+        
+        function showModal(modalId) { document.getElementById(modalId).classList.add('active'); }
+        function hideModal(modalId) { document.getElementById(modalId).classList.remove('active'); }
+        
+        async function handleRedeemCode() {
+            const codeInput = document.getElementById('redeem-code-entry');
+            const code = codeInput.value.trim().toUpperCase();
+            if (!code) return showAlert("অনুগ্রহ করে একটি কোড প্রবেশ করান।");
+            loader.style.display = 'flex';
+            try {
+                await runTransaction(db, async (transaction) => {
+                    const codeRef = doc(db, "redeem_codes", code);
+                    const codeDoc = await transaction.get(codeRef);
+                    if (!codeDoc.exists() || codeDoc.data().isUsed) throw new Error("এই কোডটি সঠিক নয় অথবা ইতিমধ্যে ব্যবহার করা হয়েছে।");
+                    const codeData = codeDoc.data();
+                    const userRef = doc(db, "users", userData.tgChatId);
+                    const userDoc = await transaction.get(userRef);
+                    if (!userDoc.exists()) throw new Error("ব্যবহারকারী খুঁজে পাওয়া যায়নি।");
+                    if (codeData.type === 'balance') {
+                        const newBalance = (userDoc.data().balance || 0) + codeData.value;
+                        transaction.update(userRef, { balance: newBalance });
+                        userData.balance = newBalance;
+                        showAlert(`অভিনন্দন! আপনার অ্যাকাউন্টে ৳${codeData.value.toFixed(2)} যোগ করা হয়েছে।`);
+                    } else if (codeData.type === 'premium') {
+                        let newExpiryDate = (userDoc.data().isPremium && userDoc.data().premiumExpiresAt && userDoc.data().premiumExpiresAt.toDate() > new Date()) ? userDoc.data().premiumExpiresAt.toDate() : new Date();
+                        newExpiryDate.setDate(newExpiryDate.getDate() + codeData.value);
+                        const expiryTimestamp = Timestamp.fromDate(newExpiryDate);
+                        transaction.update(userRef, { isPremium: true, premiumExpiresAt: expiryTimestamp });
+                        userData.isPremium = true;
+                        userData.premiumExpiresAt = expiryTimestamp;
+                        showAlert(`অভিনন্দন! আপনি ${codeData.value} দিনের জন্য প্রিমিয়াম সাবস্ক্রিপশন পেয়েছেন।`);
+                    }
+                    transaction.update(codeRef, { isUsed: true, usedBy: userData.tgChatId, usedAt: serverTimestamp() });
+                });
+                updateUI(); loadProfilePage(); loadSupportMenu();
+                codeInput.value = '';
+                hideModal('redeem-code-modal');
+            } catch (error) {
+                showAlert(error.message || "কোড রিডিম করতে সমস্যা হয়েছে।");
+                hideModal('redeem-code-modal');
+                navigateTo('home-page');
+            } finally { 
+                loader.style.display = 'none'; 
+            }
+        }
+
+        async function handleCreateRedeemCode() {
+            let code = document.getElementById('redeem-code-input').value.trim().toUpperCase();
+            const type = document.getElementById('redeem-type-select').value;
+            const value = parseFloat(document.getElementById('redeem-value-input').value);
+            if (!value || value <= 0) return showAlert("অনুগ্রহ করে একটি সঠিক মান (value) দিন।");
+            if (!code) code = 'BD' + Math.random().toString(36).substring(2, 8).toUpperCase();
+            loader.style.display = 'flex';
+            const codeRef = doc(db, "redeem_codes", code);
+            try {
+                const codeSnap = await getDoc(codeRef);
+                if (codeSnap.exists()) {
+                    loader.style.display = 'none';
+                    return showAlert("এই কোডটি ইতিমধ্যে বিদ্যমান। অনুগ্রহ করে অন্য একটি কোড ব্যবহার করুন।");
+                }
+                await setDoc(codeRef, { code, type, value, isUsed: false, createdAt: serverTimestamp(), createdBy: userData.tgChatId, usedBy: null, usedAt: null });
+                showAlert(`সফলভাবে কোড "${code}" তৈরি করা হয়েছে।`);
+                document.getElementById('redeem-code-input').value = '';
+                document.getElementById('redeem-value-input').value = '';
+            } catch (error) { showAlert("কোড তৈরি করতে সমস্যা হয়েছে।"); } 
+            finally { loader.style.display = 'none'; }
+        }
+
+        function listenForNotifications() {
+            const q = query(collection(db, "notifications"), orderBy("createdAt", "desc"));
+            onSnapshot(q, (snapshot) => {
+                let unreadCount = 0;
+                const lastSeen = userData.lastSeenNotification ? userData.lastSeenNotification.toMillis() : 0;
+                
+                snapshot.forEach(doc => {
+                    const notification = doc.data();
+                    if (notification.userId && notification.userId !== userData.tgChatId) {
+                        return;
+                    }
+                    if (notification.createdAt.toMillis() > lastSeen) {
+                        unreadCount++;
+                    }
+                });
+
+                const badge = document.getElementById('notification-badge');
+                if (unreadCount > 0) {
+                    badge.textContent = unreadCount;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            });
+        }
+
+        async function showNotifications() {
+            const modal = document.getElementById('notification-modal');
+            const listEl = document.getElementById('notification-list');
+            listEl.innerHTML = getLoadingHTML();
+            modal.classList.remove('hidden');
+            
+            let allDocs = [];
+
+            try {
+                const globalQuery = query(collection(db, "notifications"), where("userId", "==", null), orderBy("createdAt", "desc"), limit(10));
+                const globalSnapshot = await getDocs(globalQuery);
+                globalSnapshot.forEach(doc => allDocs.push(doc));
+            } catch (e) {
+                console.error("Error fetching global notifications (check Firestore indexes):", e);
+            }
+
+            try {
+                const personalQuery = query(collection(db, "notifications"), where("userId", "==", userData.tgChatId), orderBy("createdAt", "desc"), limit(10));
+                const personalSnapshot = await getDocs(personalQuery);
+                personalSnapshot.forEach(doc => allDocs.push(doc));
+            } catch(e) {
+                console.error("Error fetching personal notifications (check Firestore indexes):", e);
+            }
+
+            if (allDocs.length > 0) {
+                allDocs.sort((a, b) => b.data().createdAt.toMillis() - a.data().createdAt.toMillis());
+                
+                const uniqueDocIds = new Set();
+                const uniqueDocs = allDocs.filter(doc => {
+                    if (uniqueDocIds.has(doc.id)) {
+                        return false;
+                    } else {
+                        uniqueDocIds.add(doc.id);
+                        return true;
+                    }
+                });
+
+                const finalDocs = uniqueDocs.slice(0, 10);
+
+                listEl.innerHTML = finalDocs.map(doc => {
+                    const item = doc.data();
+                    const date = item.createdAt.toDate().toLocaleString('en-GB');
+                    return `<div class="p-3 bg-gray-50 rounded-lg">
+                        <p class="font-bold text-gray-800">${item.title}</p>
+                        <p class="text-sm text-gray-600">${item.message}</p>
+                        <p class="text-xs text-gray-400 text-right mt-2">${date}</p>
+                    </div>`;
+                }).join('');
+            } else {
+                listEl.innerHTML = '<p class="text-center text-gray-500">No notifications yet.</p>';
+            }
+        }
+
+        async function hideNotifications() {
+            document.getElementById('notification-modal').classList.add('hidden');
+            const userRef = doc(db, "users", userData.tgChatId);
+            const newTimestamp = Timestamp.now();
+            await updateDoc(userRef, { lastSeenNotification: newTimestamp });
+            userData.lastSeenNotification = newTimestamp;
+            document.getElementById('notification-badge').classList.add('hidden');
         }
 
         async function handleDepositRequest() {
@@ -529,21 +1206,23 @@
             const amount = parseInt(document.getElementById('deposit-amount').value);
             const senderNumber = document.getElementById('sender-number').value.trim();
             const transactionId = document.getElementById('deposit-txid').value.trim();
-
-            if (!method || !amount || !senderNumber || !transactionId) {
-                return showAlert("অনুগ্রহ করে সমস্ত তথ্য সঠিকভাবে পূরণ করুন।");
+            
+            // =================================================================
+            // পরিবর্তন শুরু: ন্যূনতম ডিপোজিট যাচাই করা
+            // =================================================================
+            if (!method || !amount || !senderNumber || !transactionId) return showAlert("অনুগ্রহ করে সমস্ত তথ্য সঠিকভাবে পূরণ করুন।");
+            if (amount < MINIMUM_DEPOSIT) {
+                return showAlert(`ন্যূনতম ডিপোজিটের পরিমাণ ৳${MINIMUM_DEPOSIT}।`);
             }
-            // New minimum deposit check
-            if (amount < MINIMUM_DEPOSIT_AMOUNT) {
-                return showAlert(`ন্যূনতম ডিপোজিটের পরিমাণ ৳${MINIMUM_DEPOSIT_AMOUNT}।`);
-            }
-
+            // =================================================================
+            // পরিবর্তন শেষ
+            // =================================================================
+            
             loader.style.opacity = '1';
             loader.style.display = 'flex';
 
             try {
-                // ... (rest of the handleDepositRequest function is the same)
-                 const depositQuery = query(collection(db, "deposits"), where("transactionId", "==", transactionId), where("status", "in", ["pending", "approved"]));
+                const depositQuery = query(collection(db, "deposits"), where("transactionId", "==", transactionId), where("status", "in", ["pending", "approved"]));
                 const querySnapshot = await getDocs(depositQuery);
                 if (!querySnapshot.empty) {
                     loader.style.display = 'none';
@@ -554,6 +1233,7 @@
                     senderNumber: senderNumber, transactionId: transactionId, status: "pending", requestedAt: serverTimestamp()
                 });
                 showAlert("আপনার ডিপোজিট অনুরোধ সফলভাবে জমা হয়েছে।");
+                await createPersonalNotification("Deposit Request Submitted", `Your request to deposit ৳${amount} via ${method} has been submitted for review.`);
                 document.getElementById('deposit-method').value = '';
                 document.getElementById('deposit-amount').value = '';
                 document.getElementById('sender-number').value = '';
@@ -565,7 +1245,67 @@
                 loader.style.display = 'none';
             }
         }
+
+        async function loadPaymentHistory() {
+            const historyList = document.getElementById('payment-history-list');
+            historyList.innerHTML = getLoadingHTML();
+            try {
+                const q = query(collection(db, "deposits"), where("userId", "==", userData.tgChatId), orderBy("requestedAt", "desc"));
+                const snapshot = await getDocs(q);
+                if (snapshot.empty) return historyList.innerHTML = '<p class="text-gray-600 text-center">কোনো রেকর্ড পাওয়া যায়নি।</p>';
+
+                historyList.innerHTML = snapshot.docs.map(doc => {
+                    const item = doc.data();
+                    let statusColor, statusIcon;
+                    switch (item.status) {
+                        case 'approved': statusColor = 'text-green-600'; statusIcon = 'check-circle-2'; break;
+                        case 'rejected': statusColor = 'text-red-600'; statusIcon = 'x-circle'; break;
+                        default: statusColor = 'text-yellow-600'; statusIcon = 'hourglass';
+                    }
+                    const date = item.requestedAt ? item.requestedAt.toDate().toLocaleDateString('en-GB') : 'N/A';
+                    return `<div class="card-bg p-3 flex items-center justify-between"><div class="flex items-center gap-3"><i data-lucide="${statusIcon}" class="w-6 h-6 ${statusColor}"></i><div><p class="font-semibold text-gray-800">${item.type || 'Deposit'} - ${item.method}</p><p class="text-xs text-gray-500">${date}</p></div></div><div class="text-right"><p class="font-bold text-lg text-gray-800">৳${item.amount}</p><p class="font-semibold ${statusColor} capitalize text-xs">${item.status}</p></div></div>`;
+                }).join('');
+                lucide.createIcons();
+            } catch (error) {
+                historyList.innerHTML = '<p class="text-red-600 text-center">হিস্টি লোড করা যায়নি।</p>';
+            }
+        }
+
+        async function getStockCount(collectionName) {
+            try {
+                const q = query(collection(db, collectionName), where("isSold", "==", false));
+                const snapshot = await getCountFromServer(q);
+                return snapshot.data().count;
+            } catch (error) {
+                console.error(`Error getting stock count for ${collectionName}:`, error);
+                return 0;
+            }
+        }
         
+        // =================================================================
+        // পরিবর্তন শুরু: নতুন ফাংশন - স্টক সংখ্যাকে ডায়নামিকভাবে পরিবর্তন করার জন্য
+        // =================================================================
+        function fluctuateStock() {
+            if (!appConfig.mails || appConfig.mails.length === 0) return;
+            appConfig.mails.forEach(mail => {
+                const stockElement = document.getElementById(`stock-display-${mail.stockKey}`);
+                if (stockElement) {
+                    let currentStock = parseInt(stockElement.textContent);
+                    // -3 থেকে +5 এর মধ্যে একটি র‍্যান্ডম সংখ্যা তৈরি করা
+                    const fluctuation = Math.floor(Math.random() * 8) - 3;
+                    let newStock = currentStock + fluctuation;
+                    // স্টক যেন বেস সংখ্যার নিচে না যায় তা নিশ্চিত করা
+                    if (newStock < STOCK_BASE) {
+                        newStock = STOCK_BASE + Math.floor(Math.random() * 5);
+                    }
+                    stockElement.textContent = newStock;
+                }
+            });
+        }
+        // =================================================================
+        // পরিবর্তন শেষ
+        // =================================================================
+
         async function loadMailStore() {
             const mailListEl = document.getElementById('mail-list');
             const historyListEl = document.getElementById('mail-purchase-history');
@@ -580,76 +1320,120 @@
 
                 mailListEl.innerHTML = '';
                 mailsWithStock.forEach(mail => {
-                    const realStock = mail.stock;
-                    const displayStock = realStock + 958; // Inflated stock
+                    // =================================================================
+                    // পরিবর্তন শুরু: আসল স্টকের সাথে বেস সংখ্যা যোগ করা
+                    // =================================================================
+                    const displayedStock = mail.stock + STOCK_BASE;
+                    // =================================================================
+                    // পরিবর্তন শেষ
+                    // =================================================================
                     const costInBdt = mail.priceBdt;
-                    const isOutOfStock = realStock === 0;
+                    const isOutOfStock = mail.stock === 0;
                     const insufficientBalance = userData.balance < costInBdt;
                     const buyButtonDisabled = isOutOfStock || insufficientBalance ? 'disabled' : '';
                     const buyButtonClasses = isOutOfStock || insufficientBalance ? 'bg-gray-400 cursor-not-allowed' : 'btn-gradient';
-                    
-                    mailListEl.innerHTML += `<div class="card-bg p-4 rounded-xl space-y-3">
-                        <div class="flex justify-between items-center">
-                           <div class="flex items-center gap-3"><img src="${mail.logoUrl}" class="w-8 h-8 rounded-lg object-cover" alt="${mail.type} logo"><h3 class="font-bold text-lg text-gray-800">${mail.type}</h3></div>
-                           <button onclick="showMailDetails('${mail.type}', '${mail.details.replace(/'/g, "\\'")}')" class="text-teal-600 text-sm font-semibold">বিস্তারিত</button>
-                        </div>
-                        <div class="grid grid-cols-3 text-center items-center pt-2 border-t border-gray-200">
-                           <div><p class="text-gray-500 text-sm">দাম</p><p class="font-bold text-lg text-teal-600">৳${costInBdt.toFixed(2)}</p></div>
-                           <div><p class="text-gray-500 text-sm">স্টক</p><p class="font-bold text-lg text-green-600 stock-display">${displayStock}</p></div>
-                           <button class="${buyButtonClasses} w-full py-2 rounded-lg text-md" ${buyButtonDisabled} onclick="buyMail('${mail.type}', ${costInBdt}, '${mail.stockKey}')">এখনই কিনুন</button>
-                        </div>
-                    </div>`;
+                    const validityTagHtml = (mail.expirationDays !== undefined && mail.expirationDays !== null) ? `<span class="bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-full">${mail.expirationDays} h</span>` : '';
+                    const apiButtonHtml = mail.apiLink ? `<button onclick="openApiLink('${mail.apiLink}')" class="text-teal-600 font-semibold">API</button>` : '<span class="text-gray-400 font-semibold">API</span>';
+                    // =================================================================
+                    // পরিবর্তন শুরু: স্টক দেখানোর জন্য p ট্যাগ-এ একটি আইডি যোগ করা
+                    // =================================================================
+                    mailListEl.innerHTML += `<div class="card-bg p-4 space-y-3"><div class="flex justify-between items-center"><div class="flex items-center gap-3"><img src="${mail.logoUrl}" class="w-8 h-8 rounded-lg object-cover" alt="${mail.type} logo"><h3 class="font-bold text-lg text-gray-800">${mail.type}</h3></div><div class="flex items-center gap-2">${validityTagHtml}<button onclick="showMailDetails('${mail.type}', '${mail.details.replace(/'/g, "\\'")}')" class="text-teal-600 text-sm font-semibold">Details</button></div></div><div class="grid grid-cols-3 text-center items-center pt-2 border-t border-gray-200"><div class="py-2">${apiButtonHtml}</div><div class="py-2"><p class="text-gray-500 text-sm">Price</p><p class="font-bold text-lg text-teal-600">৳${costInBdt.toFixed(2)}</p></div><div class="py-2"><p class="text-gray-500 text-sm">Stock</p><p id="stock-display-${mail.stockKey}" class="font-bold text-lg text-green-600">${displayedStock}</p></div></div><button class="${buyButtonClasses} w-full py-2 rounded-lg text-md" ${buyButtonDisabled} onclick="buyMail('${mail.type}', ${costInBdt}, '${mail.stockKey}')">Buy Now</button></div>`;
+                    // =================================================================
+                    // পরিবর্তন শেষ
+                    // =================================================================
                 });
                 
-                // ... (rest of the loadMailStore function for purchase history remains the same)
-                 const fourHoursAgo = Timestamp.fromDate(new Date(Date.now() - 4 * 60 * 60 * 1000));
+                const fourHoursAgo = Timestamp.fromDate(new Date(Date.now() - 4 * 60 * 60 * 1000));
                 const q = query(collection(db, "mail_purchases"), where("userId", "==", userData.tgChatId), where("purchasedAt", ">=", fourHoursAgo), orderBy("purchasedAt", "desc"));
                 const querySnapshot = await getDocs(q);
+
                 if(querySnapshot.empty) {
-                    historyListEl.innerHTML = '<p class="text-center text-gray-600">আপনি শেষ ৪ ঘণ্টায় কোনো প্রোডাক্ট কিনেননি।</p>';
+                    historyListEl.innerHTML = '<p class="text-center text-gray-600">আপনি শেষ ৪ ঘণ্টায় কোনো আইটেম কিনেননি।</p>';
                 } else {
                     historyListEl.innerHTML = querySnapshot.docs.map(doc => {
                         const purchase = doc.data();
                         const date = purchase.purchasedAt.toDate().toLocaleString();
                         const fullData = [purchase.mail, purchase.password, purchase.refreshToken, purchase.clientId].filter(Boolean).join('|');
-                        return `<div class="card-bg p-4 rounded-xl space-y-3">
+                        return `<div class="card-bg p-4 space-y-3">
                             <div class="flex justify-between items-start">
-                                <div><h4 class="font-bold text-lg text-gray-800">${purchase.mailType}</h4><p class="text-xs text-gray-500">${date}</p></div>
-                                <button onclick="copyToClipboard('${fullData}', this)" class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-md font-semibold hover:bg-gray-200">সম্পূর্ণ কপি</button>
+                                <div>
+                                    <h4 class="font-bold text-lg text-gray-800">${purchase.mailType}</h4>
+                                    <p class="text-xs text-gray-500">${date}</p>
+                                    <p class="text-xs font-mono text-teal-600 mt-1">ID: ${purchase.saleId || 'N/A'}</p>
+                                </div>
+                                <button onclick="copyToClipboard('${fullData}', this)" class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-md font-semibold hover:bg-gray-200 flex items-center gap-1"><i data-lucide="copy-plus" class="w-3 h-3"></i> FULL COPY</button>
                             </div>
                             <div class="space-y-2 pt-2 border-t">
-                                <div class="flex items-center justify-between bg-gray-50 p-2 rounded-md"><span class="font-mono text-sm text-gray-800 truncate">${purchase.mail}</span><button onclick="copyToClipboard('${purchase.mail}', this)" class="ml-2 p-1.5 rounded-md hover:bg-gray-200"><i data-lucide="copy" class="w-4 h-4 text-gray-600"></i></button></div>
-                                <div class="flex items-center justify-between bg-gray-50 p-2 rounded-md"><span class="font-mono text-sm text-gray-800">${purchase.password || 'N/A'}</span><button onclick="copyToClipboard('${purchase.password || ''}', this)" class="ml-2 p-1.5 rounded-md hover:bg-gray-200"><i data-lucide="copy" class="w-4 h-4 text-gray-600"></i></button></div>
+                                <div class="flex items-center justify-between bg-gray-50 p-2 rounded-md">
+                                    <span class="text-sm font-medium text-gray-500 mr-2">EMAIL:</span><span class="font-mono text-sm text-gray-800 truncate">${purchase.mail}</span>
+                                    <button onclick="copyToClipboard('${purchase.mail}', this)" class="ml-2 p-1.5 rounded-md hover:bg-gray-200"><i data-lucide="copy" class="w-4 h-4 text-gray-600"></i></button>
+                                </div>
+                                <div class="flex items-center justify-between bg-gray-50 p-2 rounded-md">
+                                    <span class="text-sm font-medium text-gray-500 mr-2">PASS:</span><span class="font-mono text-sm text-gray-800">${purchase.password || 'N/A'}</span>
+                                    <button onclick="copyToClipboard('${purchase.password || ''}', this)" class="ml-2 p-1.5 rounded-md hover:bg-gray-200"><i data-lucide="copy" class="w-4 h-4 text-gray-600"></i></button>
+                                </div>
                             </div>
                         </div>`;
                     }).join('');
                 }
                 lucide.createIcons();
-
+                if (insufficientBalanceInterval) { clearInterval(insufficientBalanceInterval); insufficientBalanceInterval = null; }
+                const hasSufficientBalanceForAny = mailsWithStock.some(mail => userData.balance >= mail.priceBdt && mail.stock > 0);
+                const hasAnyStock = mailsWithStock.some(mail => mail.stock > 0);
+                if (!hasSufficientBalanceForAny && hasAnyStock) {
+                    insufficientBalanceInterval = setInterval(() => {
+                        const isAnyModalOpen = document.querySelector('#custom-alert:not(.hidden), .modal-overlay.active');
+                        if (!isAnyModalOpen) {
+                            document.getElementById('insufficient-balance-modal').classList.remove('hidden');
+                            lucide.createIcons();
+                        }
+                    }, 30000);
+                }
             } catch(e) {
-                 mailListEl.innerHTML = '<p class="text-center text-red-600">প্রোডাক্ট লোড করা যায়নি।</p>';
-                 historyListEl.innerHTML = '<p class="text-center text-red-600">হিস্টোরি লোড করা যায়নি।</p>';
+                 mailListEl.innerHTML = '<p class="text-center text-red-600">আইটেম লোড করা যায়নি।</p>';
+                 historyListEl.innerHTML = '<p class="text-center text-red-600">হিস্টি লোড করা যায়নি।</p>';
                  console.error(e);
             }
         }
-        
-        // --- IMPORTANT ---
-        // All other JavaScript functions (showAlert, copyToClipboard, buyMail, setupEventListeners, etc.)
-        // remain in the script tag. They are omitted here to avoid making the response excessively long,
-        // but they are essential for the app to work. The logic within them does not need to be changed
-        // based on your request, only the functions shown above.
-        // The original file's full JS should be used, with the modified functions I provided.
 
-        // Placeholder for the rest of the original JavaScript
-        // This includes functions like:
-        // setupEventListeners, showMainPage, getStockCount, loadPaymentHistory, 
-        // handleVote, handleAddMails, handleDepositRequest (already shown modified), 
-        // showAlert, copyToClipboard, openApiLink, setupBanner, etc.
-        // It's crucial that the rest of the JS logic from the original file is present here.
-        // For example, here's buyMail, which remains unchanged logically:
+        async function handleDownloadHistory() {
+            loader.style.display = 'flex';
+            try {
+                const q = query(collection(db, "mail_purchases"), where("userId", "==", userData.tgChatId), orderBy("purchasedAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                if (querySnapshot.empty) {
+                    loader.style.display = 'none';
+                    return showAlert("আপনার কোনো History নেই");
+                }
+                const dataForExcel = querySnapshot.docs.map(doc => { const p = doc.data(); return { 'Purchase Date': p.purchasedAt.toDate().toLocaleString(), 'Mail Type': p.mailType, 'Email': p.mail, 'Password': p.password || 'N/A', 'Cost (BDT)': p.cost, 'Full Data': [p.mail,p.password,p.refreshToken,p.clientId].filter(Boolean).join('|') }; });
+                const worksheet = XLSX.utils.json_to_sheet(dataForExcel);
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Purchase History");
+                worksheet['!cols'] = [ {wch: 22}, {wch: 20}, {wch: 30}, {wch: 30}, {wch: 15}, {wch: 70} ];
+                XLSX.writeFile(workbook, "My_Purchase_History.xlsx");
+            } catch (error) { showAlert("ইতিহাস ডাউনলোড করার সময় একটি সমস্যা হয়েছে।"); }
+            finally { loader.style.display = 'none'; }
+        }
+        
+        async function handleCopyHistory() {
+             loader.style.display = 'flex';
+            try {
+                const fourHoursAgo = new Date(Date.now() - 4 * 60 * 60 * 1000);
+                const q = query(collection(db, "mail_purchases"), where("userId", "==", userData.tgChatId), where("purchasedAt", ">=", Timestamp.fromDate(fourHoursAgo)), orderBy("purchasedAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                if (querySnapshot.empty) {
+                    loader.style.display = 'none';
+                    return showAlert("শেষ ৪ ঘণ্টায় আপনার কোনো কেনাকাটার ইতিহাস নেই।");
+                }
+                const rows = querySnapshot.docs.map(doc => { const p = doc.data(); return `Mail Type: ${p.mailType}\nEmail: ${p.mail}\nPassword: ${p.password || 'N/A'}`; });
+                const contentToCopy = rows.join('\n\n---\n\n');
+                copyToClipboard(contentToCopy, null, 'শেষ ৪ ঘণ্টার ইতিহাস কপি করা হয়েছে!');
+            } catch (error) { showAlert("ইতিহাস কপি করার সময় একটি সমস্যা হয়েছে।"); console.error(error); }
+            finally { loader.style.display = 'none'; }
+        }
+
         window.buyMail = async function(mailType, cost, stockKey) {
             if (userData.balance < cost) {
-                // The insufficient balance modal should be styled to match the new theme
                 document.getElementById('insufficient-balance-modal').classList.remove('hidden');
                 lucide.createIcons();
                 return;
@@ -658,20 +1442,23 @@
             loader.style.display = 'flex';
             try {
                 const purchasedMailData = await runTransaction(db, async (transaction) => {
+                    const counterRef = doc(db, "counters", "mail_purchase");
                     const q = query(collection(db, stockKey), where("isSold", "==", false), limit(1));
                     const mailQuerySnapshot = await getDocs(q);
-                    if (mailQuerySnapshot.empty) throw "দুঃখিত, এই ধরনের প্রোডাক্ট বর্তমানে স্টক শেষ।";
+                    if (mailQuerySnapshot.empty) throw "দুঃখিত, এই ধরনের আইটেম বর্তমানে স্টক শেষ।";
                     const mailDoc = mailQuerySnapshot.docs[0];
                     const mailData = mailDoc.data();
                     const userRef = doc(db, "users", userData.tgChatId);
-                    const userSnap = await transaction.get(userRef);
+                    const [counterSnap, userSnap] = await Promise.all([ transaction.get(counterRef), transaction.get(userRef) ]);
                     if (!userSnap.exists() || userSnap.data().balance < cost) throw `অপর্যাপ্ত ব্যালেন্স।`;
-                    
+                    if (!counterSnap.exists()) throw "Sale ID counter not found. Please setup 'counters/mail_purchase'.";
+                    const saleId = counterSnap.data().currentId;
+                    transaction.update(counterRef, { currentId: saleId + 1 });
                     transaction.update(userRef, { balance: userSnap.data().balance - cost });
                     transaction.update(mailDoc.ref, { isSold: true, soldTo: userData.tgChatId, soldAt: serverTimestamp() });
                     const purchaseLogRef = doc(collection(db, "mail_purchases"));
                     transaction.set(purchaseLogRef, {
-                         userId: userData.tgChatId, mailType: mailType, mail: mailData.email,
+                        saleId: saleId, userId: userData.tgChatId, mailType: mailType, mail: mailData.email,
                         password: mailData.password || null, refreshToken: mailData.refresh_token || null,
                         clientId: mailData.client_id || null, cost: cost, purchasedAt: serverTimestamp()
                     });
@@ -679,19 +1466,381 @@
                 });
                 userData.balance -= cost;
                 updateUI();
-                // Success modal should also be updated visually
                 document.getElementById('purchase-success-email').textContent = purchasedMailData.email;
                 document.getElementById('purchase-success-password').textContent = purchasedMailData.password || 'N/A';
                 document.getElementById('purchase-success-modal').classList.remove('hidden');
                 lucide.createIcons();
-                loadMailStore(); // Reload to update stock
+                loadMailStore();
             } catch (e) { showAlert(typeof e === 'string' ? e : "কিনতে সমস্যা হয়েছে। আবার চেষ্টা করুন।"); }
             finally { loader.style.display = 'none'; }
         }
 
-        // --- All other functions from the original file should be here ---
-        // (The full JS code is too long to paste again, but it should be included
-        // in the final implementation, with the changes I made above integrated)
+        window.showMailDetails = function(mailType, details) {
+            document.getElementById('mail-details-title').textContent = `${mailType} Details`;
+            document.getElementById('mail-details-content').textContent = details;
+            document.getElementById('mail-details-modal').classList.remove('hidden');
+        }
+
+        async function loadUpdates() {
+            const updatesContainer = document.getElementById('updates-content');
+            updatesContainer.innerHTML = getLoadingHTML();
+            try {
+                const q = query(collection(db, "updates"), orderBy("createdAt", "desc"), limit(1));
+                const snapshot = await getDocs(q);
+                if (snapshot.empty) return updatesContainer.innerHTML = `<div class="card-bg p-6 text-center"><h3 class="font-bold text-xl text-gray-800">No new updates right now!</h3><p class="text-gray-600 mt-2">Check back later.</p></div>`;
+                const updateDoc = snapshot.docs[0];
+                const updateData = updateDoc.data();
+                const updateId = updateDoc.id;
+                const userInteractionDoc = await getDoc(doc(db, "updates", updateId, "userInteractions", userData.tgChatId));
+                const userVote = userInteractionDoc.exists() ? userInteractionDoc.data().vote : null;
+                const isLiked = userVote === 'liked';
+                const isDisliked = userVote === 'disliked';
+                let linkButtonHtml = updateData.linkUrl ? `<a href="${updateData.linkUrl}" target="_blank" class="btn-gradient px-4 py-2 text-sm flex-1 text-center">Learn More</a>` : '';
+                const createdAtDate = updateData.createdAt ? updateData.createdAt.toDate().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+                updatesContainer.innerHTML = `<div class="card-bg overflow-hidden shadow-lg flex flex-col">${updateData.imageUrl ? `<img src="${updateData.imageUrl}" class="w-full aspect-[16/9] object-cover" alt="Update Banner">` : ''}<div class="p-6 space-y-4 flex flex-col flex-grow"><div><h3 class="text-2xl font-bold text-gray-800">${updateData.title}</h3>${createdAtDate ? `<p class="text-xs text-gray-500 mt-1">${createdAtDate}</p>` : ''}</div><p class="text-gray-600 text-base whitespace-pre-wrap flex-grow leading-relaxed">${updateData.content || ''}</p><div class="flex items-center justify-between gap-4 pt-4 mt-auto border-t border-gray-200"><div class="flex items-center gap-4"><div class="flex items-center space-x-2"><button id="like-btn" class="p-2 rounded-full transition-colors ${isLiked ? 'text-blue-500 bg-blue-100' : 'text-gray-500 hover:bg-gray-100'}" ${isLiked || isDisliked ? 'disabled' : ''}><i data-lucide="thumbs-up" class="w-5 h-5"></i></button><span class="font-semibold text-sm text-gray-700">${updateData.likes || 0}</span></div><div class="flex items-center space-x-2"><button id="dislike-btn" class="p-2 rounded-full transition-colors ${isDisliked ? 'text-red-500 bg-red-100' : 'text-gray-500 hover:bg-gray-100'}" ${isLiked || isDisliked ? 'disabled' : ''}><i data-lucide="thumbs-down" class="w-5 h-5"></i></button><span class="font-semibold text-sm text-gray-700">${updateData.dislikes || 0}</span></div></div>${linkButtonHtml}</div></div></div>`;
+                lucide.createIcons();
+                document.getElementById('like-btn').onclick = () => handleVote('like', updateId);
+                document.getElementById('dislike-btn').onclick = () => handleVote('dislike', updateId);
+            } catch(e) {
+                updatesContainer.innerHTML = `<p class="text-center text-red-600">Failed to load updates.</p>`;
+                console.error("Error loading updates:", e);
+            }
+        }
+
+        async function handleVote(voteType, updateId) {
+            loader.style.display = 'flex';
+            const updateRef = doc(db, "updates", updateId);
+            const userInteractionRef = doc(db, "updates", updateId, "userInteractions", userData.tgChatId);
+            try {
+                await runTransaction(db, async (transaction) => {
+                    if ((await transaction.get(userInteractionRef)).exists()) throw new Error("You have already cast your vote.");
+                    const updateDoc = await transaction.get(updateRef);
+                    if (!updateDoc.exists()) throw new Error("Update not found.");
+                    const fieldToUpdate = voteType === 'like' ? 'likes' : 'dislikes';
+                    transaction.update(updateRef, { [fieldToUpdate]: (updateDoc.data()[fieldToUpdate] || 0) + 1 });
+                    transaction.set(userInteractionRef, { vote: voteType, votedAt: serverTimestamp() });
+                });
+                showAlert("Your vote has been submitted successfully!");
+                loadUpdates();
+            } catch (e) { showAlert(e.message || "Failed to submit your vote."); }
+            finally { loader.style.display = 'none'; }
+        }
+
+        function populateAdminMailTypes() {
+            const selectEl = document.getElementById('mail-type-select');
+            selectEl.innerHTML = '<option value="">Select mail type...</option>';
+            (appConfig.mails || []).forEach(mail => { selectEl.innerHTML += `<option value="${mail.stockKey}">${mail.type}</option>`; });
+        }
+
+        async function handleAddMails() {
+            const stockKey = document.getElementById('mail-type-select').value;
+            const mailDataRaw = document.getElementById('mail-data-textarea').value;
+            if (!stockKey || !mailDataRaw.trim()) return showAlert("Please select a mail type and provide mail data.");
+            const lines = mailDataRaw.trim().split('\n').filter(line => line.trim() !== '');
+            if (lines.length === 0) return showAlert("No valid mail data found.");
+            loader.style.display = 'flex';
+            try {
+                const batch = writeBatch(db);
+                let addedCount = 0;
+                lines.forEach(line => {
+                    const parts = line.trim().split('/');
+                    if (parts.length === 4) {
+                        const mailDocRef = doc(collection(db, stockKey));
+                        batch.set(mailDocRef, { email: parts[0], password: parts[1], refresh_token: parts[2], client_id: parts[3], isSold: false, createdAt: serverTimestamp() });
+                        addedCount++;
+                    }
+                });
+                if (addedCount > 0) {
+                    await batch.commit();
+                    showAlert(`Successfully added ${addedCount} new mails to the stock.`);
+                    document.getElementById('mail-data-textarea').value = '';
+                } else showAlert("No valid mails were found to add. Ensure the format is correct.");
+            } catch (error) { showAlert("An error occurred while adding mails."); }
+            finally { loader.style.display = 'none'; }
+        }
+
+        function showAlert(message) {
+            document.getElementById('alert-message').innerText = message;
+            document.getElementById('custom-alert').classList.remove('hidden');
+        }
+
+        window.copyToClipboard = function(text, element, alertMessage = 'কপি করা হয়েছে!') {
+            if (!text || typeof text !== 'string') return;
+            const textArea = document.createElement("textarea");
+            textArea.value = text.trim();
+            textArea.style.position = 'fixed'; textArea.style.top = '-9999px'; textArea.style.left = '-9999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    if (element) {
+                        const originalContent = element.innerHTML;
+                        element.innerHTML = `<i data-lucide="check" class="w-4 h-4 text-green-600"></i> Copied`;
+                        lucide.createIcons();
+                        setTimeout(() => { element.innerHTML = originalContent; lucide.createIcons(); }, 1500);
+                    } else { showAlert(alertMessage); }
+                } else { showAlert('দুঃখিত, কপি করা যায়নি।'); }
+            } catch (err) { showAlert('দুঃখিত, কপি করতে একটি ত্রুটি হয়েছে।'); }
+            document.body.removeChild(textArea);
+        }
+
+        window.openApiLink = function(url) {
+            if(url) window.open(url, '_blank');
+        }
+
+        function setupBanner() {
+            const slides = document.querySelectorAll('.slide');
+            const slideContainer = document.getElementById('slides');
+            const dotsContainer = document.getElementById('dots');
+            if (slides.length <= 1) return;
+            let index = 0;
+            dotsContainer.innerHTML = Array.from(slides).map((_, i) => `<span class="dot ${i === 0 ? 'active' : ''}" data-index="${i}"></span>`).join('');
+            const dots = dotsContainer.querySelectorAll('.dot');
+            function showSlide(i) {
+                index = i;
+                slideContainer.style.transform = `translateX(${-i * 100}%)`;
+                dots.forEach(d => d.classList.remove('active'));
+                dots[i].classList.add('active');
+            }
+            dotsContainer.addEventListener('click', e => { if(e.target.matches('.dot')) showSlide(parseInt(e.target.dataset.index)); });
+            setInterval(() => showSlide((index + 1) % slides.length), 5000);
+        }
+
+        async function loadFeaturesPage() {
+            const container = document.getElementById('features-page');
+            container.querySelectorAll('[id$="-display"]').forEach(el => el.textContent = '...');
+            try {
+                const depositQuery = query(collection(db, "deposits"), where("userId", "==", userData.tgChatId), where("status", "==", "approved"));
+                const depositSnapshot = await getDocs(depositQuery);
+                const totalDeposit = depositSnapshot.docs.reduce((sum, doc) => sum + doc.data().amount, 0);
+                document.getElementById('total-deposit-display').textContent = `৳${totalDeposit.toFixed(2)}`;
+                const receivedQuery = query(collection(db, "transfers"), where("toId", "==", userData.tgChatId));
+                const receivedSnapshot = await getDocs(receivedQuery);
+                const totalReceive = receivedSnapshot.docs.reduce((sum, doc) => sum + doc.data().amount, 0);
+                document.getElementById('total-receive-display').textContent = `৳${totalReceive.toFixed(2)}`;
+                const rechargeQuery = query(collection(db, "recharge_requests"), where("userId", "==", userData.tgChatId), where("status", "==", "approved"));
+                const rechargeSnapshot = await getDocs(rechargeQuery);
+                const totalRecharge = rechargeSnapshot.docs.reduce((sum, doc) => sum + doc.data().amount, 0);
+                document.getElementById('total-recharge-display').textContent = `৳${totalRecharge.toFixed(2)}`;
+                const sendQuery = query(collection(db, "transfers"), where("fromId", "==", userData.tgChatId));
+                const sendSnapshot = await getDocs(sendQuery);
+                const totalSend = sendSnapshot.docs.reduce((sum, doc) => sum + doc.data().amount, 0);
+                document.getElementById('total-send-display').textContent = `৳${totalSend.toFixed(2)}`;
+                await loadTransferHistory();
+            } catch (error) {
+                console.error("Error loading features page data:", error);
+                showAlert("Could not load page data.");
+            }
+        }
+
+        async function loadTransferHistory() {
+            const historyList = document.getElementById('transfer-history-list');
+            historyList.innerHTML = getLoadingHTML();
+            const sentQuery = query(collection(db, "transfers"), where("fromId", "==", userData.tgChatId), orderBy("timestamp", "desc"));
+            const receivedQuery = query(collection(db, "transfers"), where("toId", "==", userData.tgChatId), orderBy("timestamp", "desc"));
+            try {
+                const [sentSnapshot, receivedSnapshot] = await Promise.all([getDocs(sentQuery), getDocs(receivedQuery)]);
+                const transactions = [];
+                sentSnapshot.forEach(doc => transactions.push({ id: doc.id, ...doc.data() }));
+                receivedSnapshot.forEach(doc => transactions.push({ id: doc.id, ...doc.data() }));
+                transactions.sort((a, b) => b.timestamp.toMillis() - a.timestamp.toMillis());
+                if (transactions.length === 0) {
+                    historyList.innerHTML = '<p class="text-gray-600 text-center">No transfer history found.</p>';
+                    return;
+                }
+                historyList.innerHTML = transactions.map(item => {
+                    const isSent = item.fromId === userData.tgChatId;
+                    const date = item.timestamp.toDate().toLocaleString('en-GB');
+                    const sign = isSent ? '-' : '+';
+                    const color = isSent ? 'text-red-600' : 'text-green-600';
+                    const actionText = isSent ? `Sent to ${item.toName}` : `Received from ${item.fromName}`;
+                    const amountToShow = isSent ? item.totalDeducted : item.amount;
+                    return `<div class="card-bg p-3 flex items-center justify-between"><div><p class="font-semibold text-gray-800">${actionText}</p><p class="text-xs text-gray-500">${date}</p></div><p class="font-bold text-lg ${color}">${sign}৳${amountToShow.toFixed(2)}</p></div>`;
+                }).join('');
+            } catch (e) { historyList.innerHTML = '<p class="text-red-600 text-center">হিস্টি লোড করা যায়নি।</p>'; }
+        }
+
+        function handleReceive() {
+            const message = `আপনার রিসিভ আইডি:\n\n${userData.tgChatId}\n\nএই আইডি ব্যবহার করে অন্য ব্যবহারকারীর থেকে ব্যালেন্স রিসিভ করতে পারবেন।`;
+            copyToClipboard(userData.tgChatId, null, message);
+        }
+
+        function setupDynamicAmountHandlers(pageType) {
+            const amountInput = document.getElementById(`${pageType}-amount`);
+            const feeDisplay = document.getElementById(`${pageType}-fee-display`);
+            if (!amountInput || !feeDisplay) return;
+            amountInput.addEventListener('input', () => {
+                const maxAmount = Math.floor(userData.balance / 1.05);
+                let currentAmount = parseInt(amountInput.value);
+                if (isNaN(currentAmount) || currentAmount < 0) currentAmount = 0;
+                if (currentAmount > maxAmount) { amountInput.value = maxAmount; currentAmount = maxAmount; }
+                if (currentAmount > 0) {
+                    const fee = currentAmount * 0.05;
+                    feeDisplay.textContent = `Fee (5%): ৳${fee.toFixed(2)}`;
+                } else { feeDisplay.textContent = ''; }
+            });
+        }
+
+        async function handleSendRequest() {
+            const recipientId = document.getElementById('send-recipient-id').value.trim();
+            const amountStr = document.getElementById('send-amount').value;
+            if (!recipientId || !amountStr) return showAlert("অনুগ্রহ করে প্রাপকের আইডি এবং টাকার পরিমাণ লিখুন।");
+            if (recipientId === userData.tgChatId) return showAlert("আপনি নিজের একাউন্টে ব্যালেন্স পাঠাতে পারবেন না।");
+            const amount = parseFloat(amountStr);
+            if (isNaN(amount) || amount < 20) return showAlert("সর্বনিম্ন পাঠানোর পরিমাণ ৳20।");
+            const fee = amount * 0.05;
+            const totalCost = amount + fee;
+            if (totalCost > userData.balance) return showAlert(`আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালেন্স নেই। আপনার প্রয়োজন ৳${totalCost.toFixed(2)}।`);
+            if (!confirm(`আপনি কি ${recipientId} আইডিতে ৳${amount.toFixed(2)} পাঠাতে চান?\n\nফি (5%): ৳${fee.toFixed(2)}\nমোট কাটা হবে: ৳${totalCost.toFixed(2)}\n\nআপনি কি নিশ্চিত?`)) return;
+            loader.style.display = 'flex';
+            const senderRef = doc(db, "users", userData.tgChatId);
+            const recipientRef = doc(db, "users", recipientId);
+            try {
+                const recipientDocForName = await runTransaction(db, async (transaction) => {
+                    const senderDoc = await transaction.get(senderRef);
+                    const recipientDoc = await transaction.get(recipientRef);
+                    if (!senderDoc.exists() || senderDoc.data().balance < totalCost) throw "আপনার পর্যাপ্ত ব্যালেন্স নেই।";
+                    if (!recipientDoc.exists()) throw "প্রাপক আইডি (Recipient ID) খুঁজে পাওয়া যায়নি।";
+                    const newSenderBalance = senderDoc.data().balance - totalCost;
+                    const newRecipientBalance = recipientDoc.data().balance + amount;
+                    transaction.update(senderRef, { balance: newSenderBalance });
+                    transaction.update(recipientRef, { balance: newRecipientBalance });
+                    const transferLogRef = doc(collection(db, "transfers"));
+                    transaction.set(transferLogRef, { fromId: userData.tgChatId, fromName: userData.name, toId: recipientId, toName: recipientDoc.data().name, amount: amount, fee: fee, totalDeducted: totalCost, timestamp: serverTimestamp() });
+                    return recipientDoc.data();
+                });
+                userData.balance -= totalCost;
+                updateUI();
+                showAlert(`সফলভাবে ৳${amount.toFixed(2)} পাঠানো হয়েছে।`);
+                await createPersonalNotification("Balance Sent", `You have successfully sent ৳${amount.toFixed(2)} to ${recipientDocForName.name} (ID: ${recipientId}).`);
+                document.getElementById('send-recipient-id').value = '';
+                document.getElementById('send-amount').value = '';
+                document.getElementById('send-fee-display').textContent = '';
+                navigateTo('features-page');
+            } catch (error) {
+                showAlert(typeof error === 'string' ? error : "ব্যালেন্স পাঠাতে সমস্যা হয়েছে।");
+            } finally { loader.style.display = 'none'; }
+        }
+
+        async function handleRechargeRequest() {
+            const number = document.getElementById('recharge-number').value.trim();
+            const amountStr = document.getElementById('recharge-amount').value;
+            const operator = document.getElementById('recharge-operator').value;
+            const type = document.getElementById('recharge-type').value;
+            if (!number || !amountStr || !operator) return showAlert("অনুগ্রহ করে সমস্ত তথ্য সঠিকভাবে পূরণ করুন।");
+            if (!/^(01[3-9])\d{8}$/.test(number)) return showAlert("অনুগ্রহ করে একটি সঠিক বাংলাদেশী মোবাইল নম্বর দিন।");
+            const amount = parseFloat(amountStr);
+            if (isNaN(amount) || amount < 20) return showAlert("সর্বনিম্ন রিচার্জের পরিমাণ ৳20।");
+            const fee = amount * 0.05;
+            const totalCost = amount + fee;
+            if (totalCost > userData.balance) return showAlert(`আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালেন্স নেই। আপনার প্রয়োজন ৳${totalCost.toFixed(2)}।`);
+            if (!confirm(`আপনি কি ${number} নম্বরে ৳${amount.toFixed(2)} রিচার্জ করতে চান?\n\nফি (5%): ৳${fee.toFixed(2)}\nমোট কাটা হবে: ৳${totalCost.toFixed(2)}\n\nআপনি কি নিশ্চিত?`)) return;
+            loader.style.display = 'flex';
+            try {
+                const userRef = doc(db, "users", userData.tgChatId);
+                await runTransaction(db, async (transaction) => {
+                    const userDoc = await transaction.get(userRef);
+                    if (!userDoc.exists() || userDoc.data().balance < totalCost) throw "আপনার পর্যাপ্ত ব্যালেন্স নেই।";
+                    const newBalance = userDoc.data().balance - totalCost;
+                    transaction.update(userRef, { balance: newBalance });
+                    const rechargeRequestRef = doc(collection(db, "recharge_requests"));
+                    transaction.set(rechargeRequestRef, { userId: userData.tgChatId, userName: userData.name, mobileNumber: number, amount: amount, operator: operator, rechargeType: type, fee: fee, totalDeducted: totalCost, status: "pending", requestedAt: serverTimestamp() });
+                });
+                userData.balance -= totalCost;
+                updateUI();
+                showAlert("আপনার রিচার্জ অনুরোধ সফলভাবে জমা হয়েছে।");
+                await createPersonalNotification("Recharge Request Submitted", `Your recharge request of ৳${amount} for ${number} has been submitted.`);
+                document.getElementById('recharge-number').value = '';
+                document.getElementById('recharge-amount').value = '';
+                document.getElementById('recharge-operator').value = '';
+                document.getElementById('recharge-fee-display').textContent = '';
+                loadRechargeHistory();
+            } catch (error) {
+                showAlert(typeof error === 'string' ? error : "রিচার্জ অনুরোধে সমস্যা হয়েছে।");
+            } finally { loader.style.display = 'none'; }
+        }
+
+        async function loadRechargeHistory() {
+            const historyList = document.getElementById('recharge-history-list');
+            historyList.innerHTML = getLoadingHTML();
+            try {
+                const q = query(collection(db, "recharge_requests"), where("userId", "==", userData.tgChatId), orderBy("requestedAt", "desc"));
+                const snapshot = await getDocs(q);
+                if (snapshot.empty) return historyList.innerHTML = '<p class="text-gray-600 text-center">কোনো রিচার্জ হিস্ট্রি পাওয়া যায়নি।</p>';
+                historyList.innerHTML = snapshot.docs.map(doc => {
+                    const item = doc.data();
+                    let statusColor, statusIcon;
+                    switch (item.status) {
+                        case 'approved': statusColor = 'text-green-600'; statusIcon = 'check-circle-2'; break;
+                        case 'rejected': statusColor = 'text-red-600'; statusIcon = 'x-circle'; break;
+                        default: statusColor = 'text-yellow-600'; statusIcon = 'hourglass';
+                    }
+                    const date = item.requestedAt ? item.requestedAt.toDate().toLocaleDateString('en-GB') : 'N/A';
+                    return `<div class="card-bg p-3 flex items-center justify-between"><div><p class="font-semibold text-gray-800">${item.mobileNumber}</p><p class="text-xs text-gray-500">${item.operator} - ${date}</p></div><div class="text-right"><p class="font-bold text-lg text-gray-800">৳${item.amount.toFixed(2)}</p><p class="font-semibold ${statusColor} capitalize text-xs">${item.status}</p></div></div>`;
+                }).join('');
+                lucide.createIcons();
+            } catch (error) {
+                historyList.innerHTML = '<p class="text-red-600 text-center">হিস্ট্রি লোড করা যায়নি।</p>';
+            }
+        }
+
+        async function loadTutorials() {
+            const tutorialListEl = document.getElementById('tutorial-list');
+            tutorialListEl.innerHTML = getLoadingHTML();
+            try {
+                const q = query(collection(db, "tutorials"), orderBy("order"));
+                const snapshot = await getDocs(q);
+                if (snapshot.empty) return tutorialListEl.innerHTML = '<p class="text-center text-gray-600">কোনো টিউটোরিয়াল পাওয়া যায়নি।</p>';
+                tutorialListEl.innerHTML = snapshot.docs.map(doc => {
+                    const tutorial = doc.data();
+                    return `<div class="card-bg p-4"><h3 class="font-bold text-lg text-gray-800 mb-3">${tutorial.title}</h3><div class="video-container-16-9"><iframe src="${tutorial.youtubeEmbedUrl}" title="${tutorial.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div></div>`;
+                }).join('');
+            } catch (e) {
+                tutorialListEl.innerHTML = '<p class="text-center text-red-600">টিউটোরিয়াল লোড করা যায়নি।</p>';
+            }
+        }
+
+        async function loadReviews() {
+            const reviewListEl = document.getElementById('reviews-list');
+            reviewListEl.innerHTML = getLoadingHTML();
+            try {
+                const q = query(collection(db, "reviews"), orderBy("createdAt", "desc"), limit(5));
+                const snapshot = await getDocs(q);
+                if (snapshot.empty) return reviewListEl.innerHTML = '<p class="text-center text-gray-600">কোনো রিভিউ পাওয়া যায়নি।</p>';
+                reviewListEl.innerHTML = snapshot.docs.map(doc => {
+                    const review = doc.data();
+                    let stars = '';
+                    for (let i = 0; i < 5; i++) stars += `<i data-lucide="star" class="w-4 h-4 ${i < review.rating ? 'fill-current' : ''}"></i>`;
+                    return `<div class="review-card-new p-4 rounded-lg"><div class="flex items-start gap-4"><img src="${review.imageUrl}" class="w-12 h-12 rounded-full object-cover" alt="User"><div class="flex-1"><div class="flex justify-between items-center"><h5 class="font-bold">${review.name}</h5><div class="star-rating flex text-sm">${stars}</div></div><p class="text-gray-600 text-sm mt-1">"${review.reviewText}"</p></div></div></div>`;
+                }).join('');
+                lucide.createIcons();
+            } catch (e) {
+                reviewListEl.innerHTML = '<p class="text-center text-red-600">রিভিউ লোড করা যায়নি।</p>';
+            }
+        }
+
+        window.handleLoginMailClick = function() {
+            if (!appConfig || !appConfig.mails || appConfig.mails.length === 0) {
+                 navigateTo('pay-page');
+                 return;
+            }
+            const minPrice = Math.min(...appConfig.mails.map(m => m.priceBdt));
+            if (userData.balance < minPrice) {
+                navigateTo('pay-page');
+            } else {
+                document.getElementById('mail-list').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        window.handleOtpMailClick = function() {
+            if (appConfig.otpMailLink && appConfig.otpMailLink !== '#') {
+                window.Telegram.WebApp.openLink(appConfig.otpMailLink);
+            } else {
+                showAlert("OTP Mail service is currently unavailable.");
+            }
+        }
 
     </script>
 </body>
