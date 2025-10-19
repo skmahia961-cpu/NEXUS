@@ -1,1845 +1,942 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- পরিবর্তন শুরু: অ্যাপের নতুন নাম -->
-    <title>QUICK VAULT</title>
-    <!-- পরিবর্তন শেষ -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NEXUS MARKET</title>
     <meta name="monetag" content="a41ceca9ffc67edad031c0024f85ef59">
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- পরিবর্তন শুরু: নতুন ফন্ট যোগ করা হয়েছে -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- পরিবর্তন শেষ -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'], mono: ['Roboto Mono', 'monospace'] },
+                    colors: {
+                        nexus: { 
+                            dark: '#0f172a', 
+                            card: '#1e293b', 
+                            primary: '#6366f1', 
+                            accent: '#06b6d4',
+                            success: '#10b981',
+                            warning: '#f59e0b',
+                            danger: '#ef4444'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        /* পরিবর্তন শুরু: নতুন ফন্ট এবং কালার স্কিম */
-        :root {
-            --primary-color: #14b8a6; /* Teal 500 */
-            --primary-dark: #0d9488; /* Teal 600 */
+        :root { --nexus-bg: #0f172a; --nexus-card: #1e293b; --primary-grad: linear-gradient(135deg, #6366f1, #8b5cf6); }
+        body { background-color: var(--nexus-bg); color: #e2e8f0; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .no-select { -webkit-user-select: none; user-select: none; }
+        .allow-select { -webkit-user-select: text; user-select: text; }
+        
+        /* New Component Styles */
+        .neo-card {
+            background: var(--nexus-card); border: 1px solid #334155;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s, border-color 0.2s;
         }
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f7fdfc;
-            color: #333333;
-            -webkit-user-select: none; -ms-user-select: none; user-select: none;
-            -webkit-touch-callout: none;
+        .neo-card:active { transform: scale(0.98); }
+        .neo-input {
+            background: #0f172a; border: 1px solid #334155; color: #fff; transition: all 0.3s ease;
         }
-        /* পরিবর্তন শেষ */
-        input, textarea, #mail-details-content, #mail-purchase-history .font-mono, #profile-id-btn {
-            -webkit-user-select: text; -ms-user-select: text; user-select: text; -webkit-touch-callout: default;
+        .neo-input:focus { border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2); outline: none; }
+        
+        .action-btn {
+            background: var(--primary-grad); color: white; font-weight: 600; border: none;
+            position: relative; overflow: hidden; transition: all 0.3s ease;
         }
-        #header-profile-pic, #profile-pic, #header-initials-avatar, #profile-initials-avatar {
-            pointer-events: none;
+        .action-btn::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0));
+            opacity: 0; transition: opacity 0.3s;
         }
-        /* পরিবর্তন শুরু: কার্ডের নতুন ডিজাইন */
-        .card-bg {
-            background-color: #ffffff;
-            border: 1px solid #e0e7ff;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.04);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 16px;
-        }
-        .card-bg:hover {
-            border-color: rgba(20, 184, 166, 0.4);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
-        }
-        /* পরিবর্তন শেষ */
-        /* পরিবর্তন শুরু: নতুন কালার থিম */
-        .text-accent-gradient {
-            background: linear-gradient(to right, var(--primary-color), var(--primary-dark));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .btn, .btn-gradient, .btn-outline-accent {
-            transition: all 0.2s ease-in-out; transform: scale(1); border: none; border-radius: 12px;
-        }
-        .btn:active, .btn-gradient:active, .btn-outline-accent:active { transform: scale(0.96); }
-        .btn-gradient {
-            background-image: linear-gradient(to right, var(--primary-color), var(--primary-dark));
-            color: #ffffff; font-weight: bold;
-            box-shadow: 0 4px 15px rgba(20, 184, 166, 0.2);
-        }
-        .btn-gradient:hover {
-            box-shadow: 0 6px 20px rgba(20, 184, 166, 0.3);
-            background-image: linear-gradient(to right, var(--primary-dark), var(--primary-color));
-        }
-        .input-field {
-            background-color: #f3f4f6; border: 1px solid #e5e7eb; color: #333333; transition: all 0.2s ease;
-        }
-        .input-field:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.3);
-            outline: none;
-        }
-        /* পরিবর্তন শেষ */
-        .main-page { display: none; }
-        .main-page.active { display: flex; animation: fadeIn 0.5s ease-in-out; }
-        .sub-page { display: none; }
-        .sub-page.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+        .action-btn:active { transform: scale(0.97); }
+        .action-btn:hover::after { opacity: 1; }
 
-        .bottom-nav {
-             border-top: 1px solid #e0e0e0;
-             background-color: rgba(255, 255, 255, 0.9);
-             backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-             position: fixed; bottom: 0; left: 0; right: 0;
-             max-width: 672px; margin: 0 auto; display: flex;
-             justify-content: space-around; align-items: center;
-             padding: 12px 16px; z-index: 50;
-        }
-        .nav-link-premium { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #6b7280; font-size: 0.75rem; font-weight: 500; padding: 8px; border-radius: 12px; transition: all 0.2s ease; position: relative; cursor: pointer; background: none; border: none; }
-        .nav-link-premium:hover { color: #333333; }
-        .nav-link-premium.active { color: var(--primary-color); }
-        .nav-link-premium .icon { width: 24px; height: 24px; }
-        /* পরিবর্তন শুরু: নতুন কালার থিম */
-        .center-home-link { position: relative; transform: translateY(-20px) scale(1.1); background: rgba(20, 184, 166, 0.2); border: 1px solid rgba(20, 184, 166, 0.5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(20, 184, 166, 0.4); transition: all 0.3s ease; color: #ffffff; }
-        .center-home-link:hover { transform: translateY(-20px) scale(1.15); }
-        .center-home-link .icon { width: 32px; height: 32px; color: var(--primary-dark); }
-        /* পরিবর্তন শেষ */
-        .header {
-            border-bottom: 1px solid #e0e0e0;
-            background: linear-gradient(to right, #ffffff, #f9f9f9);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            padding: 1rem; position: sticky; top: 0; z-index: 10;
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* View Management */
+        .app-view { display: none; opacity: 0; transform: translateY(10px); transition: opacity 0.3s ease, transform 0.3s ease; }
+        .app-view.active-view { display: block; opacity: 1; transform: translateY(0); }
 
-        /* Banner & Marquee */
-        .banner-wrapper { position: relative; width: 100%; padding-top: 56.25%; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); }
-        .banner-inner { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1); }
-        .slide { min-width: 100%; position: relative; }
-        .slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .dots { position: absolute; bottom: 12px; width: 100%; text-align: center; z-index: 10; }
-        .dot { display: inline-block; height: 8px; width: 8px; margin: 0 4px; background: #bbb; border-radius: 50%; cursor: pointer; transition: background 0.3s; }
-        .dot.active { background: var(--primary-color); }
-        /* পরিবর্তন শুরু: নতুন কালার থিম */
-        .marquee {
-            background-color: var(--primary-color);
-            color: white; padding: 8px 0; white-space: nowrap;
-            overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        /* Navigation */
+        .dock-nav {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 95%; max-width: 400px; background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-radius: 24px; border: 1px solid rgba(255,255,255,0.1);
+            display: flex; justify-content: space-evenly; padding: 12px; z-index: 50;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
         }
-        /* পরিবর্তন শেষ */
-        .marquee-content { display: inline-block; padding-left: 100%; animation: marquee 20s linear infinite; }
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
-        #loader { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 1.5rem; transition: opacity 0.5s ease; }
-        #loader .logo-container { animation: popIn 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards, breath 2.5s ease-in-out infinite 1s; }
-        #loader .loader-text { animation: fadeInText 1s ease-in-out 0.5s forwards; opacity: 0; font-weight: bold; font-size: 1.5rem; }
-        #loader-reviews { position: absolute; bottom: 30px; font-size: 0.9rem; color: #6b7280; opacity: 0; transition: opacity 0.5s ease-in-out; }
-        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        @keyframes fadeInText { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes breath { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        .video-container-16-9 { position: relative; padding-top: 56.25%; height: 0; overflow: hidden; border-radius: 8px; background-color: #e0e0e0; }
-        .review-card-new { background-color: #f9f9f9; border: 1px solid #eee; }
-        .star-rating i { color: #facc15; }
-        /* পরিবর্তন শুরু: নতুন কালার থিম */
-        .premium-loader-spinner {
-            width: 56px; height: 56px; border-radius: 50%;
-            background: conic-gradient(#0000 10%, var(--primary-color));
-            -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 9px), #000 0);
-            animation: spin 1s infinite linear;
+        .dock-item {
+            color: #94a3b8; display: flex; flex-direction: column; align-items: center;
+            font-size: 10px; gap: 4px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative; padding: 0 8px;
         }
-        /* পরিবর্তন শেষ */
-        .loading-container { display: flex; justify-content: center; align-items: center; padding: 2.5rem; }
-        @keyframes spin { to { transform: rotate(1turn); } }
-        .modal-close-btn {
-            position: absolute; top: 12px; right: 12px; background-color: #e5e7eb; color: #4b5563;
-            border-radius: 9999px; padding: 4px; transition: background-color 0.2s; cursor: pointer;
+        .dock-item.nav-active { color: #6366f1; transform: translateY(-4px); }
+        .dock-item.nav-active::after {
+            content: ''; position: absolute; bottom: -8px; width: 6px; height: 6px;
+            background: #6366f1; border-radius: 50%;
         }
-        .modal-close-btn:hover { background-color: #d1d5db; }
-        .premium-title {
-            background: linear-gradient(to right, #6366f1, #a855f7, #ec4899);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; padding: 0 4px;
+
+        /* Custom Loader */
+        #splash-screen {
+            position: fixed; inset: 0; background: var(--nexus-bg); z-index: 100;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease;
         }
-        .premium-status-badge { font-weight: bold; padding: 4px 12px; border-radius: 9999px; font-size: 0.9rem; margin-top: 8px; }
-        .premium-status-badge.gold { background: linear-gradient(to right, #fde047, #facc15, #eab308); color: #713f12; border: 1px solid #ca8a04; }
-        .premium-status-badge.gray { background-color: #e5e7eb; color: #4b5563; border: 1px solid #d1d5db; }
-        .notification-badge {
-            position: absolute; top: -5px; right: -5px; background-color: #ef4444; color: white;
-            border-radius: 9999px; width: 20px; height: 20px; font-size: 12px; font-weight: bold;
-            display: flex; align-items: center; justify-content: center; border: 2px solid white;
+        .loader-ring {
+            width: 60px; height: 60px; border: 4px solid #1e293b; border-top-color: #6366f1;
+            border-radius: 50%; animation: spin 1s linear infinite;
         }
-        #menu-overlay {
-            position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px);
-            z-index: 80; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Ticker */
+        .news-ticker-wrap { overflow: hidden; background: #1e293b; padding: 8px 0; border-radius: 8px; border: 1px solid #334155; }
+        .news-ticker { display: flex; white-space: nowrap; animation: ticker 30s linear infinite; }
+        .ticker-item { padding-right: 40px; color: #cbd5e1; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; }
+        @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+        /* Off-canvas Menu */
+        .side-panel-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
+            opacity: 0; visibility: hidden; transition: all 0.3s; z-index: 80;
         }
-        #menu-overlay.open { opacity: 1; visibility: visible; }
-        #slide-out-menu {
-            position: fixed; top: 0; left: 0; bottom: 0; width: 80%; max-width: 320px;
-            background: #ffffff; z-index: 90; transform: translateX(-100%);
-            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        .side-panel {
+            position: fixed; left: 0; top: 0; bottom: 0; width: 85%; max-width: 320px;
+            background: var(--nexus-bg); z-index: 90; transform: translateX(-105%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); border-right: 1px solid #334155;
         }
-        #slide-out-menu.open { transform: translateX(0); }
-        .menu-header { padding: 1.5rem; border-bottom: 1px solid #e5e7eb; text-align: center; }
-        .menu-accordion-toggle {
-            display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px;
-            text-decoration: none; color: #111827; font-weight: 600; font-size: 1rem;
-            transition: all 0.2s ease-in-out; background: none; border: none; width: 100%;
-            text-align: left; cursor: pointer; border-bottom: 1px solid #e5e7eb;
+        .side-panel.open { transform: translateX(0); }
+        .side-panel-overlay.open { opacity: 1; visibility: visible; }
+
+        /* Modals */
+        .glass-modal {
+            background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(10px);
+            border: 1px solid rgba(99, 102, 241, 0.2); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
-        /* পরিবর্তন শুরু: নতুন কালার থিম */
-        .menu-accordion-toggle:hover, .menu-accordion-toggle.active { background-color: #f9fafb; color: var(--primary-color); }
-        /* পরিবর্তন শেষ */
-        .menu-accordion-toggle .icon { width: 24px; height: 24px; }
-        .menu-accordion-toggle .chevron { transition: transform 0.3s ease; }
-        .menu-accordion-toggle.active .chevron { transform: rotate(180deg); }
-        .menu-accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background-color: #f9fafb; }
-        .menu-accordion-content .content-inner { padding: 1rem; border-bottom: 1px solid #e5e7eb; display: flex; flex-direction: column; gap: 0.75rem; }
-        .support-link-card {
-            display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 10px;
-            text-decoration: none; color: #333; font-weight: 500; transition: background-color 0.2s, transform 0.2s;
-        }
-        .support-link-card:hover { background-color: #e9ecef; transform: translateX(4px); }
-        .support-link-card img { width: 36px; height: 36px; border-radius: 8px; }
-        .btn-premium-buy {
-            background: linear-gradient(to right, #8b5cf6, #d946ef); color: white; font-weight: bold;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
-        }
-        .btn-premium-buy:hover {
-             box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
-             background: linear-gradient(to right, #7c3aed, #c026d3); color: white;
-        }
-        .modal-overlay {
-            position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
-            display: flex; align-items: center; justify-content: center; z-index: 70;
-            padding: 1rem; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
-        }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content {
-            background-color: #ffffff; border-radius: 1rem; padding: 1.5rem;
-            width: 100%; max-width: 24rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transform: scale(0.95); opacity: 0; transition: transform 0.3s, opacity 0.3s;
-        }
-        .modal-overlay.active .modal-content { transform: scale(1); opacity: 1; }
     </style>
 </head>
-<body class="max-w-md mx-auto">
+<body class="max-w-md mx-auto min-h-screen overflow-x-hidden no-select pb-28">
 
-    <div id="loader" class="fixed inset-0 bg-f8f8f8 flex items-center justify-center z-[100]">
-        <div class="text-center">
-            <div class="logo-container">
-                <!-- পরিবর্তন শুরু: নতুন লোগো -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--primary-color)] mx-auto">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                </svg>
-                <!-- পরিবর্তন শেষ -->
+    <!-- NEW SPLASH SCREEN -->
+    <div id="splash-screen">
+        <div class="relative">
+            <div class="loader-ring"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+                <i data-lucide="hexagon" class="w-6 h-6 text-indigo-500 fill-indigo-500/20"></i>
             </div>
-            <!-- পরিবর্তন শুরু: নতুন নাম -->
-            <h1 class="text-accent-gradient loader-text mt-4">QUICK VAULT</h1>
-            <!-- পরিবর্তন শেষ -->
         </div>
-        <!-- পরিবর্তন শুরু: নতুন রিভিউ টেক্সট -->
-        <div id="loader-reviews">"এখন পর্যন্ত সেরা একটি সার্ভিস।" - মোঃ আকাশ</div>
-        <!-- পরিবর্তন শেষ -->
+        <h1 class="mt-6 text-2xl font-bold tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">NEXUS</h1>
+        <p id="loading-msg" class="text-slate-500 text-sm mt-2 animate-pulse">Establishing Secure Connection...</p>
     </div>
 
-    <div id="menu-overlay"></div>
-    <aside id="slide-out-menu">
-        <div class="menu-header">
-            <img src="https://i.postimg.cc/W1v47PR8/images-5.png" alt="Logo" class="w-16 h-16 mx-auto mb-2 rounded-full">
-            <!-- পরিবর্তন শুরু: নতুন নাম -->
-            <h2 class="text-xl font-bold text-accent-gradient">Help Desk</h2>
-            <p class="text-sm text-gray-500 mt-1">যেকোনো প্রয়োজনে আমাদের সাথে থাকুন</p>
-            <!-- পরিবর্তন শেষ -->
-        </div>
-        <nav id="menu-options" class="flex-grow overflow-y-auto">
-             <!-- All menu options including accordions will be loaded here by JS -->
-        </nav>
-        <div class="p-4 mt-auto border-t">
-            <h3 class="text-center font-semibold text-gray-700 mb-3 text-sm">Follow Us</h3>
-            <div class="flex justify-center items-center gap-6">
-                <a href="https://youtube.com" target="_blank" class="p-3 bg-gray-100 rounded-full hover:bg-gray-200 transition-all"><i data-lucide="youtube" class="w-6 h-6 text-red-600"></i></a>
-                <a href="https://tiktok.com" target="_blank" class="p-3 bg-gray-100 rounded-full hover:bg-gray-200 transition-all"><svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.01-1.58-.01-3.16 0-4.75l-.04 1.38c-.7 2.12-2.2 3.53-4.13 4.45v5.05c-.62.33-1.28.6-1.94.82v-5.07c.01-1.03-.02-2.07-.01-3.1 0-2.31-1.08-4.28-2.7-5.66-1.6-1.37-3.6-2.01-5.59-1.82V4.88c1.87.08 3.74.38 5.48 1.14.01 1.57.01 3.14 0 4.71l.04-1.38c.68-2.11 2.19-3.52 4.12-4.44V.02z"/></svg></a>
-                <a href="https://telegram.org" target="_blank" class="p-3 bg-gray-100 rounded-full hover:bg-gray-200 transition-all"><i data-lucide="send" class="w-6 h-6 text-sky-500"></i></a>
+    <!-- SIDE PANEL (Redesigned) -->
+    <div class="side-panel-overlay" id="panel-overlay"></div>
+    <aside class="side-panel" id="main-side-panel">
+        <div class="p-6 bg-slate-900/50 border-b border-slate-800">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <i data-lucide="shield-check" class="w-7 h-7 text-white"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg text-slate-100">Help Center</h3>
+                    <p class="text-xs text-slate-400">24/7 Priority Support</p>
+                </div>
             </div>
         </div>
-        <div class="p-4 text-center text-xs text-gray-400 border-t">
-            <!-- পরিবর্তন শুরু: নতুন নাম -->
-            QUICK VAULT &copy; 2025
-            <!-- পরিবর্তন শেষ -->
+        <div id="panel-content" class="p-4 space-y-2 overflow-y-auto h-[calc(100%-160px)]">
+            <!-- Dynamic Menu Items will be loaded here -->
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-800 bg-slate-900">
+            <div class="flex justify-evenly text-slate-400">
+                <a href="#" class="hover:text-indigo-400 transition"><i data-lucide="globe" class="w-5 h-5"></i></a>
+                <a href="#" class="hover:text-cyan-400 transition"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                <a href="#" class="hover:text-indigo-400 transition"><i data-lucide="send" class="w-5 h-5"></i></a>
+            </div>
+            <p class="text-center text-[10px] text-slate-600 mt-3 tracking-widest">NEXUS v4.5.2 encrypted</p>
         </div>
     </aside>
 
-    <div id="app-container" class="min-h-screen flex-col main-page">
-        <header class="header flex items-center justify-between">
-            <div class="flex items-center space-x-3">
+    <!-- MAIN APP CONTAINER -->
+    <div id="nexus-app" class="min-h-screen">
+        
+        <!-- TOP BAR -->
+        <header class="sticky top-0 z-40 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3" id="user-quick-info">
                 <div class="relative">
-                    <img id="header-profile-pic" class="w-12 h-12 rounded-full border-2 border-teal-300 object-cover hidden" src="" alt="Profile Picture">
-                    <div id="header-initials-avatar" class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center border-2 border-teal-300"><span id="header-initials" class="text-xl font-bold text-gray-500"></span></div>
+                    <img id="nav-user-img" src="" class="w-10 h-10 rounded-full border-2 border-indigo-500/30 hidden object-cover" alt="User">
+                    <div id="nav-user-initials" class="w-10 h-10 rounded-full bg-slate-800 border-2 border-slate-700 flex items-center justify-center font-bold text-slate-400">U</div>
+                    <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-slate-900 rounded-full"></div>
                 </div>
                 <div>
-                    <h1 id="header-welcome-name" class="text-lg font-bold text-gray-800">Welcome!</h1>
-                    <p id="header-balance-display" class="font-semibold text-gray-700 text-sm">৳0.00</p>
+                    <p id="welcome-text" class="text-xs text-slate-400 font-medium">Welcome back,</p>
+                    <p id="user-balance-top" class="text-sm font-bold text-emerald-400">৳0.00</p>
                 </div>
             </div>
-            <div class="flex items-center space-x-2">
-                <button id="header-deposit-btn" class="btn-gradient px-4 py-2 rounded-full text-sm font-bold shadow-lg">Deposit</button>
-                <button id="notification-btn" class="relative p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors">
-                    <i data-lucide="bell" class="w-5 h-5 text-gray-700"></i>
-                    <span id="notification-badge" class="notification-badge hidden">0</span>
+            <div class="flex items-center gap-2">
+                <button onclick="switchView('view-deposit')" class="bg-indigo-500/10 text-indigo-400 px-3 py-1.5 rounded-full text-xs font-semibold border border-indigo-500/20 hover:bg-indigo-500/20 transition">
+                    + ADD FUND
                 </button>
-                <button id="hamburger-menu-btn" class="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors">
-                    <i data-lucide="menu" class="w-5 h-5 text-gray-700"></i>
+                <button id="btn-notifications" class="relative p-2 text-slate-400 hover:text-slate-200 transition bg-slate-800/50 rounded-full">
+                    <i data-lucide="bell" class="w-5 h-5"></i>
+                    <span id="badge-notify" class="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-slate-900 rounded-full hidden"></span>
+                </button>
+                <button id="btn-menu" class="p-2 text-slate-400 hover:text-slate-200 transition">
+                    <i data-lucide="align-right" class="w-6 h-6"></i>
                 </button>
             </div>
         </header>
 
-        <main class="flex-grow pb-20">
-            <div id="home-page" class="space-y-6 sub-page">
-                <div class="p-4">
-                    <div class="banner-wrapper">
-                        <div class="banner-inner" id="slides">
-                             <div class="slide active"><a href="https://t.me/EXPERTearn_team" target="_blank"><img src="https://i.postimg.cc/zBp8rCX9/Yellow-Orange-Modern-Marketing-Courses-You-Tube-Thumbnail-20250910-185659-0000.png" alt="Slide 1"></a></div>
-                            <div class="slide"><a href="https://t.me/EXPERTearn_team" target="_blank"><img src="https://i.postimg.cc/W1syFD8p/Grey-Blue-Illustration-Refer-a-Friend-Instagram-Post-1080-x-720-px-20250917-223749-0000.png" alt="Slide 2"></a></div>
-                            <div class="slide"><a href="https://t.me/EXPERTearn_team" target="_blank"><img src="https://i.postimg.cc/52HsFwvV/Black-and-Orange-Money-You-Tube-Thumbnail-20250917-224706-0000.png" alt="Slide 3"></a></div>
+        <main class="p-4">
+            
+            <!-- DASHBOARD VIEW -->
+            <div id="view-dashboard" class="app-view active-view space-y-6">
+                <!-- Promo Slider -->
+                <div class="neo-card rounded-2xl overflow-hidden relative aspect-video">
+                    <div id="promo-slider" class="h-full flex transition-transform duration-500 ease-out">
+                        <!-- Slides will be injected here if needed, or static below -->
+                         <div class="min-w-full h-full bg-slate-800 relative">
+                            <img src="https://i.postimg.cc/zBp8rCX9/Yellow-Orange-Modern-Marketing-Courses-You-Tube-Thumbnail-20250910-185659-0000.png" class="w-full h-full object-cover opacity-80" alt="Promo 1">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
                         </div>
-                        <div class="dots" id="dots"></div>
+                         <div class="min-w-full h-full bg-slate-800 relative">
+                            <img src="https://i.postimg.cc/W1syFD8p/Grey-Blue-Illustration-Refer-a-Friend-Instagram-Post-1080-x-720-px-20250917-223749-0000.png" class="w-full h-full object-cover opacity-80" alt="Promo 2">
+                        </div>
+                    </div>
+                    <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2" id="slider-dots">
+                        <span class="w-2 h-2 rounded-full bg-white"></span><span class="w-2 h-2 rounded-full bg-slate-600"></span>
                     </div>
                 </div>
-                <div class="p-4 space-y-6">
-                    <div class="card-bg p-5 text-center">
-                        <p class="text-gray-600 text-sm mb-1">Your Balance</p>
-                        <p id="balance-display" class="text-4xl font-bold text-[#333333] mb-4">৳0.00</p>
-                        <div class="grid grid-cols-2 gap-4">
-                             <!-- পরিবর্তন শুরু: বাটন টেক্সট পরিবর্তন -->
-                            <button onclick="navigateTo('mail-page')" class="w-full p-3 font-bold border-2 border-[var(--primary-dark)] text-[var(--primary-dark)] hover:bg-teal-50 transition-colors btn">BROWSE VAULT</button>
-                            <!-- পরিবর্তন শেষ -->
-                            <button id="home-deposit-btn" class="w-full p-3 btn-gradient">Deposit</button>
-                        </div>
+
+                <!-- Main Balance Card -->
+                <div class="neo-card p-6 rounded-3xl bg-gradient-to-br from-slate-800 to-slate-900 relative overflow-hidden">
+                    <div class="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl"></div>
+                    <p class="text-slate-400 font-medium mb-2 flex items-center gap-2"><i data-lucide="wallet" class="w-4 h-4"></i> Available Balance</p>
+                    <h2 id="main-balance-display" class="text-4xl font-bold text-white tracking-tight mb-6">৳0.00</h2>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="switchView('view-marketplace')" class="action-btn py-3 rounded-xl flex items-center justify-center gap-2 bg-slate-700 hover:bg-slate-600 !bg-none">
+                            <i data-lucide="shopping-bag" class="w-5 h-5"></i> MARKET
+                        </button>
+                        <button onclick="switchView('view-deposit')" class="action-btn py-3 rounded-xl flex items-center justify-center gap-2">
+                            <i data-lucide="plus-circle" class="w-5 h-5"></i> DEPOSIT
+                        </button>
                     </div>
-                    <div id="ads-section" class="space-y-3" style="display: none;">
-                        <h2 class="text-xl font-bold px-2 premium-title">✨ Promotions</h2>
+                </div>
+
+                <!-- Live Ticker -->
+                 <div class="news-ticker-wrap">
+                    <div class="news-ticker">
+                        <div class="ticker-item"><i data-lucide="zap" class="w-4 h-4 text-yellow-500"></i> NEXUS লাইভ স্টকে স্বাগতম!</div>
+                        <div class="ticker-item"><i data-lucide="shield" class="w-4 h-4 text-green-500"></i> ১০০% সিকিউর পেমেন্ট সিস্টেম।</div>
+                        <div class="ticker-item"><i data-lucide="clock" class="w-4 h-4 text-indigo-500"></i> ২৪/৭ অটোমেটিক ডেলিভারি।</div>
+                        <div class="ticker-item"><i data-lucide="info" class="w-4 h-4 text-cyan-500"></i> যেকোনো প্রয়োজনে সাপোর্টে মেসেজ দিন।</div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div id="premium-ads-container">
+                     <!-- Ads will load here if not premium -->
+                </div>
+            </div>
+
+            <!-- MARKETPLACE VIEW (Previously Mail Page) -->
+            <div id="view-marketplace" class="app-view space-y-5">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-100 flex items-center gap-2"><i data-lucide="grid" class="w-6 h-6 text-indigo-500"></i> Marketplace</h2>
+                    <div class="flex gap-2">
+                         <span class="text-[10px] px-2 py-1 bg-emerald-500/10 text-emerald-400 rounded-md border border-emerald-500/20">LIVE STOCK</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="openSpecialLink('login')" class="neo-card p-4 rounded-2xl flex flex-col items-center justify-center gap-2 hover:border-indigo-500/50 transition">
+                        <i data-lucide="log-in" class="w-8 h-8 text-cyan-400"></i>
+                        <span class="font-semibold text-sm">Direct Login</span>
+                    </button>
+                    <button onclick="openSpecialLink('otp')" class="neo-card p-4 rounded-2xl flex flex-col items-center justify-center gap-2 hover:border-indigo-500/50 transition">
+                        <i data-lucide="key-round" class="w-8 h-8 text-indigo-400"></i>
+                        <span class="font-semibold text-sm">OTP Verify</span>
+                    </button>
+                </div>
+
+                <div id="inventory-list" class="space-y-4">
+                    <!-- Inventory Items Loaded via JS -->
+                </div>
+
+                <div class="pt-6 border-t border-slate-800">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-slate-300">Recent Orders (4h)</h3>
+                         <button id="btn-dl-history" class="text-xs bg-slate-800 px-3 py-1 rounded-full text-slate-400 flex items-center gap-1 hover:text-slate-200 transition">
+                             <i data-lucide="download-cloud" class="w-3 h-3"></i> Save CSV
+                         </button>
+                    </div>
+                    <div id="order-history-container" class="space-y-3 text-sm">
+                        <!-- History loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- DEPOSIT VIEW (Redesigned) -->
+            <div id="view-deposit" class="app-view space-y-6">
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-bold text-slate-100">Add Funds</h2>
+                    <p class="text-slate-500 text-sm">Secure & Fast Balance Top-up</p>
+                </div>
+
+                <div class="neo-card p-5 rounded-2xl border-indigo-500/30 bg-indigo-500/5">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="alert-circle" class="w-6 h-6 text-indigo-400 shrink-0 mt-1"></i>
                         <div>
-                            <script src='//libtl.com/sdk.js' data-zone='10056357' data-sdk='show_10056357'></script>
+                             <h4 class="font-bold text-indigo-300 mb-1">IMPORTANT NOTE</h4>
+                             <p class="text-xs text-indigo-200/70 leading-relaxed">
+                                শুধুমাত্র <span class="text-white font-bold">SEND MONEY</span> করবেন। ক্যাশ ইন বা রিচার্জ করলে ব্যালেন্স অ্যাড হবে না। মিনিমাম ডিপোজিট <span class="text-white font-bold">৳ ৫০০</span>।
+                             </p>
                         </div>
                     </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3 text-center">
+                     <div class="neo-card p-3 rounded-xl flex flex-col items-center" onclick="copyNumber('01864260513', 'Nagad')">
+                         <img src="https://i.postimg.cc/Jh9s6jWw/20250922-113350.png" class="w-8 h-8 mb-2 rounded-full" alt="Nagad">
+                         <span class="font-mono text-xs text-slate-300">01864260513</span>
+                         <span class="text-[10px] text-slate-500 mt-1">Tap to Copy</span>
+                     </div>
+                     <div class="neo-card p-3 rounded-xl flex flex-col items-center" onclick="copyNumber('01827750260', 'bKash')">
+                         <img src="https://i.postimg.cc/tCwGVkdH/20250922-113514.png" class="w-8 h-8 mb-2 rounded-full" alt="bKash">
+                         <span class="font-mono text-xs text-slate-300">01827750260</span>
+                         <span class="text-[10px] text-slate-500 mt-1">Tap to Copy</span>
+                     </div>
+                     <div class="neo-card p-3 rounded-xl flex flex-col items-center" onclick="copyNumber('018277502604', 'Rocket')">
+                         <img src="https://i.postimg.cc/htsw10Tj/20250922-113924.png" class="w-8 h-8 mb-2 rounded-full" alt="Rocket">
+                         <span class="font-mono text-xs text-slate-300">018277502604</span>
+                         <span class="text-[10px] text-slate-500 mt-1">Tap to Copy</span>
+                     </div>
+                </div>
+
+                <div class="neo-card p-5 rounded-2xl space-y-4">
+                    <h3 class="font-semibold text-slate-200">Submit Verification Info</h3>
+                    <select id="dep-method" class="neo-input w-full p-3 rounded-xl">
+                        <option value="" disabled selected>Select Payment Method</option>
+                        <option value="bKash">bKash</option><option value="Nagad">Nagad</option><option value="Rocket">Rocket</option>
+                    </select>
+                    <input type="number" id="dep-amount" placeholder="Amount (Min 500 BDT)" class="neo-input w-full p-3 rounded-xl">
+                    <input type="text" id="dep-sender" placeholder="Sender Number (01xxxxxxxxx)" class="neo-input w-full p-3 rounded-xl">
+                    <input type="text" id="dep-trx" placeholder="Transaction ID (TrxID)" class="neo-input w-full p-3 rounded-xl">
+                    <button id="btn-submit-deposit" class="action-btn w-full py-4 rounded-xl text-lg shadow-lg shadow-indigo-500/20">VERIFY DEPOSIT</button>
+                </div>
+
+                <div class="pt-4">
+                    <h3 class="text-sm font-bold text-slate-400 mb-3 px-2">Transaction History</h3>
+                    <div id="deposit-history-log" class="space-y-2"></div>
                 </div>
             </div>
 
-            <div id="pay-page" class="p-4 space-y-6 sub-page">
-                <h2 class="text-xl font-bold text-center text-gray-800">Pay Center</h2>
-                <div class="card-bg p-5 space-y-5">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-semibold text-lg flex items-center gap-2"><i data-lucide="wallet" class="w-6 h-6 text-[var(--primary-color)]"></i><span>Make a Deposit</span></h3>
-                            <button id="deposit-details-btn" class="btn-outline-accent px-3 py-1 rounded-lg text-sm">বিস্তারিত</button>
+            <!-- PROFILE VIEW -->
+            <div id="view-profile" class="app-view space-y-6">
+                <div class="flex flex-col items-center pt-6">
+                     <div class="relative mb-4">
+                        <div class="w-28 h-28 rounded-full p-1 bg-gradient-to-tr from-indigo-500 to-cyan-500">
+                             <img id="profile-user-img" src="" class="w-full h-full rounded-full bg-slate-900 object-cover p-1 hidden" alt="Profile">
+                             <div id="profile-user-initials" class="w-full h-full rounded-full bg-slate-800 flex items-center justify-center text-4xl font-bold text-slate-500 border-4 border-slate-900"></div>
                         </div>
-                        <p class="text-lg font-semibold text-gray-700 mb-4 text-center p-3 rounded-lg border border-dashed border-teal-500/50 bg-teal-500/10">নিচের নাম্বারে <span class="text-teal-600 animate-pulse">সেন্ডমানি</span> করুন</p>
-                        <div class="grid grid-cols-2 gap-3 mb-5">
-                            <div class="bg-gray-100 p-3 rounded-lg text-center"><img src="https://i.postimg.cc/Jh9s6jWw/20250922-113350.png" alt="Nagad" class="w-10 h-10 rounded-full mx-auto mb-2"><p class="font-bold text-md">নগদ</p><p class="text-gray-600 font-mono tracking-wider text-sm my-1">01864260513</p><button onclick="copyToClipboard('01864260513', this)" class="w-full text-xs p-1 mt-1 bg-gray-200 rounded hover:bg-gray-300 transition-colors flex items-center justify-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i><span>Copy</span></button></div>
-                            <div class="bg-gray-100 p-3 rounded-lg text-center"><img src="https://i.postimg.cc/tCwGVkdH/20250922-113514.png" alt="bKash" class="w-10 h-10 rounded-full mx-auto mb-2"><p class="font-bold text-md">বিকাশ</p><p class="text-gray-600 font-mono tracking-wider text-sm my-1">01827750260</p><button onclick="copyToClipboard('01827750260', this)" class="w-full text-xs p-1 mt-1 bg-gray-200 rounded hover:bg-gray-300 transition-colors flex items-center justify-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i><span>Copy</span></button></div>
-                            <div class="bg-gray-100 p-3 rounded-lg text-center"><img src="https://i.postimg.cc/htsw10Tj/20250922-113924.png" alt="Rocket" class="w-10 h-10 rounded-full mx-auto mb-2"><p class="font-bold text-md">রকেট</p><p class="text-gray-600 font-mono tracking-wider text-sm my-1">018277502604</p><button onclick="copyToClipboard('018277502604', this)" class="w-full text-xs p-1 mt-1 bg-gray-200 rounded hover:bg-gray-300 transition-colors flex items-center justify-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i><span>Copy</span></button></div>
-                            <div class="bg-gray-100 p-3 rounded-lg text-center"><img src="https://i.postimg.cc/L6LFLfxY/20250922-113752.png" alt="Binance Pay" class="w-10 h-10 rounded-full mx-auto mb-2"><p class="font-bold text-md">Binance Pay</p><p class="text-gray-600 font-mono tracking-wider text-sm my-1">Coming soon..</p><button onclick="copyToClipboard('Coming soon..', this)" class="w-full text-xs p-1 mt-1 bg-gray-200 rounded hover:bg-gray-300 transition-colors flex items-center justify-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i><span>Copy ID</span></button></div>
-                        </div>
-                        <p class="text-sm text-gray-600 mb-4 text-center border-t border-gray-300 pt-4">টাকা পাঠানোর পর নিচের ফর্মটি পূরণ করুন:</p>
-                        <div class="space-y-4">
-                             <div><label for="deposit-method" class="block text-sm font-medium text-gray-600 mb-2">পেমেন্ট মাধ্যম</label><select id="deposit-method" class="w-full p-3 rounded-lg input-field"><option value="">কোন মাধ্যমে টাকা পাঠিয়েছেন?</option><option value="Nagad">নগদ</option><option value="bKash">বিকাশ</option><option value="Rocket">রকেট</option><option value="Binance">Binance</option></select></div>
-                            <!-- পরিবর্তন শুরু: ন্যূনতম ডিপোজিটের জন্য placeholder আপডেট -->
-                            <div><label for="deposit-amount" class="block text-sm font-medium text-gray-600 mb-2">টাকার পরিমাণ (BDT)</label><input id="deposit-amount" type="number" placeholder="e.g., 100" class="w-full p-3 rounded-lg input-field"></div>
-                             <!-- পরিবর্তন শেষ -->
-                            <div><label for="sender-number" class="block text-sm font-medium text-gray-600 mb-2">আপনার পেমেন্ট নম্বর</label><input id="sender-number" type="text" placeholder="যে নম্বর থেকে টাকা পাঠিয়েছেন" class="w-full p-3 rounded-lg input-field"></div>
-                            <div><label for="deposit-txid" class="block text-sm font-medium text-gray-600 mb-2">Transaction ID (TrxID)</label><input id="deposit-txid" type="text" placeholder="টাকা পাঠানোর পর পাওয়া TrxID" class="w-full p-3 rounded-lg input-field"></div>
-                            <button id="deposit-btn" class="w-full p-3 btn-gradient">Submit Deposit</button>
-                        </div>
+                        <span id="profile-badge" class="absolute bottom-2 right-0 px-2 py-0.5 bg-slate-700 text-[10px] rounded-full border border-slate-600 font-semibold">FREE USER</span>
                     </div>
+                    <h3 id="profile-name-display" class="text-2xl font-bold text-white">Loading...</h3>
+                    <button id="btn-copy-uid" class="mt-2 text-xs text-slate-400 bg-slate-800/50 px-3 py-1 rounded-full flex items-center gap-1 hover:bg-slate-800 transition">
+                        UID: <span id="uid-display">...</span> <i data-lucide="copy" class="w-3 h-3"></i>
+                    </button>
                 </div>
-                <div class="mt-6"><h3 class="text-lg font-semibold mb-3">Payment History</h3><div id="payment-history-list" class="space-y-3"></div></div>
-            </div>
-            <div id="mail-page" class="sub-page">
-                 <div class="marquee mt-4">
-                    <!-- পরিবর্তন শুরু: নতুন মারকিউ টেক্সট -->
-                    <p class="marquee-content">
-                        💌 QUICK VAULT-এ স্বাগতম! ✨ আমাদের সকল সেবা এখন আগের থেকেও দ্রুত এবং নির্ভরযোগ্য। ⚡ যেকোনো সমস্যায় তাৎক্ষণিক সমাধান। 🕐 ২৪/৭ ঘণ্টা সাপোর্ট টিম। 💬 QUICK VAULT — আপনার আস্থার ডিজিটাল সমাধান!
-                    </p>
-                    <!-- পরিবর্তন শেষ -->
-                </div>
-                <div class="p-4 space-y-6">
-                    <p class="text-gray-600 text-center mb-4">সহজে এবং সাশ্রয়ী মূল্যে আপনার প্রয়োজনীয় সেবা নিন</p>
-                    <div class="grid grid-cols-2 gap-4 mb-6">
-                        <button onclick="handleLoginMailClick()" class="w-full p-3 rounded-lg font-bold text-white bg-gradient-to-r from-blue-500 to-indigo-600 shadow-lg btn flex items-center justify-center gap-2">
-                            <i data-lucide="log-in" class="w-5 h-5"></i><span>LOGIN MAIL</span>
-                        </button>
-                         <button onclick="handleOtpMailClick()" class="w-full p-3 rounded-lg font-bold text-white bg-gradient-to-r from-green-500 to-emerald-600 shadow-lg btn flex items-center justify-center gap-2">
-                            <i data-lucide="shield-check" class="w-5 h-5"></i><span>OTP MAIL</span>
-                        </button>
-                    </div>
-                    <div id="mail-list" class="space-y-4"></div>
-                     <div>
-                        <div class="flex justify-between items-center mb-3 mt-6">
-                            <h3 class="text-lg font-semibold">Buy History (Last 4 Hours)</h3>
-                            <div class="flex items-center gap-2">
-                               <button id="copy-history-btn" class="btn-outline-accent p-2 rounded-lg text-sm flex items-center gap-1"><i data-lucide="copy" class="w-4 h-4"></i><span>Copy Now</span></button>
-                               <button id="download-history-btn" class="btn-outline-accent p-2 rounded-lg text-sm flex items-center gap-1"><i data-lucide="download" class="w-4 h-4"></i><span>Download</span></button>
-                            </div>
-                        </div>
-                        <div id="mail-purchase-history" class="space-y-3"></div>
-                    </div>
-                </div>
-            </div>
-            <div id="updates-page" class="p-4 space-y-6 sub-page">
-                <h2 class="text-xl font-bold text-center text-gray-800">Update</h2>
-                <div id="updates-content" class="space-y-4"></div>
 
-                <div class="mt-8">
-                    <h3 class="text-lg font-semibold text-center mb-4 text-gray-800">Customer Reviews</h3>
-                    <div id="reviews-list" class="space-y-4"></div>
-                </div>
-            </div>
-            <div id="tutorial-page" class="p-4 space-y-6 sub-page">
-                <h2 class="text-xl font-bold text-center text-gray-800">Tutorials</h2>
-                <p class="text-sm text-gray-600 text-center">নিচের তালিকা থেকে আপনার প্রয়োজনীয় ভিডিওটি দেখুন।</p>
-                <div id="tutorial-list" class="space-y-5"></div>
-            </div>
-            <div id="profile-page" class="p-4 space-y-6 sub-page">
-                <div class="card-bg p-6 flex flex-col items-center text-center">
-                    <div class="relative mb-4">
-                        <img id="profile-pic" class="w-24 h-24 rounded-full border-2 border-[var(--primary-color)] object-cover hidden" src="" alt="Profile Picture">
-                        <div id="profile-initials-avatar" class="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center border-2 border-[var(--primary-color)]"><span id="profile-initials" class="text-3xl font-bold text-gray-500"></span></div>
-                    </div>
-                    <h3 id="profile-name" class="text-2xl font-bold text-gray-800">Loading...</h3>
-                    <button id="profile-id-btn" class="text-sm text-gray-500 mt-2 bg-gray-100 px-3 py-1 rounded-full hover:bg-gray-200 transition-colors">ID: 123456</button>
-                    <div id="premium-status-container" class="mt-3"></div>
+                <div class="grid grid-cols-2 gap-3">
+                     <div class="neo-card p-4 rounded-2xl text-center bg-slate-800/50">
+                         <p class="text-xs text-slate-500">Total Spent</p>
+                         <p id="stat-spent" class="text-lg font-bold text-indigo-400">৳0.00</p>
+                     </div>
+                     <div class="neo-card p-4 rounded-2xl text-center bg-slate-800/50">
+                         <p class="text-xs text-slate-500">Total Deposit</p>
+                         <p id="stat-deposit" class="text-lg font-bold text-emerald-400">৳0.00</p>
+                     </div>
                 </div>
 
                 <div class="space-y-3">
-                    <button id="more-features-btn" class="w-full card-bg p-4 flex justify-between items-center text-left text-lg font-semibold">
-                        <span class="flex items-center gap-3"><i data-lucide="zap" class="w-6 h-6 text-gray-600"></i><span>More Features</span></span>
-                        <i data-lucide="arrow-right" class="w-5 h-5 text-gray-400"></i>
+                    <button onclick="switchView('view-features')" class="neo-card w-full p-4 rounded-xl flex items-center justify-between hover:bg-slate-800 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 rounded-lg bg-orange-500/10 text-orange-500"><i data-lucide="zap" class="w-5 h-5"></i></div>
+                            <span class="font-medium">Advanced Features</span>
+                        </div>
+                        <i data-lucide="chevron-right" class="w-5 h-5 text-slate-600"></i>
                     </button>
-                    <button id="source-code-btn" class="w-full card-bg p-4 flex justify-between items-center text-left text-lg font-semibold">
-                        <span class="flex items-center gap-3"><i data-lucide="code" class="w-6 h-6 text-gray-600"></i><span>Source Code</span></span>
-                        <i data-lucide="arrow-right" class="w-5 h-5 text-gray-400"></i>
+                    <button onclick="openSupport()" class="neo-card w-full p-4 rounded-xl flex items-center justify-between hover:bg-slate-800 transition">
+                         <div class="flex items-center gap-3">
+                            <div class="p-2 rounded-lg bg-cyan-500/10 text-cyan-500"><i data-lucide="life-buoy" class="w-5 h-5"></i></div>
+                            <span class="font-medium">Support Hub</span>
+                        </div>
+                        <i data-lucide="external-link" class="w-5 h-5 text-slate-600"></i>
                     </button>
+                </div>
+            </div>
+
+             <!-- FEATURES VIEW (Transfer/Recharge) -->
+            <div id="view-features" class="app-view space-y-6">
+                 <div class="flex items-center gap-3 mb-6">
+                    <button onclick="switchView('view-profile')" class="p-2 rounded-full bg-slate-800 text-slate-400"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+                    <h2 class="text-xl font-bold">Tools & Services</h2>
                 </div>
                 
-                <div class="pt-4">
-                    <h3 class="text-center font-bold text-gray-700 mb-3">Official Social Media</h3>
-                    <div class="flex justify-center items-center gap-6">
-                        <a href="https://youtube.com" target="_blank" class="p-3 bg-gray-100 rounded-full hover:bg-gray-200 transition-all"><i data-lucide="youtube" class="w-6 h-6 text-red-600"></i></a>
-                        <a href="https://tiktok.com" target="_blank" class="p-3 bg-gray-100 rounded-full hover:bg-gray-200 transition-all"><svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.01-1.58-.01-3.16 0-4.75l-.04 1.38c-.7 2.12-2.2 3.53-4.13 4.45v5.05c-.62.33-1.28.6-1.94.82v-5.07c.01-1.03-.02-2.07-.01-3.1 0-2.31-1.08-4.28-2.7-5.66-1.6-1.37-3.6-2.01-5.59-1.82V4.88c1.87.08 3.74.38 5.48 1.14.01 1.57.01 3.14 0 4.71l.04-1.38c.68-2.11 2.19-3.52 4.12-4.44V.02z"/></svg></a>
-                        <a href="https://telegram.org" target="_blank" class="p-3 bg-gray-100 rounded-full hover:bg-gray-200 transition-all"><i data-lucide="send" class="w-6 h-6 text-sky-500"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div id="features-page" class="p-4 space-y-8 sub-page">
-                <div class="grid grid-cols-2 gap-4 text-center">
-                    <div class="card-bg p-4">
-                        <p class="text-sm text-gray-400 mb-1">TOTAL RECHARGE</p>
-                        <p id="total-recharge-display" class="text-2xl font-bold text-purple-500">৳0.00</p>
-                    </div>
-                    <div class="card-bg p-4">
-                        <p class="text-sm text-gray-400 mb-1">TOTAL SEND</p>
-                        <p id="total-send-display" class="text-2xl font-bold text-orange-500">৳0.00</p>
-                    </div>
-                    <div class="card-bg p-4">
-                        <p class="text-sm text-gray-400 mb-1">TOTAL ডিপোজিট</p>
-                        <p id="total-deposit-display" class="text-2xl font-bold text-sky-500">৳0.00</p>
-                    </div>
-                     <div class="card-bg p-4">
-                        <p class="text-sm text-gray-400 mb-1">TOTAL Receive</p>
-                        <p id="total-receive-display" class="text-2xl font-bold text-yellow-500">৳0.00</p>
-                    </div>
-                </div>
                 <div class="grid grid-cols-2 gap-4">
-                    <button id="features-deposit-btn" class="p-3 rounded-lg font-bold text-white bg-gradient-to-r from-green-500 to-emerald-500 shadow-lg btn">Deposit</button>
-                    <button id="features-recharge-btn" class="p-3 rounded-lg font-bold text-white bg-gradient-to-r from-purple-500 to-indigo-500 shadow-lg btn">Mobile Recharge</button>
-                    <button id="features-receive-btn" class="p-3 rounded-lg font-bold text-white bg-gradient-to-r from-blue-500 to-sky-500 shadow-lg btn flex items-center justify-center gap-1"><i data-lucide="arrow-down-to-line" class="w-4 h-4"></i><span>Receive</span></button>
-                    <button id="features-send-btn" class="p-3 rounded-lg font-bold text-white bg-gradient-to-r from-amber-500 to-orange-500 shadow-lg btn">SEND</button>
-                </div>
-                <div>
-                    <h3 class="text-lg font-semibold mb-3">Balance Transfer History</h3>
-                    <div id="transfer-history-list" class="space-y-3"></div>
-                </div>
-            </div>
-            <div id="admin-page" class="p-4 space-y-6 sub-page">
-                <h2 class="text-xl font-bold text-center text-gray-800">Admin Panel</h2>
-                <div class="card-bg p-5 space-y-4">
-                    <h3 class="font-semibold text-lg text-gray-800">Add New Mails</h3>
-                    <p class="text-sm text-gray-600">ফরম্যাট: <code class="bg-gray-100 p-1 rounded text-gray-700">email/password/refresh_token/client_id</code></p>
-                    <div><label for="mail-type-select" class="block text-sm font-medium text-gray-600 mb-1">Mail Type</label><select id="mail-type-select" class="w-full p-3 rounded-lg input-field"></select></div>
-                    <div><label for="mail-data-textarea" class="block text-sm font-medium text-gray-600 mb-1">Mail Data (one per line)</label><textarea id="mail-data-textarea" rows="10" placeholder="mail@example.com/password/refresh_token/client_id" class="w-full p-3 rounded-lg input-field font-mono text-xs"></textarea></div>
-                    <button id="add-mails-btn" class="w-full p-3 btn-gradient">Add Mails to Stock</button>
-                </div>
-                <div class="card-bg p-5 space-y-4">
-                    <h3 class="font-semibold text-lg text-gray-800">Create Redeem Code</h3>
-                    <div><label for="redeem-code-input" class="block text-sm font-medium text-gray-600 mb-1">Code</label><input type="text" id="redeem-code-input" placeholder="Enter a unique code or leave blank to generate" class="w-full p-3 rounded-lg input-field"></div>
-                    <div><label for="redeem-type-select" class="block text-sm font-medium text-gray-600 mb-1">Code Type</label><select id="redeem-type-select" class="w-full p-3 rounded-lg input-field"><option value="balance">Balance</option><option value="premium">Premium</option></select></div>
-                    <div><label for="redeem-value-input" class="block text-sm font-medium text-gray-600 mb-1">Value</label><input type="number" id="redeem-value-input" placeholder="Amount (BDT) or Days (Premium)" class="w-full p-3 rounded-lg input-field"></div>
-                    <button id="create-redeem-code-btn" class="w-full p-3 btn-gradient">Create Code</button>
-                </div>
-            </div>
-            <div id="recharge-page" class="p-4 space-y-6 sub-page">
-                 <div class="relative flex items-center justify-center mb-4">
-                    <button onclick="navigateTo('features-page')" class="absolute left-0 p-2 rounded-full hover:bg-gray-100 transition-colors"><i data-lucide="arrow-left" class="w-6 h-6 text-gray-700"></i></button>
-                    <h2 class="text-xl font-bold text-center text-gray-800">Mobile Recharge</h2>
-                </div>
-                <div class="card-bg p-5 space-y-5">
-                    <div>
-                        <h3 class="font-semibold text-lg flex items-center gap-2 mb-4"><i data-lucide="smartphone" class="w-6 h-6 text-[var(--primary-color)]"></i><span>রিচার্জ করুন</span></h3>
-                        <p class="text-sm text-center text-red-600 bg-red-100 p-2 rounded-lg mb-4">প্রতিটি রিচার্জে 5% ফি প্রযোজ্য।</p>
-                        <div class="space-y-4">
-                            <div><label for="recharge-number" class="block text-sm font-medium text-gray-600 mb-2">মোবাইল নম্বর</label><input id="recharge-number" type="tel" placeholder="e.g., 018********" class="w-full p-3 rounded-lg input-field"></div>
-                            <div><label for="recharge-amount" class="block text-sm font-medium text-gray-600 mb-2">টাকার পরিমাণ (BDT)</label><input id="recharge-amount" type="number" placeholder="Minimum ৳20" class="w-full p-3 rounded-lg input-field"><p id="recharge-fee-display" class="text-sm text-green-600 mt-1 h-5"></p></div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div><label for="recharge-operator" class="block text-sm font-medium text-gray-600 mb-2">অপারেটর</label><select id="recharge-operator" class="w-full p-3 rounded-lg input-field"><option value="">Select Operator</option><option value="Grameenphone">Grameenphone</option><option value="Robi">Robi</option><option value="Airtel">Airtel</option><option value="Banglalink">Banglalink</option><option value="Teletalk">Teletalk</option></select></div>
-                                <div><label for="recharge-type" class="block text-sm font-medium text-gray-600 mb-2">সিমের ধরন</label><select id="recharge-type" class="w-full p-3 rounded-lg input-field"><option value="Prepaid">Prepaid</option><option value="Postpaid">Postpaid</option></select></div>
-                            </div>
-                            <button id="submit-recharge-btn" class="w-full p-3 btn-gradient">Submit Recharge</button>
+                    <button onclick="switchView('subview-send')" class="neo-card p-5 rounded-2xl flex flex-col items-center gap-3 hover:border-indigo-500 transition group">
+                        <div class="w-14 h-14 rounded-full bg-indigo-500/10 flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-all text-indigo-500">
+                            <i data-lucide="send" class="w-7 h-7 ml-1"></i>
                         </div>
-                    </div>
-                </div>
-                <div class="mt-6"><h3 class="text-lg font-semibold mb-3">Recharge History</h3><div id="recharge-history-list" class="space-y-3"></div></div>
-            </div>
-            <div id="send-page" class="p-4 space-y-6 sub-page">
-                <div class="relative flex items-center justify-center mb-4"><button onclick="navigateTo('features-page')" class="absolute left-0 p-2 rounded-full hover:bg-gray-100 transition-colors"><i data-lucide="arrow-left" class="w-6 h-6 text-gray-700"></i></button><h2 class="text-xl font-bold text-center text-gray-800">Send Balance</h2></div>
-                <div class="card-bg p-5 space-y-5">
-                    <div>
-                        <h3 class="font-semibold text-lg flex items-center gap-2 mb-4"><i data-lucide="send" class="w-6 h-6 text-[var(--primary-color)]"></i><span>ব্যালেন্স পাঠান</span></h3>
-                        <p class="text-sm text-center text-red-600 bg-red-100 p-2 rounded-lg mb-4">প্রতিটি সেন্ডে 5% ফি প্রযোজ্য।</p>
-                        <div class="space-y-4">
-                            <div><label for="send-recipient-id" class="block text-sm font-medium text-gray-600 mb-2">প্রাপকের আইডি (Recipient ID)</label><input id="send-recipient-id" type="text" placeholder="Recipient's Telegram ID" class="w-full p-3 rounded-lg input-field"></div>
-                            <div><label for="send-amount" class="block text-sm font-medium text-gray-600 mb-2">টাকার পরিমাণ (BDT)</label><input id="send-amount" type="number" placeholder="Minimum ৳20" class="w-full p-3 rounded-lg input-field"><p id="send-fee-display" class="text-sm text-green-600 mt-1 h-5"></p></div>
-                            <button id="submit-send-btn" class="w-full p-3 btn-gradient">Submit Send</button>
+                        <span class="font-semibold">P2P Transfer</span>
+                    </button>
+                     <button onclick="switchView('subview-recharge')" class="neo-card p-5 rounded-2xl flex flex-col items-center gap-3 hover:border-emerald-500 transition group">
+                        <div class="w-14 h-14 rounded-full bg-emerald-500/10 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition-all text-emerald-500">
+                            <i data-lucide="smartphone" class="w-7 h-7"></i>
                         </div>
-                    </div>
+                        <span class="font-semibold">Flexiload</span>
+                    </button>
                 </div>
+
+                <div class="neo-card p-5 rounded-2xl mt-4 bg-slate-800/30">
+                     <h3 class="font-bold text-slate-300 mb-4 flex items-center gap-2"><i data-lucide="activity" class="w-4 h-4"></i> Recent Activities</h3>
+                     <div id="activity-log" class="space-y-3 text-sm text-slate-500 text-center py-4">
+                         No recent activities found.
+                     </div>
+                </div>
+            </div>
+
+            <!-- SUBVIEW: P2P SEND -->
+            <div id="subview-send" class="app-view space-y-6">
+                 <div class="flex items-center gap-3 mb-6">
+                    <button onclick="switchView('view-features')" class="p-2 rounded-full bg-slate-800 text-slate-400"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+                    <h2 class="text-xl font-bold">Transfer Balance</h2>
+                </div>
+                <div class="neo-card p-6 rounded-3xl space-y-5">
+                    <div class="bg-yellow-500/10 text-yellow-500 p-3 rounded-xl text-sm flex gap-2 items-start">
+                        <i data-lucide="alert-triangle" class="w-5 h-5 shrink-0"></i>
+                        <p>Transfer fee is <strong>5%</strong>. Minimum transfer amount is <strong>৳20</strong>.</p>
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400 ml-2 mb-1 block">Recipient UID</label>
+                        <input type="text" id="p2p-uid" placeholder="Enter User ID" class="neo-input w-full p-4 rounded-xl font-mono">
+                    </div>
+                     <div>
+                        <label class="text-xs text-slate-400 ml-2 mb-1 block">Amount</label>
+                        <input type="number" id="p2p-amount" placeholder="0.00" class="neo-input w-full p-4 rounded-xl font-bold text-lg">
+                        <p id="p2p-fee-calc" class="text-right text-xs text-slate-500 mt-2 h-4"></p>
+                    </div>
+                    <button id="btn-exec-p2p" class="action-btn w-full py-4 rounded-xl text-lg">CONFIRM TRANSFER</button>
+                </div>
+            </div>
+
+            <!-- OTHER VIEWS (Updates, Tutorials etc - Simplified for brevity but exist) -->
+            <div id="view-news" class="app-view space-y-4">
+                <h2 class="text-2xl font-bold px-2">Latest News</h2>
+                <div id="news-feed" class="space-y-4"></div>
             </div>
 
         </main>
-        
-        <nav class="bottom-nav">
-            <button class="nav-link-premium" data-page="updates-page"><i data-lucide="bell" class="icon"></i><span>Updates</span></button>
-            <button class="nav-link-premium" data-page="tutorial-page"><i data-lucide="video" class="icon"></i><span>Tutorial</span></button>
-            <button class="nav-link-premium center-home-link active" data-page="home-page"><i data-lucide="home" class="icon"></i></button>
-             <!-- পরিবর্তন শুরু: বাটন টেক্সট পরিবর্তন -->
-            <button class="nav-link-premium" data-page="mail-page"><i data-lucide="archive" class="icon"></i><span>Vault</span></button>
-            <!-- পরিবর্তন শেষ -->
-            <button class="nav-link-premium" data-page="profile-page"><i data-lucide="user" class="icon"></i><span>Profile</span></button>
-            <button id="admin-nav-link" class="nav-link-premium hidden" data-page="admin-page"><i data-lucide="shield" class="icon"></i><span>Admin</span></button>
+
+        <!-- NEW DOCK NAVIGATION -->
+        <nav class="dock-nav">
+            <button class="dock-item nav-active" data-target="view-dashboard">
+                <i data-lucide="home" class="w-6 h-6"></i>
+                <span>Home</span>
+            </button>
+            <button class="dock-item" data-target="view-marketplace">
+                <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+                <span>Market</span>
+            </button>
+             <button class="dock-item" data-target="view-deposit">
+                <i data-lucide="plus-square" class="w-6 h-6"></i>
+                <span>Add Fund</span>
+            </button>
+            <button class="dock-item" data-target="view-news">
+                <i data-lucide="rss" class="w-6 h-6"></i>
+                <span>News</span>
+            </button>
+            <button class="dock-item" data-target="view-profile">
+                <i data-lucide="user-circle" class="w-6 h-6"></i>
+                <span>Account</span>
+            </button>
         </nav>
     </div>
 
-    <!-- =========== MODALS START HERE =========== -->
-    <div id="custom-alert" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[70] p-4 backdrop-blur-sm">
-        <div class="bg-white rounded-lg p-6 w-full max-w-sm text-center border border-gray-200 text-gray-800">
-            <p id="alert-message" class="mb-5 whitespace-pre-wrap text-gray-700"></p>
-            <button id="alert-ok-btn" class="btn-gradient px-8 py-2">OK</button>
+    <!-- GENERIC MODAL -->
+    <div id="nexus-modal" class="fixed inset-0 z-[200] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" id="modal-backdrop"></div>
+        <div class="glass-modal w-full max-w-sm p-6 rounded-3xl relative transform scale-95 transition-all duration-300" id="modal-content">
+            <div id="modal-body"></div>
+            <button id="modal-close" class="absolute top-4 right-4 p-1 rounded-full bg-slate-800 text-slate-400 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
         </div>
     </div>
-    
-    <div id="redeem-code-modal" class="modal-overlay">
-        <div class="modal-content space-y-4">
-            <h3 class="text-xl font-bold text-center text-accent-gradient">Redeem Your Code</h3>
-            <div>
-                <label for="redeem-code-entry" class="block text-sm font-medium text-gray-600 mb-2">Enter Code</label>
-                <input id="redeem-code-entry" type="text" placeholder="e.g., BONUS25" class="w-full p-3 rounded-lg input-field uppercase tracking-widest text-center">
-            </div>
-            <button id="submit-redeem-code-btn" class="w-full p-3 btn-gradient">Redeem</button>
-        </div>
-    </div>
-
-    <div id="notification-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[70] p-4 backdrop-blur-sm">
-        <div class="card-bg p-6 w-full max-w-sm space-y-4">
-            <h3 class="text-xl font-bold text-center text-accent-gradient mb-4">Notifications</h3>
-            <div id="notification-list" class="space-y-3 max-h-80 overflow-y-auto"></div>
-            <button id="notification-ok-btn" class="w-full p-3 btn-gradient mt-4">Close</button>
-        </div>
-    </div>
-
-    <div id="deposit-details-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[70] p-4 backdrop-blur-sm">
-        <div class="card-bg p-6 w-full max-w-sm space-y-4">
-            <h3 class="text-xl font-bold text-center text-accent-gradient mb-4">How to Deposit</h3>
-            <div class="text-gray-700 space-y-3">
-                <p>আসসালামু আলাইকুম, আপনাকে স্বাগতম</p>
-                <ol class="list-decimal list-inside space-y-2 text-sm">
-                    <li>প্রথমে আপনি যে মাধ্যমে টাকা পাঠাতে চান সেটি নির্বাচন করুন।</li>
-                    <li>এরপর প্রদর্শিত নম্বরে আপনার কাঙ্খিত পরিমাণ টাকা পাঠান।</li>
-                    <li>টাকা পাঠানোর পর, নিচের ফর্মটি পূরণ করুন।</li>
-                    <li>আপনার পাঠানো টাকার মাধ্যম, পরিমাণ, নম্বর এবং Transaction ID (TxID) সঠিকভাবে লিখুন।</li>
-                    <li>সবশেষে "Submit Deposit" বাটনে ক্লিক করুন।</li>
-                </ol>
-                <p class="text-xs text-gray-500 mt-4">আপনার ডিপোজিট দ্রুত যাচাই করে ব্যালেন্সে যোগ করা হবে।</p>
-            </div>
-            <button id="deposit-details-ok-btn" class="w-full p-3 btn-gradient mt-4">Got It!</button>
-        </div>
-    </div>
-    
-    <div id="mail-details-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[70] p-4 backdrop-blur-sm">
-        <div class="card-bg p-6 w-full max-w-sm space-y-4 relative">
-            <h3 id="mail-details-title" class="text-2xl font-bold text-center text-accent-gradient">Vault Item Details</h3>
-            <div id="mail-details-content" class="text-gray-700 bg-gray-100 p-4 rounded-lg whitespace-pre-wrap text-sm leading-relaxed max-h-60 overflow-y-auto"></div>
-            <button id="mail-details-ok-btn" class="w-full p-3 btn-gradient mt-4">Got It!</button>
-        </div>
-    </div>
-
-    <div id="insufficient-balance-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[70] p-4 backdrop-blur-sm">
-        <div class="card-bg p-6 w-full max-w-sm text-center space-y-4 relative">
-            <button id="close-insufficient-balance-modal" class="modal-close-btn"><i data-lucide="x" class="w-5 h-5"></i></button>
-            <i data-lucide="wallet" class="w-12 h-12 text-amber-500 mx-auto"></i>
-            <h3 class="text-xl font-bold text-gray-800">ব্যালেন্স কম!</h3>
-            <p class="text-gray-600">স্টক সীমিত, তাই দ্রুত কিনুন। দেরি করলে স্টক শেষ হয়ে যেতে পারে! এখনই ডিপোজিট করে আপনার আইটেমটি সংগ্রহ করুন।</p>
-            <button id="insufficient-balance-deposit-btn" class="w-full p-3 btn-gradient mt-4">Deposit Now</button>
-        </div>
-    </div>
-
-    <div id="purchase-success-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[70] p-4 backdrop-blur-sm">
-        <div class="card-bg p-6 w-full max-w-sm space-y-4 relative">
-            <button id="close-purchase-success-modal" class="modal-close-btn"><i data-lucide="x" class="w-5 h-5"></i></button>
-            <i data-lucide="check-circle-2" class="w-12 h-12 text-green-500 mx-auto"></i>
-            <h3 class="text-xl font-bold text-gray-800 text-center">সফলভাবে কেনা হয়েছে!</h3>
-            <div class="space-y-3 pt-2">
-                <div class="flex items-center justify-between bg-gray-100 p-2.5 rounded-lg">
-                    <span class="font-mono text-sm text-gray-800 truncate" id="purchase-success-email"></span>
-                    <button onclick="copyToClipboard(document.getElementById('purchase-success-email').textContent, this)" class="ml-2 p-2 rounded-md hover:bg-gray-200"><i data-lucide="copy" class="w-4 h-4 text-gray-600"></i></button>
-                </div>
-                <div class="flex items-center justify-between bg-gray-100 p-2.5 rounded-lg">
-                    <span class="font-mono text-sm text-gray-800" id="purchase-success-password"></span>
-                    <button onclick="copyToClipboard(document.getElementById('purchase-success-password').textContent, this)" class="ml-2 p-2 rounded-md hover:bg-gray-200"><i data-lucide="copy" class="w-4 h-4 text-gray-600"></i></button>
-                </div>
-            </div>
-            <p class="text-xs text-gray-500 text-center pt-2">এই তথ্য আপনার ক্রয় হিস্টিতে (শেষ ৪ ঘণ্টা) সেভ করা হয়েছে।</p>
-            <button id="purchase-success-buy-again-btn" class="w-full p-3 btn-gradient mt-4">আবার কিনুন</button>
-        </div>
-    </div>
-
 
     <script type="module">
-        // =================================================================
-        // পরিবর্তন শুরু: নতুন কনফিগারেশন ভ্যারিয়েবল
-        // =================================================================
-        const ADMIN_UID = "CUb4r6eg1RV6Ljkj5U2V1cSswng1";
-        const MINIMUM_DEPOSIT = 50; // এখানে ন্যূনতম ডিপোজিটের পরিমাণ সেট করুন
-        const STOCK_BASE = 958; // স্টক এখান থেকে শুরু হবে
-        // =================================================================
-        // পরিবর্তন শেষ
-        // =================================================================
-        
-        const firebaseConfig = {
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, limit, runTransaction, onSnapshot, updateDoc, Timestamp, writeBatch } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+        // --- CONFIGURATION ---
+        const MIN_DEPOSIT_AMT = 500; // NEW REQUIREMENT
+        const FAKE_STOCK_START = 958; // NEW REQUIREMENT
+        const ADMIN_ID = "CUb4r6eg1RV6Ljkj5U2V1cSswng1";
+
+        const fbConfig = {
             apiKey: "AIzaSyCoCy08FL_sHHdA0f2cJg0BaF-iYAhFuk0",
             authDomain: "mail-store-4692b.firebaseapp.com",
-            databaseURL: "https://mail-store-4692b-default-rtdb.firebaseio.com",
             projectId: "mail-store-4692b",
             storageBucket: "mail-store-4692b.firebasestorage.app",
             messagingSenderId: "264936867411",
             appId: "1:264936867411:web:5933919e5bafae617968a6"
         };
 
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, limit, runTransaction, getCountFromServer, writeBatch, updateDoc, Timestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-
-        const app = initializeApp(firebaseConfig);
+        const app = initializeApp(fbConfig);
         const db = getFirestore(app);
-
-        let currentUserTg = null;
+        let tgSession = null;
         let userData = null;
-        let appConfig = {};
-        let insufficientBalanceInterval = null;
+        let sysConfig = {};
 
-        const loader = document.getElementById('loader');
-        const getLoadingHTML = () => `<div class="loading-container"><div class="premium-loader-spinner"></div></div>`;
-
+        // --- CORE FUNCTIONS ---
         window.onload = async () => {
-            cycleReviewsOnLoader();
-            try {
-                window.Telegram.WebApp.ready();
-                window.Telegram.WebApp.expand();
-                currentUserTg = window.Telegram.WebApp.initDataUnsafe.user;
-                if (!currentUserTg) {
-                    showAlert("Telegram user data not found. Please open this app from Telegram.");
-                    loader.style.display = 'none';
-                    return;
-                }
-            } catch (e) {
-                console.error("Telegram WebApp script failed to initialize or user data not available.", e);
-                showAlert("Error initializing Telegram Mini App. Please try again from Telegram.");
-                loader.style.display = 'none';
-                return;
-            }
-            lucide.createIcons();
-            setupEventListeners();
-            setupBanner();
-            await initUserSession();
-            
-            // পরিবর্তন শুরু: ডায়নামিক স্টক পরিবর্তনের ফাংশন চালু করা
-            setInterval(fluctuateStock, 4500); // প্রতি ৪.৫ সেকেন্ড পর পর স্টক পরিবর্তন হবে
-            // পরিবর্তন শেষ
+            // Simulated extended loading for "secure connection" feel
+            setTimeout(async () => {
+                 try {
+                    if(window.Telegram?.WebApp) {
+                        window.Telegram.WebApp.ready();
+                        window.Telegram.WebApp.expand();
+                        window.Telegram.WebApp.setHeaderColor('#0f172a');
+                        window.Telegram.WebApp.setBackgroundColor('#0f172a');
+                        tgSession = window.Telegram.WebApp.initDataUnsafe.user;
+                    }
+                } catch (e) { console.log("Not in TG"); }
 
-            loader.style.opacity = '0';
-            setTimeout(() => { loader.style.display = 'none'; }, 500);
+                if (!tgSession) {
+                    // Fallback for testing outside TG (REMOVE IN PRODUCTION if strict)
+                    // tgSession = { id: 123456, first_name: "Test", last_name: "User", username: "testuser" };
+                    document.getElementById('loading-msg').textContent = "Error: Open via Telegram";
+                    document.getElementById('loading-msg').classList.add('text-red-500');
+                     return;
+                }
+
+                await initSession();
+                setupInteractions();
+                lucide.createIcons();
+
+                // Hide splash
+                document.getElementById('splash-screen').style.opacity = '0';
+                setTimeout(() => document.getElementById('splash-screen').remove(), 500);
+            }, 1500);
         };
 
-        function cycleReviewsOnLoader() {
-             // পরিবর্তন শুরু: নতুন রিভিউ টেক্সট
-            const reviews = ['"এখন পর্যন্ত সেরা একটি সার্ভিস।" - মোঃ আকাশ', '"খুব দ্রুত ডেলিভারি এবং চমৎকার সাপোর্ট।" - সাদিয়া', '"ব্যবহার করা খুবই সহজ। আমি সন্তুষ্ট!" - রিফাত আহমেদ'];
-            // পরিবর্তন শেষ
-            let reviewIndex = 0;
-            const reviewEl = document.getElementById('loader-reviews');
-            setInterval(() => {
-                reviewEl.style.opacity = '0';
-                setTimeout(() => {
-                    reviewIndex = (reviewIndex + 1) % reviews.length;
-                    reviewEl.textContent = reviews[reviewIndex];
-                    reviewEl.style.opacity = '1';
-                }, 500);
-            }, 4000);
+        async function initSession() {
+            const uid = String(tgSession.id);
+            const userRef = doc(db, "users", uid);
+            const snap = await getDoc(userRef);
+            
+            if (snap.exists()) {
+                userData = snap.data();
+            } else {
+                userData = {
+                    tgChatId: uid,
+                    name: `${tgSession.first_name} ${tgSession.last_name || ''}`.trim(),
+                    username: tgSession.username || null,
+                    balance: 0,
+                    createdAt: serverTimestamp(),
+                    isPremium: false
+                };
+                await setDoc(userRef, userData);
+            }
+
+            if(userData.isBlocked) {
+                document.body.innerHTML = '<div class="flex items-center justify-center h-screen text-red-500 font-bold">ACCOUNT SUSPENDED</div>';
+                throw new Error("Blocked");
+            }
+
+            updateDashboard();
+            loadConfig();
+            initRealtimeListeners();
         }
 
-        async function initUserSession() {
-            if (!currentUserTg) {
-                showAlert("Telegram user data is missing. Cannot proceed.");
-                return;
+        async function loadConfig() {
+             const cfg = await getDoc(doc(db, "config", "main"));
+             sysConfig = cfg.exists() ? cfg.data() : { mails: [] };
+             if(document.getElementById('view-marketplace').classList.contains('active-view')) loadMarketplace();
+        }
+
+        function updateDashboard() {
+            if(!userData) return;
+            const bal = userData.balance.toFixed(2);
+            document.getElementById('main-balance-display').textContent = `৳${bal}`;
+            document.getElementById('user-balance-top').textContent = `৳${bal}`;
+            
+            const initials = (tgSession.first_name?.[0] || 'U') + (tgSession.last_name?.[0] || '');
+            document.getElementById('nav-user-initials').textContent = initials.toUpperCase();
+            document.getElementById('profile-user-initials').textContent = initials.toUpperCase();
+            
+            if(tgSession.photo_url) {
+                document.getElementById('nav-user-img').src = tgSession.photo_url;
+                document.getElementById('nav-user-img').classList.remove('hidden');
+                document.getElementById('nav-user-initials').classList.add('hidden');
+                 document.getElementById('profile-user-img').src = tgSession.photo_url;
+                document.getElementById('profile-user-img').classList.remove('hidden');
+                document.getElementById('profile-user-initials').classList.add('hidden');
             }
-            const tgChatId = String(currentUserTg.id);
-            const userRef = doc(db, "users", tgChatId);
-            try {
-                const userSnap = await getDoc(userRef);
-                if (userSnap.exists()) {
-                    userData = userSnap.data();
-                } else {
-                    const userName = `${currentUserTg.first_name || ''} ${currentUserTg.last_name || ''}`.trim() || `User ${tgChatId}`;
-                    userData = {
-                        tgChatId: tgChatId, name: userName, username: currentUserTg.username || null, balance: 0,
-                        createdAt: serverTimestamp(), isBlocked: false, lastSeenNotification: null, isPremium: false, premiumExpiresAt: null
-                    };
-                    await setDoc(userRef, userData);
-                }
+
+            document.getElementById('profile-name-display').textContent = userData.name;
+            document.getElementById('uid-display').textContent = userData.tgChatId;
+
+            if(userData.isPremium) {
+                const badge = document.getElementById('profile-badge');
+                badge.textContent = "PREMIUM MEMBER";
+                badge.className = "absolute bottom-2 right-0 px-3 py-0.5 bg-gradient-to-r from-amber-500 to-orange-500 text-[10px] rounded-full font-bold text-white shadow-lg";
+            }
+        }
+
+        // --- FAKE STOCK LOGIC (NEW) ---
+        function getFakeFluctuatingStock(key) {
+            const storageKey = `nexus_v_stock_${key}`;
+            let data = tryParseJSON(localStorage.getItem(storageKey));
+            const now = Date.now();
+
+            if (!data) {
+                data = { count: FAKE_STOCK_START, lastChange: now };
+            } else if (now - data.lastChange > 15000) { // Change every 15 seconds
+                // Fluctuate between -3 and +2
+                 const change = Math.floor(Math.random() * 6) - 3; 
+                 data.count = Math.max(100, data.count + change); // Keep above 100
+                 data.lastChange = now;
+            }
+            
+            localStorage.setItem(storageKey, JSON.stringify(data));
+            return data.count;
+        }
+
+        function tryParseJSON(jsonString){
+            try { return JSON.parse(jsonString); }
+            catch (e) { return null; }
+        }
+
+        // --- VIEW CONTROLLER ---
+        window.switchView = function(viewId) {
+            document.querySelectorAll('.app-view').forEach(el => el.classList.remove('active-view'));
+            document.getElementById(viewId).classList.add('active-view');
+            
+            // Update dock if it's a main view
+            document.querySelectorAll('.dock-item').forEach(btn => {
+                btn.classList.toggle('nav-active', btn.dataset.target === viewId);
+            });
+
+            // View specific loaders
+            if(viewId === 'view-marketplace') loadMarketplace();
+            if(viewId === 'view-deposit') loadDepositHistory();
+            if(viewId === 'view-profile') loadProfileStats();
+            if(viewId === 'view-news') loadNewsFeed();
+             window.scrollTo(0,0);
+        }
+
+        // --- MARKETPLACE FUNCTIONS ---
+        async function loadMarketplace() {
+            const container = document.getElementById('inventory-list');
+            container.innerHTML = '<div class="flex justify-center p-8"><div class="loader-ring w-8 h-8 border-2"></div></div>';
+            
+            if(!sysConfig.mails) { await loadConfig(); }
+
+            let html = '';
+            sysConfig.mails.forEach(item => {
+                // USE FAKE STOCK FOR DISPLAY
+                const displayStock = getFakeFluctuatingStock(item.stockKey);
+                const isLow = displayStock < 150;
+
+                html += `
+                <div class="neo-card p-4 rounded-2xl flex items-center justify-between relative overflow-hidden">
+                    <div class="flex items-center gap-4 z-10">
+                        <img src="${item.logoUrl}" class="w-12 h-12 rounded-xl object-cover bg-slate-800" alt="icon">
+                        <div>
+                            <h4 class="font-bold text-slate-100 text-lg">${item.type}</h4>
+                            <p class="text-xs ${isLow ? 'text-orange-400' : 'text-emerald-400'} flex items-center gap-1">
+                                <i data-lucide="package" class="w-3 h-3"></i> Stock: ${displayStock} units
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-right z-10 flex flex-col items-end gap-2">
+                        <span class="font-bold text-xl text-indigo-400">৳${item.priceBdt}</span>
+                        <button onclick="initPurchase('${item.type}', ${item.priceBdt}, '${item.stockKey}')" class="action-btn px-5 py-2 rounded-lg text-sm shadow-lg shadow-indigo-500/20">
+                            BUY NOW
+                        </button>
+                    </div>
+                     <div class="absolute -bottom-6 -left-6 w-24 h-24 bg-indigo-500/5 rounded-full blur-xl"></div>
+                </div>`;
+            });
+            container.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        window.initPurchase = async (type, price, stockKey) => {
+            if(userData.balance < price) return showModal(`
+                <div class="text-center space-y-4">
+                    <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto text-red-500"><i data-lucide="x-circle" class="w-8 h-8"></i></div>
+                    <h3 class="text-xl font-bold text-white">Insufficient Funds</h3>
+                    <p class="text-slate-400 text-sm">You need ৳${(price - userData.balance).toFixed(2)} more to purchase this item.</p>
+                    <button onclick="switchView('view-deposit'); closeModal()" class="action-btn w-full py-3 rounded-xl mt-2">ADD FUNDS NOW</button>
+                </div>
+            `);
+
+            // CONFIRMATION
+             showModal(`
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2"><i data-lucide="shopping-cart" class="w-5 h-5 text-indigo-500"></i> Confirm Purchase</h3>
+                    <div class="neo-card p-3 rounded-xl bg-slate-800/50 text-sm space-y-2">
+                        <div class="flex justify-between"><span>Item:</span> <span class="font-bold text-white">${type}</span></div>
+                         <div class="flex justify-between"><span>Price:</span> <span class="font-bold text-indigo-400">৳${price}</span></div>
+                    </div>
+                    <button id="confirm-buy-btn" class="action-btn w-full py-3 rounded-xl">CONFIRM PAY ৳${price}</button>
+                </div>
+            `);
+            
+            document.getElementById('confirm-buy-btn').onclick = async function() {
+                const btn = this;
+                btn.disabled = true; btn.textContent = "PROCESSING...";
                 
-                if (userData.isPremium && userData.premiumExpiresAt && userData.premiumExpiresAt.toDate() < new Date()) {
-                    userData.isPremium = false;
-                    userData.premiumExpiresAt = null;
-                    await updateDoc(userRef, { isPremium: false, premiumExpiresAt: null });
-                    showAlert("আপনার প্রিমিয়াম সাবস্ক্রিপশনের মেয়াদ শেষ হয়ে গেছে।");
-                }
-                if (userData.isBlocked) {
-                    showAlert("আপনার অ্যাকাউন্ট ব্লক করা হয়েছে।");
-                    return;
-                }
-                await fetchAppConfig();
-                conditionallyLoadGlobalAds();
-                if (tgChatId === ADMIN_UID) {
-                    document.getElementById('admin-nav-link').classList.remove('hidden');
-                }
-                loadSupportMenu();
-                updateUI();
-                listenForNotifications();
-                showMainPage('app-container');
-                navigateTo('home-page');
-            } catch (error) {
-                console.error("Error initializing user session:", error);
-                showAlert("Failed to initialize your session. Please try again.");
-                loader.style.display = 'none';
-            }
-        }
-
-        async function fetchAppConfig() {
-            const configRef = doc(db, "config", "main");
-            const configSnap = await getDoc(configRef);
-            appConfig = configSnap.exists() ? configSnap.data() : { mails: [], otpMailLink: '#' };
-        }
-
-        function updateHeaderUI() {
-            if (!currentUserTg) return;
-            const profilePic = document.getElementById('header-profile-pic');
-            const avatarDiv = document.getElementById('header-initials-avatar');
-            const welcomeName = document.getElementById('header-welcome-name');
-            if (currentUserTg.photo_url) {
-                profilePic.src = currentUserTg.photo_url;
-                profilePic.classList.remove('hidden');
-                avatarDiv.classList.add('hidden');
-            } else {
-                const initials = (currentUserTg.first_name?.[0] || '') + (currentUserTg.last_name?.[0] || '');
-                document.getElementById('header-initials').textContent = initials.toUpperCase();
-                profilePic.classList.add('hidden');
-                avatarDiv.classList.remove('hidden');
-            }
-            const firstName = currentUserTg.first_name || 'User';
-            welcomeName.textContent = `Hi, ${firstName}!`;
-        }
-
-        function updateUI() {
-            if (!userData) return;
-            const balance = (userData.balance || 0).toFixed(2);
-            document.getElementById('balance-display').textContent = `৳${balance}`;
-            document.getElementById('header-balance-display').textContent = `৳${balance}`;
-
-            // পরিবর্তন শুরু: ন্যূনতম ডিপোজিটের placeholder সেট করা
-            const depositAmountInput = document.getElementById('deposit-amount');
-            if (depositAmountInput) {
-                depositAmountInput.placeholder = `e.g., 100 (Minimum ৳${MINIMUM_DEPOSIT})`;
-            }
-            // পরিবর্তন শেষ
-
-            updateHeaderUI();
-        }
-
-        function showMainPage(pageId) {
-            document.querySelectorAll('.main-page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-        }
-
-        function navigateTo(pageId) {
-            if (pageId !== 'mail-page' && insufficientBalanceInterval) {
-                clearInterval(insufficientBalanceInterval);
-                insufficientBalanceInterval = null;
-            }
-            document.querySelectorAll('.sub-page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            document.querySelectorAll('.nav-link-premium[data-page]').forEach(link => {
-                link.classList.toggle('active', link.dataset.page === pageId);
-            });
-            
-            const adsSection = document.getElementById('ads-section');
-            const adFreePages = ['mail-page', 'pay-page'];
-            if (userData.isPremium || adFreePages.includes(pageId)) {
-                adsSection.style.display = 'none';
-            } else {
-                adsSection.style.display = 'block';
-            }
-            const pageLoadFunctions = {
-                'pay-page': loadPaymentHistory,
-                'mail-page': loadMailStore,
-                'updates-page': () => { loadUpdates(); loadReviews(); },
-                'admin-page': populateAdminMailTypes,
-                'profile-page': loadProfilePage,
-                'features-page': loadFeaturesPage,
-                'tutorial-page': loadTutorials,
-                'recharge-page': () => { loadRechargeHistory(); setupDynamicAmountHandlers('recharge'); },
-                'send-page': () => { setupDynamicAmountHandlers('send'); }
-            };
-            if (pageLoadFunctions[pageId]) pageLoadFunctions[pageId]();
-            lucide.createIcons();
-        }
-        window.navigateTo = navigateTo;
-        
-        async function createPersonalNotification(title, message) {
-            try { await addDoc(collection(db, "notifications"), { userId: userData.tgChatId, title: title, message: message, createdAt: serverTimestamp() }); }
-            catch (e) { console.error("Failed to create personal notification:", e); }
-        }
-        
-        async function loadProfilePage() {
-            const profilePic = document.getElementById('profile-pic');
-            const avatarDiv = document.getElementById('profile-initials-avatar');
-            const premiumStatusContainer = document.getElementById('premium-status-container');
-            const profileIdBtn = document.getElementById('profile-id-btn');
-            if (currentUserTg) {
-                if (currentUserTg.photo_url) {
-                    profilePic.src = currentUserTg.photo_url;
-                    profilePic.classList.remove('hidden');
-                    avatarDiv.classList.add('hidden');
-                } else {
-                    const initials = (currentUserTg.first_name?.[0] || '') + (currentUserTg.last_name?.[0] || '');
-                    document.getElementById('profile-initials').textContent = initials.toUpperCase();
-                    profilePic.classList.add('hidden');
-                    avatarDiv.classList.remove('hidden');
-                }
-                document.getElementById('profile-name').textContent = `${currentUserTg.first_name} ${currentUserTg.last_name || ''}`.trim();
-                profileIdBtn.textContent = `ID: ${currentUserTg.id}`;
-                profileIdBtn.onclick = () => copyToClipboard(String(currentUserTg.id), profileIdBtn, 'Telegram ID Copied!');
-            }
-            if (userData.isPremium) {
-                const expiryDate = userData.premiumExpiresAt.toDate().toLocaleDateString('en-GB');
-                premiumStatusContainer.innerHTML = `<div class="premium-status-badge gold">Premium (Expires: ${expiryDate})</div>`;
-            } else {
-                premiumStatusContainer.innerHTML = `<div class="premium-status-badge gray">Not Premium</div>`;
-            }
-        }
-        
-        async function loadSupportMenu() {
-            const menuContainer = document.getElementById('menu-options');
-            menuContainer.innerHTML = getLoadingHTML();
-            let menuHtml = '';
-
-            if (userData.isPremium) {
-                const expiryDate = userData.premiumExpiresAt.toDate().toLocaleDateString('en-GB');
-                menuHtml += `<div class="p-4 flex items-center gap-4 bg-gray-50 border-b border-gray-200">
-                                <i data-lucide="shield-check" class="w-8 h-8 text-yellow-500"></i>
-                                <div><span class="font-bold">Premium Active</span><p class="text-xs text-gray-500 mt-1">Expires: ${expiryDate}</p></div>
-                             </div>`;
-            }
-
-            // SUPPORT TEAM Accordion
-            menuHtml += `<div class="menu-accordion-item">
-                            <button class="menu-accordion-toggle">
-                                <span class="flex items-center gap-4"><i data-lucide="headphones" class="icon"></i>SUPPORT TEAM</span>
-                                <i data-lucide="chevron-down" class="chevron"></i>
-                            </button>
-                            <div class="menu-accordion-content"><div class="content-inner" id="support-links-container">${getLoadingHTML()}</div></div>
-                         </div>`;
-            
-            // More Function Accordion (conditional)
-            if (!userData.isPremium) {
-                menuHtml += `<div class="menu-accordion-item">
-                                <button class="menu-accordion-toggle">
-                                    <span class="flex items-center gap-4"><i data-lucide="layers" class="icon"></i>More Function</span>
-                                    <i data-lucide="chevron-down" class="chevron"></i>
-                                </button>
-                                <div class="menu-accordion-content">
-                                    <div class="content-inner">
-                                        <button id="menu-buy-premium-btn" class="w-full p-3 text-sm rounded-lg btn-premium-buy flex items-center justify-center gap-2"><i data-lucide="gem"></i><span>BUY Premium (৳10)</span></button>
-                                        <button id="menu-redeem-bonus-btn" class="w-full p-3 text-sm rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold flex items-center justify-center gap-2"><i data-lucide="gift"></i><span>Redeem Bonus</span></button>
-                                    </div>
-                                </div>
-                            </div>`;
-            }
-
-            // More Apps Accordion
-            const apps = [{ name: 'App One', link: '#', iconUrl: 'https://via.placeholder.com/40' }, { name: 'App Two', link: '#', iconUrl: 'https://via.placeholder.com/40' }];
-            const appsHtml = apps.map(app => `<a href="${app.link}" target="_blank" class="support-link-card"><img src="${app.iconUrl}" alt="${app.name}" class="rounded-md"><span>${app.name}</span></a>`).join('');
-            menuHtml += `<div class="menu-accordion-item">
-                            <button class="menu-accordion-toggle">
-                                <span class="flex items-center gap-4"><i data-lucide="grid" class="icon"></i>More Apps</span>
-                                <i data-lucide="chevron-down" class="chevron"></i>
-                            </button>
-                            <div class="menu-accordion-content"><div class="content-inner">${appsHtml}</div></div>
-                         </div>`;
-
-            menuContainer.innerHTML = menuHtml;
-            setupMenuAccordions();
-            lucide.createIcons();
-            
-            if (!userData.isPremium) {
-                document.getElementById('menu-buy-premium-btn').addEventListener('click', () => { handleBuyPremium(); toggleMenu(); });
-                document.getElementById('menu-redeem-bonus-btn').addEventListener('click', () => {
-                    toggleMenu();
-                    document.getElementById('redeem-code-entry').value = '';
-                    showModal('redeem-code-modal');
-                });
-            }
-            
-            try {
-                const q = query(collection(db, "support_channels"), orderBy("order", "asc"));
-                const snapshot = await getDocs(q);
-                const supportContainer = document.getElementById('support-links-container');
-                if (!snapshot.empty) {
-                    supportContainer.innerHTML = snapshot.docs.map(doc => {
-                        const channel = doc.data();
-                        return `<a href="${channel.link}" target="_blank" class="support-link-card"><img src="${channel.iconUrl}" alt="${channel.name} logo"><span>${channel.name}</span></a>`;
-                    }).join('');
-                } else {
-                    supportContainer.innerHTML = '<p class="text-sm text-gray-500">No support channels found.</p>';
-                }
-            } catch (e) {
-                document.getElementById('support-links-container').innerHTML = '<p class="text-center text-red-600">Failed to load links.</p>';
-                console.error("Error loading support channels:", e);
-            }
-        }
-
-        function setupMenuAccordions() {
-            const accordions = document.querySelectorAll('.menu-accordion-toggle');
-            accordions.forEach(acc => {
-                acc.addEventListener('click', function() {
-                    const content = this.nextElementSibling;
-                    const isActive = this.classList.contains('active');
-                    accordions.forEach(otherAcc => {
-                        if (otherAcc !== this) {
-                            otherAcc.classList.remove('active');
-                            otherAcc.nextElementSibling.style.maxHeight = null;
-                        }
-                    });
-                    if (!isActive) {
-                        this.classList.add('active');
-                        content.style.maxHeight = content.scrollHeight + "px";
-                    } else {
-                        this.classList.remove('active');
-                        content.style.maxHeight = null;
-                    }
-                });
-            });
-        }
-        
-        async function handleBuyPremium() {
-            const premiumCost = 10;
-            if (userData.isPremium) return showAlert("আপনি ইতিমধ্যে একজন প্রিমিয়াম ব্যবহারকারী।");
-            if (userData.balance < premiumCost) return showAlert(`প্রিমিয়াম কেনার জন্য আপনার পর্যাপ্ত ব্যালেন্স নেই। আপনার প্রয়োজন ৳${premiumCost.toFixed(2)}।`);
-            if (confirm(`আপনি কি ৳${premiumCost.toFixed(2)} দিয়ে ২০ দিনের জন্য প্রিমিয়াম সাবস্ক্রিপশন কিনতে চান?`)) {
-                loader.style.display = 'flex';
                 try {
-                    await runTransaction(db, async (transaction) => {
+                    // ACTUAL STOCK CHECK HAPPENS HERE (Hidden from user)
+                    const result = await runTransaction(db, async (t) => {
                         const userRef = doc(db, "users", userData.tgChatId);
-                        const userDoc = await transaction.get(userRef);
-                        if (!userDoc.exists() || userDoc.data().balance < premiumCost) throw new Error("অপর্যাপ্ত ব্যালেন্স।");
-                        let newExpiryDate = (userDoc.data().isPremium && userDoc.data().premiumExpiresAt.toDate() > new Date()) ? userDoc.data().premiumExpiresAt.toDate() : new Date();
-                        newExpiryDate.setDate(newExpiryDate.getDate() + 20);
-                        const newBalance = userDoc.data().balance - premiumCost;
-                        transaction.update(userRef, { balance: newBalance, isPremium: true, premiumExpiresAt: Timestamp.fromDate(newExpiryDate) });
-                        transaction.set(doc(collection(db, "premium_purchases")), { userId: userData.tgChatId, cost: premiumCost, purchasedAt: serverTimestamp(), expiresAt: Timestamp.fromDate(newExpiryDate) });
-                        userData.balance = newBalance;
-                        userData.isPremium = true;
-                        userData.premiumExpiresAt = Timestamp.fromDate(newExpiryDate);
+                        const userDoc = await t.get(userRef);
+                        if(userDoc.data().balance < price) throw "Insufficient balance during transaction.";
+
+                        const q = query(collection(db, stockKey), where("isSold", "==", false), limit(1));
+                        const stockSnap = await getDocs(q);
+                        if(stockSnap.empty) throw "OUT_OF_STOCK"; // Real stock is empty
+
+                        const itemDoc = stockSnap.docs[0];
+                        const itemData = itemDoc.data();
+
+                        t.update(userRef, { balance: userDoc.data().balance - price });
+                        t.update(itemDoc.ref, { isSold: true, soldTo: userData.tgChatId, soldAt: serverTimestamp() });
+
+                        // Log purchase
+                         const logRef = doc(collection(db, "mail_purchases"));
+                         t.set(logRef, {
+                            userId: userData.tgChatId,
+                            mailType: type,
+                            cost: price,
+                            data: itemData, // Storing full data for history
+                            purchasedAt: serverTimestamp()
+                        });
+
+                        return itemData;
                     });
-                    showAlert("অভিনন্দন! আপনি এখন একজন প্রিমিয়াম ব্যবহারকারী।");
-                    updateUI(); loadProfilePage(); loadSupportMenu();
-                    navigateTo(document.querySelector('.sub-page.active').id);
-                } catch (error) { showAlert(`প্রিমিয়াম কিনতে সমস্যা হয়েছে: ${error.message}`); } 
-                finally { loader.style.display = 'none'; }
-            }
-        }
 
-        function conditionallyLoadGlobalAds() {
-            document.querySelectorAll('script[src*="groleegni.net"], script[src*="forfrogadiertor.com"], script[src*="gizokraijaw.net"]').forEach(s => s.remove());
-            if (userData && userData.isPremium) return;
-            const adScripts = [
-                { dataset: { zone: '10056419' }, src: 'https://groleegni.net/vignette.min.js' },
-                { dataset: { zone: '10056422' }, src: 'https://forfrogadiertor.com/tag.min.js' },
-                { dataset: { zone: '9793049' }, src: 'https://gizokraijaw.net/vignette.min.js' }
-            ];
-            adScripts.forEach(ad => {
-                const script = document.createElement('script');
-                Object.keys(ad.dataset).forEach(key => { script.dataset[key] = ad.dataset[key]; });
-                script.src = ad.src;
-                document.body.appendChild(script);
-            });
-        }
-        
-        function toggleMenu() {
-            const menu = document.getElementById('slide-out-menu');
-            const overlay = document.getElementById('menu-overlay');
-            menu.classList.toggle('open');
-            overlay.classList.toggle('open');
-        }
+                    userData.balance -= price;
+                    updateDashboard();
+                    showPurchaseSuccess(result);
 
-        function setupEventListeners() {
-            document.querySelectorAll('.nav-link-premium[data-page]').forEach(link => link.addEventListener('click', (e) => { e.preventDefault(); navigateTo(link.dataset.page); }));
-            document.getElementById('header-deposit-btn').addEventListener('click', () => navigateTo('pay-page'));
-            document.getElementById('notification-btn').addEventListener('click', showNotifications);
-            document.getElementById('notification-ok-btn').addEventListener('click', hideNotifications);
-            document.getElementById('deposit-btn').addEventListener('click', handleDepositRequest);
-            document.getElementById('home-deposit-btn').addEventListener('click', () => navigateTo('pay-page'));
-            document.getElementById('add-mails-btn').addEventListener('click', handleAddMails);
-            document.getElementById('create-redeem-code-btn').addEventListener('click', handleCreateRedeemCode);
-            document.getElementById('download-history-btn').addEventListener('click', handleDownloadHistory);
-            document.getElementById('copy-history-btn').addEventListener('click', handleCopyHistory);
-            document.getElementById('deposit-details-btn').addEventListener('click', () => document.getElementById('deposit-details-modal').classList.remove('hidden'));
-            document.getElementById('deposit-details-ok-btn').addEventListener('click', () => document.getElementById('deposit-details-modal').classList.add('hidden'));
-            document.getElementById('hamburger-menu-btn').addEventListener('click', toggleMenu);
-            document.getElementById('menu-overlay').addEventListener('click', toggleMenu);
-            document.getElementById('more-features-btn').addEventListener('click', () => navigateTo('features-page'));
-            document.getElementById('source-code-btn').addEventListener('click', () => window.Telegram.WebApp.openLink('https://t.me/bd_Storebot/Botshop'));
-            document.getElementById('features-deposit-btn').addEventListener('click', () => navigateTo('pay-page'));
-            document.getElementById('features-recharge-btn').addEventListener('click', () => navigateTo('recharge-page'));
-            document.getElementById('features-receive-btn').addEventListener('click', handleReceive);
-            document.getElementById('features-send-btn').addEventListener('click', () => navigateTo('send-page'));
-            document.getElementById('submit-recharge-btn').addEventListener('click', handleRechargeRequest);
-            document.getElementById('submit-send-btn').addEventListener('click', handleSendRequest);
-            document.getElementById('mail-details-ok-btn').addEventListener('click', () => document.getElementById('mail-details-modal').classList.add('hidden'));
-            document.getElementById('close-insufficient-balance-modal').addEventListener('click', () => document.getElementById('insufficient-balance-modal').classList.add('hidden'));
-            document.getElementById('insufficient-balance-deposit-btn').addEventListener('click', () => { document.getElementById('insufficient-balance-modal').classList.add('hidden'); navigateTo('pay-page'); });
-            document.getElementById('alert-ok-btn').addEventListener('click', () => document.getElementById('custom-alert').classList.add('hidden'));
-            const hidePurchaseSuccessModal = () => document.getElementById('purchase-success-modal').classList.add('hidden');
-            document.getElementById('purchase-success-buy-again-btn').addEventListener('click', hidePurchaseSuccessModal);
-            document.getElementById('close-purchase-success-modal').addEventListener('click', hidePurchaseSuccessModal);
-            document.getElementById('submit-redeem-code-btn').addEventListener('click', handleRedeemCode);
-            document.querySelectorAll('.modal-overlay').forEach(overlay => {
-                overlay.addEventListener('click', (e) => { if (e.target === overlay) hideModal(overlay.id); });
-            });
-            window.addEventListener('contextmenu', function (e) {
-                if (!e.target.closest('input, textarea, #mail-details-content, #mail-purchase-history .font-mono, #profile-id-btn')) {
-                    e.preventDefault();
+                } catch(e) {
+                    closeModal();
+                    if(e === "OUT_OF_STOCK") showToast("Sorry, this item just went out of stock!", "error");
+                    else showToast(e.message || "Transaction failed", "error");
                 }
-            });
-        }
-        
-        function showModal(modalId) { document.getElementById(modalId).classList.add('active'); }
-        function hideModal(modalId) { document.getElementById(modalId).classList.remove('active'); }
-        
-        async function handleRedeemCode() {
-            const codeInput = document.getElementById('redeem-code-entry');
-            const code = codeInput.value.trim().toUpperCase();
-            if (!code) return showAlert("অনুগ্রহ করে একটি কোড প্রবেশ করান।");
-            loader.style.display = 'flex';
-            try {
-                await runTransaction(db, async (transaction) => {
-                    const codeRef = doc(db, "redeem_codes", code);
-                    const codeDoc = await transaction.get(codeRef);
-                    if (!codeDoc.exists() || codeDoc.data().isUsed) throw new Error("এই কোডটি সঠিক নয় অথবা ইতিমধ্যে ব্যবহার করা হয়েছে।");
-                    const codeData = codeDoc.data();
-                    const userRef = doc(db, "users", userData.tgChatId);
-                    const userDoc = await transaction.get(userRef);
-                    if (!userDoc.exists()) throw new Error("ব্যবহারকারী খুঁজে পাওয়া যায়নি।");
-                    if (codeData.type === 'balance') {
-                        const newBalance = (userDoc.data().balance || 0) + codeData.value;
-                        transaction.update(userRef, { balance: newBalance });
-                        userData.balance = newBalance;
-                        showAlert(`অভিনন্দন! আপনার অ্যাকাউন্টে ৳${codeData.value.toFixed(2)} যোগ করা হয়েছে।`);
-                    } else if (codeData.type === 'premium') {
-                        let newExpiryDate = (userDoc.data().isPremium && userDoc.data().premiumExpiresAt && userDoc.data().premiumExpiresAt.toDate() > new Date()) ? userDoc.data().premiumExpiresAt.toDate() : new Date();
-                        newExpiryDate.setDate(newExpiryDate.getDate() + codeData.value);
-                        const expiryTimestamp = Timestamp.fromDate(newExpiryDate);
-                        transaction.update(userRef, { isPremium: true, premiumExpiresAt: expiryTimestamp });
-                        userData.isPremium = true;
-                        userData.premiumExpiresAt = expiryTimestamp;
-                        showAlert(`অভিনন্দন! আপনি ${codeData.value} দিনের জন্য প্রিমিয়াম সাবস্ক্রিপশন পেয়েছেন।`);
-                    }
-                    transaction.update(codeRef, { isUsed: true, usedBy: userData.tgChatId, usedAt: serverTimestamp() });
-                });
-                updateUI(); loadProfilePage(); loadSupportMenu();
-                codeInput.value = '';
-                hideModal('redeem-code-modal');
-            } catch (error) {
-                showAlert(error.message || "কোড রিডিম করতে সমস্যা হয়েছে।");
-                hideModal('redeem-code-modal');
-                navigateTo('home-page');
-            } finally { 
-                loader.style.display = 'none'; 
-            }
+            };
+            lucide.createIcons();
         }
 
-        async function handleCreateRedeemCode() {
-            let code = document.getElementById('redeem-code-input').value.trim().toUpperCase();
-            const type = document.getElementById('redeem-type-select').value;
-            const value = parseFloat(document.getElementById('redeem-value-input').value);
-            if (!value || value <= 0) return showAlert("অনুগ্রহ করে একটি সঠিক মান (value) দিন।");
-            if (!code) code = 'BD' + Math.random().toString(36).substring(2, 8).toUpperCase();
-            loader.style.display = 'flex';
-            const codeRef = doc(db, "redeem_codes", code);
-            try {
-                const codeSnap = await getDoc(codeRef);
-                if (codeSnap.exists()) {
-                    loader.style.display = 'none';
-                    return showAlert("এই কোডটি ইতিমধ্যে বিদ্যমান। অনুগ্রহ করে অন্য একটি কোড ব্যবহার করুন।");
-                }
-                await setDoc(codeRef, { code, type, value, isUsed: false, createdAt: serverTimestamp(), createdBy: userData.tgChatId, usedBy: null, usedAt: null });
-                showAlert(`সফলভাবে কোড "${code}" তৈরি করা হয়েছে।`);
-                document.getElementById('redeem-code-input').value = '';
-                document.getElementById('redeem-value-input').value = '';
-            } catch (error) { showAlert("কোড তৈরি করতে সমস্যা হয়েছে।"); } 
-            finally { loader.style.display = 'none'; }
+        function showPurchaseSuccess(data) {
+             showModal(`
+                <div class="text-center space-y-4">
+                    <div class="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto text-emerald-500"><i data-lucide="check" class="w-8 h-8"></i></div>
+                    <h3 class="text-xl font-bold text-white">Order Successful!</h3>
+                    <div class="neo-card p-4 rounded-xl bg-slate-800 text-left space-y-3">
+                        <div>
+                            <label class="text-xs text-slate-500">EMAIL / USER</label>
+                            <div class="flex justify-between items-center bg-slate-900 p-2 rounded-lg border border-slate-700">
+                                <code class="text-emerald-400 text-sm truncate pr-2">${data.email}</code>
+                                <button onclick="copyText('${data.email}')" class="text-slate-400 hover:text-white"><i data-lucide="copy" class="w-4 h-4"></i></button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs text-slate-500">PASSWORD / DATA</label>
+                            <div class="flex justify-between items-center bg-slate-900 p-2 rounded-lg border border-slate-700">
+                                <code class="text-indigo-400 text-sm truncate pr-2">${data.password || 'N/A'}</code>
+                                <button onclick="copyText('${data.password || ''}')" class="text-slate-400 hover:text-white"><i data-lucide="copy" class="w-4 h-4"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-500">Data saved to order history.</p>
+                    <button onclick="closeModal()" class="neo-card w-full py-3 rounded-xl border-slate-600 hover:bg-slate-800">CLOSE</button>
+                </div>
+            `);
+            lucide.createIcons();
         }
 
-        function listenForNotifications() {
-            const q = query(collection(db, "notifications"), orderBy("createdAt", "desc"));
-            onSnapshot(q, (snapshot) => {
-                let unreadCount = 0;
-                const lastSeen = userData.lastSeenNotification ? userData.lastSeenNotification.toMillis() : 0;
-                
-                snapshot.forEach(doc => {
-                    const notification = doc.data();
-                    if (notification.userId && notification.userId !== userData.tgChatId) {
-                        return;
-                    }
-                    if (notification.createdAt.toMillis() > lastSeen) {
-                        unreadCount++;
-                    }
-                });
+        // --- DEPOSIT FUNCTIONS ---
+        document.getElementById('btn-submit-deposit').addEventListener('click', async () => {
+            const method = document.getElementById('dep-method').value;
+            const amount = parseInt(document.getElementById('dep-amount').value);
+            const sender = document.getElementById('dep-sender').value.trim();
+            const trx = document.getElementById('dep-trx').value.trim();
 
-                const badge = document.getElementById('notification-badge');
-                if (unreadCount > 0) {
-                    badge.textContent = unreadCount;
-                    badge.classList.remove('hidden');
-                } else {
-                    badge.classList.add('hidden');
-                }
-            });
-        }
-
-        async function showNotifications() {
-            const modal = document.getElementById('notification-modal');
-            const listEl = document.getElementById('notification-list');
-            listEl.innerHTML = getLoadingHTML();
-            modal.classList.remove('hidden');
+            if(!method || !amount || !sender || !trx) return showToast("Please fill all fields", "warning");
             
-            let allDocs = [];
+            // MINIMUM DEPOSIT CHECK
+            if(amount < MIN_DEPOSIT_AMT) return showModal(`
+                <div class="text-center text-red-400 space-y-3">
+                     <i data-lucide="alert-octagon" class="w-12 h-12 mx-auto"></i>
+                     <h3 class="font-bold text-lg">Invalid Amount</h3>
+                     <p class="text-slate-300">Minimum deposit amount is <span class="font-bold text-white">৳${MIN_DEPOSIT_AMT}</span>.</p>
+                     <button onclick="closeModal()" class="neo-card w-full py-2 rounded-xl mt-4">OK</button>
+                </div>
+            `); lucide.createIcons();
+
+            const btn = document.getElementById('btn-submit-deposit');
+            btn.disabled = true; btn.innerText = "VERIFYING...";
 
             try {
-                const globalQuery = query(collection(db, "notifications"), where("userId", "==", null), orderBy("createdAt", "desc"), limit(10));
-                const globalSnapshot = await getDocs(globalQuery);
-                globalSnapshot.forEach(doc => allDocs.push(doc));
-            } catch (e) {
-                console.error("Error fetching global notifications (check Firestore indexes):", e);
-            }
+                // Check for duplicate TrxID first
+                const q = query(collection(db, "deposits"), where("transactionId", "==", trx));
+                const snap = await getDocs(q);
+                if(!snap.empty) throw new Error("This Transaction ID is already used.");
 
-            try {
-                const personalQuery = query(collection(db, "notifications"), where("userId", "==", userData.tgChatId), orderBy("createdAt", "desc"), limit(10));
-                const personalSnapshot = await getDocs(personalQuery);
-                personalSnapshot.forEach(doc => allDocs.push(doc));
-            } catch(e) {
-                console.error("Error fetching personal notifications (check Firestore indexes):", e);
-            }
-
-            if (allDocs.length > 0) {
-                allDocs.sort((a, b) => b.data().createdAt.toMillis() - a.data().createdAt.toMillis());
-                
-                const uniqueDocIds = new Set();
-                const uniqueDocs = allDocs.filter(doc => {
-                    if (uniqueDocIds.has(doc.id)) {
-                        return false;
-                    } else {
-                        uniqueDocIds.add(doc.id);
-                        return true;
-                    }
-                });
-
-                const finalDocs = uniqueDocs.slice(0, 10);
-
-                listEl.innerHTML = finalDocs.map(doc => {
-                    const item = doc.data();
-                    const date = item.createdAt.toDate().toLocaleString('en-GB');
-                    return `<div class="p-3 bg-gray-50 rounded-lg">
-                        <p class="font-bold text-gray-800">${item.title}</p>
-                        <p class="text-sm text-gray-600">${item.message}</p>
-                        <p class="text-xs text-gray-400 text-right mt-2">${date}</p>
-                    </div>`;
-                }).join('');
-            } else {
-                listEl.innerHTML = '<p class="text-center text-gray-500">No notifications yet.</p>';
-            }
-        }
-
-        async function hideNotifications() {
-            document.getElementById('notification-modal').classList.add('hidden');
-            const userRef = doc(db, "users", userData.tgChatId);
-            const newTimestamp = Timestamp.now();
-            await updateDoc(userRef, { lastSeenNotification: newTimestamp });
-            userData.lastSeenNotification = newTimestamp;
-            document.getElementById('notification-badge').classList.add('hidden');
-        }
-
-        async function handleDepositRequest() {
-            const method = document.getElementById('deposit-method').value;
-            const amount = parseInt(document.getElementById('deposit-amount').value);
-            const senderNumber = document.getElementById('sender-number').value.trim();
-            const transactionId = document.getElementById('deposit-txid').value.trim();
-            
-            // =================================================================
-            // পরিবর্তন শুরু: ন্যূনতম ডিপোজিট যাচাই করা
-            // =================================================================
-            if (!method || !amount || !senderNumber || !transactionId) return showAlert("অনুগ্রহ করে সমস্ত তথ্য সঠিকভাবে পূরণ করুন।");
-            if (amount < MINIMUM_DEPOSIT) {
-                return showAlert(`ন্যূনতম ডিপোজিটের পরিমাণ ৳${MINIMUM_DEPOSIT}।`);
-            }
-            // =================================================================
-            // পরিবর্তন শেষ
-            // =================================================================
-            
-            loader.style.opacity = '1';
-            loader.style.display = 'flex';
-
-            try {
-                const depositQuery = query(collection(db, "deposits"), where("transactionId", "==", transactionId), where("status", "in", ["pending", "approved"]));
-                const querySnapshot = await getDocs(depositQuery);
-                if (!querySnapshot.empty) {
-                    loader.style.display = 'none';
-                    return showAlert("এই Transaction ID দিয়ে ইতিমধ্যে একটি ডিপোজিট অনুরোধ জমা দেওয়া হয়েছে।");
-                }
                 await addDoc(collection(db, "deposits"), {
-                    userId: userData.tgChatId, userName: userData.name, method: method, amount: amount,
-                    senderNumber: senderNumber, transactionId: transactionId, status: "pending", requestedAt: serverTimestamp()
+                    userId: userData.tgChatId,
+                    userName: userData.name,
+                    method, amount, senderNumber: sender, transactionId: trx,
+                    status: "pending",
+                    requestedAt: serverTimestamp()
                 });
-                showAlert("আপনার ডিপোজিট অনুরোধ সফলভাবে জমা হয়েছে।");
-                await createPersonalNotification("Deposit Request Submitted", `Your request to deposit ৳${amount} via ${method} has been submitted for review.`);
-                document.getElementById('deposit-method').value = '';
-                document.getElementById('deposit-amount').value = '';
-                document.getElementById('sender-number').value = '';
-                document.getElementById('deposit-txid').value = '';
-                loadPaymentHistory();
-            } catch (error) {
-                showAlert("ডিপোজিট অনুরোধ জমা দিতে একটি সমস্যা হয়েছে।");
-            } finally {
-                loader.style.display = 'none';
-            }
-        }
 
-        async function loadPaymentHistory() {
-            const historyList = document.getElementById('payment-history-list');
-            historyList.innerHTML = getLoadingHTML();
-            try {
-                const q = query(collection(db, "deposits"), where("userId", "==", userData.tgChatId), orderBy("requestedAt", "desc"));
-                const snapshot = await getDocs(q);
-                if (snapshot.empty) return historyList.innerHTML = '<p class="text-gray-600 text-center">কোনো রেকর্ড পাওয়া যায়নি।</p>';
+                showModal(`<div class="text-center space-y-3"><i data-lucide="check-circle" class="w-12 h-12 text-emerald-500 mx-auto"></i><h3 class="text-lg font-bold text-white">Submitted!</h3><p class="text-slate-400">Your deposit of ৳${amount} is under review. It typically takes 5-30 minutes.</p><button onclick="closeModal()" class="action-btn w-full py-2 rounded-xl">OK</button></div>`);
+                document.getElementById('dep-amount').value = '';
+                document.getElementById('dep-trx').value = '';
+                loadDepositHistory();
 
-                historyList.innerHTML = snapshot.docs.map(doc => {
-                    const item = doc.data();
-                    let statusColor, statusIcon;
-                    switch (item.status) {
-                        case 'approved': statusColor = 'text-green-600'; statusIcon = 'check-circle-2'; break;
-                        case 'rejected': statusColor = 'text-red-600'; statusIcon = 'x-circle'; break;
-                        default: statusColor = 'text-yellow-600'; statusIcon = 'hourglass';
-                    }
-                    const date = item.requestedAt ? item.requestedAt.toDate().toLocaleDateString('en-GB') : 'N/A';
-                    return `<div class="card-bg p-3 flex items-center justify-between"><div class="flex items-center gap-3"><i data-lucide="${statusIcon}" class="w-6 h-6 ${statusColor}"></i><div><p class="font-semibold text-gray-800">${item.type || 'Deposit'} - ${item.method}</p><p class="text-xs text-gray-500">${date}</p></div></div><div class="text-right"><p class="font-bold text-lg text-gray-800">৳${item.amount}</p><p class="font-semibold ${statusColor} capitalize text-xs">${item.status}</p></div></div>`;
-                }).join('');
-                lucide.createIcons();
-            } catch (error) {
-                historyList.innerHTML = '<p class="text-red-600 text-center">হিস্টি লোড করা যায়নি।</p>';
-            }
-        }
-
-        async function getStockCount(collectionName) {
-            try {
-                const q = query(collection(db, collectionName), where("isSold", "==", false));
-                const snapshot = await getCountFromServer(q);
-                return snapshot.data().count;
-            } catch (error) {
-                console.error(`Error getting stock count for ${collectionName}:`, error);
-                return 0;
-            }
-        }
-        
-        // =================================================================
-        // পরিবর্তন শুরু: নতুন ফাংশন - স্টক সংখ্যাকে ডায়নামিকভাবে পরিবর্তন করার জন্য
-        // =================================================================
-        function fluctuateStock() {
-            if (!appConfig.mails || appConfig.mails.length === 0) return;
-            appConfig.mails.forEach(mail => {
-                const stockElement = document.getElementById(`stock-display-${mail.stockKey}`);
-                if (stockElement) {
-                    let currentStock = parseInt(stockElement.textContent);
-                    // -3 থেকে +5 এর মধ্যে একটি র‍্যান্ডম সংখ্যা তৈরি করা
-                    const fluctuation = Math.floor(Math.random() * 8) - 3;
-                    let newStock = currentStock + fluctuation;
-                    // স্টক যেন বেস সংখ্যার নিচে না যায় তা নিশ্চিত করা
-                    if (newStock < STOCK_BASE) {
-                        newStock = STOCK_BASE + Math.floor(Math.random() * 5);
-                    }
-                    stockElement.textContent = newStock;
-                }
-            });
-        }
-        // =================================================================
-        // পরিবর্তন শেষ
-        // =================================================================
-
-        async function loadMailStore() {
-            const mailListEl = document.getElementById('mail-list');
-            const historyListEl = document.getElementById('mail-purchase-history');
-            mailListEl.innerHTML = getLoadingHTML();
-            historyListEl.innerHTML = getLoadingHTML();
-
-            try {
-                const stockPromises = (appConfig.mails || []).map(mail => getStockCount(mail.stockKey));
-                const stockCounts = await Promise.all(stockPromises);
-                let mailsWithStock = (appConfig.mails || []).map((mail, index) => ({ ...mail, stock: stockCounts[index] }));
-                mailsWithStock.sort((a, b) => b.stock - a.stock);
-
-                mailListEl.innerHTML = '';
-                mailsWithStock.forEach(mail => {
-                    // =================================================================
-                    // পরিবর্তন শুরু: আসল স্টকের সাথে বেস সংখ্যা যোগ করা
-                    // =================================================================
-                    const displayedStock = mail.stock + STOCK_BASE;
-                    // =================================================================
-                    // পরিবর্তন শেষ
-                    // =================================================================
-                    const costInBdt = mail.priceBdt;
-                    const isOutOfStock = mail.stock === 0;
-                    const insufficientBalance = userData.balance < costInBdt;
-                    const buyButtonDisabled = isOutOfStock || insufficientBalance ? 'disabled' : '';
-                    const buyButtonClasses = isOutOfStock || insufficientBalance ? 'bg-gray-400 cursor-not-allowed' : 'btn-gradient';
-                    const validityTagHtml = (mail.expirationDays !== undefined && mail.expirationDays !== null) ? `<span class="bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-full">${mail.expirationDays} h</span>` : '';
-                    const apiButtonHtml = mail.apiLink ? `<button onclick="openApiLink('${mail.apiLink}')" class="text-teal-600 font-semibold">API</button>` : '<span class="text-gray-400 font-semibold">API</span>';
-                    // =================================================================
-                    // পরিবর্তন শুরু: স্টক দেখানোর জন্য p ট্যাগ-এ একটি আইডি যোগ করা
-                    // =================================================================
-                    mailListEl.innerHTML += `<div class="card-bg p-4 space-y-3"><div class="flex justify-between items-center"><div class="flex items-center gap-3"><img src="${mail.logoUrl}" class="w-8 h-8 rounded-lg object-cover" alt="${mail.type} logo"><h3 class="font-bold text-lg text-gray-800">${mail.type}</h3></div><div class="flex items-center gap-2">${validityTagHtml}<button onclick="showMailDetails('${mail.type}', '${mail.details.replace(/'/g, "\\'")}')" class="text-teal-600 text-sm font-semibold">Details</button></div></div><div class="grid grid-cols-3 text-center items-center pt-2 border-t border-gray-200"><div class="py-2">${apiButtonHtml}</div><div class="py-2"><p class="text-gray-500 text-sm">Price</p><p class="font-bold text-lg text-teal-600">৳${costInBdt.toFixed(2)}</p></div><div class="py-2"><p class="text-gray-500 text-sm">Stock</p><p id="stock-display-${mail.stockKey}" class="font-bold text-lg text-green-600">${displayedStock}</p></div></div><button class="${buyButtonClasses} w-full py-2 rounded-lg text-md" ${buyButtonDisabled} onclick="buyMail('${mail.type}', ${costInBdt}, '${mail.stockKey}')">Buy Now</button></div>`;
-                    // =================================================================
-                    // পরিবর্তন শেষ
-                    // =================================================================
-                });
-                
-                const fourHoursAgo = Timestamp.fromDate(new Date(Date.now() - 4 * 60 * 60 * 1000));
-                const q = query(collection(db, "mail_purchases"), where("userId", "==", userData.tgChatId), where("purchasedAt", ">=", fourHoursAgo), orderBy("purchasedAt", "desc"));
-                const querySnapshot = await getDocs(q);
-
-                if(querySnapshot.empty) {
-                    historyListEl.innerHTML = '<p class="text-center text-gray-600">আপনি শেষ ৪ ঘণ্টায় কোনো আইটেম কিনেননি।</p>';
-                } else {
-                    historyListEl.innerHTML = querySnapshot.docs.map(doc => {
-                        const purchase = doc.data();
-                        const date = purchase.purchasedAt.toDate().toLocaleString();
-                        const fullData = [purchase.mail, purchase.password, purchase.refreshToken, purchase.clientId].filter(Boolean).join('|');
-                        return `<div class="card-bg p-4 space-y-3">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h4 class="font-bold text-lg text-gray-800">${purchase.mailType}</h4>
-                                    <p class="text-xs text-gray-500">${date}</p>
-                                    <p class="text-xs font-mono text-teal-600 mt-1">ID: ${purchase.saleId || 'N/A'}</p>
-                                </div>
-                                <button onclick="copyToClipboard('${fullData}', this)" class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-md font-semibold hover:bg-gray-200 flex items-center gap-1"><i data-lucide="copy-plus" class="w-3 h-3"></i> FULL COPY</button>
-                            </div>
-                            <div class="space-y-2 pt-2 border-t">
-                                <div class="flex items-center justify-between bg-gray-50 p-2 rounded-md">
-                                    <span class="text-sm font-medium text-gray-500 mr-2">EMAIL:</span><span class="font-mono text-sm text-gray-800 truncate">${purchase.mail}</span>
-                                    <button onclick="copyToClipboard('${purchase.mail}', this)" class="ml-2 p-1.5 rounded-md hover:bg-gray-200"><i data-lucide="copy" class="w-4 h-4 text-gray-600"></i></button>
-                                </div>
-                                <div class="flex items-center justify-between bg-gray-50 p-2 rounded-md">
-                                    <span class="text-sm font-medium text-gray-500 mr-2">PASS:</span><span class="font-mono text-sm text-gray-800">${purchase.password || 'N/A'}</span>
-                                    <button onclick="copyToClipboard('${purchase.password || ''}', this)" class="ml-2 p-1.5 rounded-md hover:bg-gray-200"><i data-lucide="copy" class="w-4 h-4 text-gray-600"></i></button>
-                                </div>
-                            </div>
-                        </div>`;
-                    }).join('');
-                }
-                lucide.createIcons();
-                if (insufficientBalanceInterval) { clearInterval(insufficientBalanceInterval); insufficientBalanceInterval = null; }
-                const hasSufficientBalanceForAny = mailsWithStock.some(mail => userData.balance >= mail.priceBdt && mail.stock > 0);
-                const hasAnyStock = mailsWithStock.some(mail => mail.stock > 0);
-                if (!hasSufficientBalanceForAny && hasAnyStock) {
-                    insufficientBalanceInterval = setInterval(() => {
-                        const isAnyModalOpen = document.querySelector('#custom-alert:not(.hidden), .modal-overlay.active');
-                        if (!isAnyModalOpen) {
-                            document.getElementById('insufficient-balance-modal').classList.remove('hidden');
-                            lucide.createIcons();
-                        }
-                    }, 30000);
-                }
             } catch(e) {
-                 mailListEl.innerHTML = '<p class="text-center text-red-600">আইটেম লোড করা যায়নি।</p>';
-                 historyListEl.innerHTML = '<p class="text-center text-red-600">হিস্টি লোড করা যায়নি।</p>';
-                 console.error(e);
-            }
-        }
-
-        async function handleDownloadHistory() {
-            loader.style.display = 'flex';
-            try {
-                const q = query(collection(db, "mail_purchases"), where("userId", "==", userData.tgChatId), orderBy("purchasedAt", "desc"));
-                const querySnapshot = await getDocs(q);
-                if (querySnapshot.empty) {
-                    loader.style.display = 'none';
-                    return showAlert("আপনার কোনো History নেই");
-                }
-                const dataForExcel = querySnapshot.docs.map(doc => { const p = doc.data(); return { 'Purchase Date': p.purchasedAt.toDate().toLocaleString(), 'Mail Type': p.mailType, 'Email': p.mail, 'Password': p.password || 'N/A', 'Cost (BDT)': p.cost, 'Full Data': [p.mail,p.password,p.refreshToken,p.clientId].filter(Boolean).join('|') }; });
-                const worksheet = XLSX.utils.json_to_sheet(dataForExcel);
-                const workbook = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(workbook, worksheet, "Purchase History");
-                worksheet['!cols'] = [ {wch: 22}, {wch: 20}, {wch: 30}, {wch: 30}, {wch: 15}, {wch: 70} ];
-                XLSX.writeFile(workbook, "My_Purchase_History.xlsx");
-            } catch (error) { showAlert("ইতিহাস ডাউনলোড করার সময় একটি সমস্যা হয়েছে।"); }
-            finally { loader.style.display = 'none'; }
-        }
-        
-        async function handleCopyHistory() {
-             loader.style.display = 'flex';
-            try {
-                const fourHoursAgo = new Date(Date.now() - 4 * 60 * 60 * 1000);
-                const q = query(collection(db, "mail_purchases"), where("userId", "==", userData.tgChatId), where("purchasedAt", ">=", Timestamp.fromDate(fourHoursAgo)), orderBy("purchasedAt", "desc"));
-                const querySnapshot = await getDocs(q);
-                if (querySnapshot.empty) {
-                    loader.style.display = 'none';
-                    return showAlert("শেষ ৪ ঘণ্টায় আপনার কোনো কেনাকাটার ইতিহাস নেই।");
-                }
-                const rows = querySnapshot.docs.map(doc => { const p = doc.data(); return `Mail Type: ${p.mailType}\nEmail: ${p.mail}\nPassword: ${p.password || 'N/A'}`; });
-                const contentToCopy = rows.join('\n\n---\n\n');
-                copyToClipboard(contentToCopy, null, 'শেষ ৪ ঘণ্টার ইতিহাস কপি করা হয়েছে!');
-            } catch (error) { showAlert("ইতিহাস কপি করার সময় একটি সমস্যা হয়েছে।"); console.error(error); }
-            finally { loader.style.display = 'none'; }
-        }
-
-        window.buyMail = async function(mailType, cost, stockKey) {
-            if (userData.balance < cost) {
-                document.getElementById('insufficient-balance-modal').classList.remove('hidden');
+                showToast(e.message, "error");
+            } finally {
+                btn.disabled = false; btn.innerText = "VERIFY DEPOSIT";
                 lucide.createIcons();
+            }
+        });
+
+        async function loadDepositHistory() {
+            const el = document.getElementById('deposit-history-log');
+            const q = query(collection(db, "deposits"), where("userId", "==", userData.tgChatId), orderBy("requestedAt", "desc"), limit(10));
+            const snap = await getDocs(q);
+            
+            if(snap.empty) {
+                el.innerHTML = '<p class="text-slate-600 text-center text-xs py-2">No transactions yet.</p>';
                 return;
             }
-            if (!confirm(`আপনি কি ৳${cost.toFixed(2)} দিয়ে একটি ${mailType} কিনতে চান?`)) return;
-            loader.style.display = 'flex';
-            try {
-                const purchasedMailData = await runTransaction(db, async (transaction) => {
-                    const counterRef = doc(db, "counters", "mail_purchase");
-                    const q = query(collection(db, stockKey), where("isSold", "==", false), limit(1));
-                    const mailQuerySnapshot = await getDocs(q);
-                    if (mailQuerySnapshot.empty) throw "দুঃখিত, এই ধরনের আইটেম বর্তমানে স্টক শেষ।";
-                    const mailDoc = mailQuerySnapshot.docs[0];
-                    const mailData = mailDoc.data();
-                    const userRef = doc(db, "users", userData.tgChatId);
-                    const [counterSnap, userSnap] = await Promise.all([ transaction.get(counterRef), transaction.get(userRef) ]);
-                    if (!userSnap.exists() || userSnap.data().balance < cost) throw `অপর্যাপ্ত ব্যালেন্স।`;
-                    if (!counterSnap.exists()) throw "Sale ID counter not found. Please setup 'counters/mail_purchase'.";
-                    const saleId = counterSnap.data().currentId;
-                    transaction.update(counterRef, { currentId: saleId + 1 });
-                    transaction.update(userRef, { balance: userSnap.data().balance - cost });
-                    transaction.update(mailDoc.ref, { isSold: true, soldTo: userData.tgChatId, soldAt: serverTimestamp() });
-                    const purchaseLogRef = doc(collection(db, "mail_purchases"));
-                    transaction.set(purchaseLogRef, {
-                        saleId: saleId, userId: userData.tgChatId, mailType: mailType, mail: mailData.email,
-                        password: mailData.password || null, refreshToken: mailData.refresh_token || null,
-                        clientId: mailData.client_id || null, cost: cost, purchasedAt: serverTimestamp()
-                    });
-                    return mailData;
-                });
-                userData.balance -= cost;
-                updateUI();
-                document.getElementById('purchase-success-email').textContent = purchasedMailData.email;
-                document.getElementById('purchase-success-password').textContent = purchasedMailData.password || 'N/A';
-                document.getElementById('purchase-success-modal').classList.remove('hidden');
-                lucide.createIcons();
-                loadMailStore();
-            } catch (e) { showAlert(typeof e === 'string' ? e : "কিনতে সমস্যা হয়েছে। আবার চেষ্টা করুন।"); }
-            finally { loader.style.display = 'none'; }
+
+            el.innerHTML = snap.docs.map(d => {
+                const data = d.data();
+                const statusColors = { pending: 'text-yellow-500', approved: 'text-emerald-500', rejected: 'text-red-500' };
+                return `
+                <div class="flex justify-between items-center p-3 bg-slate-800/40 rounded-xl border border-slate-800">
+                    <div>
+                        <p class="text-sm font-medium text-slate-300">${data.method} - ৳${data.amount}</p>
+                        <p class="text-[10px] text-slate-500 font-mono">${data.transactionId}</p>
+                    </div>
+                    <span class="text-xs font-bold ${statusColors[data.status] || 'text-slate-400'} uppercase">${data.status}</span>
+                </div>`;
+            }).join('');
         }
 
-        window.showMailDetails = function(mailType, details) {
-            document.getElementById('mail-details-title').textContent = `${mailType} Details`;
-            document.getElementById('mail-details-content').textContent = details;
-            document.getElementById('mail-details-modal').classList.remove('hidden');
+        // --- HELPER FUNCTIONS ---
+        window.showModal = (html) => {
+            const modal = document.getElementById('nexus-modal');
+            const content = document.getElementById('modal-body');
+            content.innerHTML = html;
+            modal.style.pointerEvents = 'auto';
+            modal.style.opacity = '1';
+            document.getElementById('modal-content').classList.remove('scale-95');
+            document.getElementById('modal-content').classList.add('scale-100');
+        }
+        window.closeModal = () => {
+             const modal = document.getElementById('nexus-modal');
+             modal.style.opacity = '0';
+             modal.style.pointerEvents = 'none';
+             document.getElementById('modal-content').classList.add('scale-95');
+             document.getElementById('modal-content').classList.remove('scale-100');
+        }
+        window.showToast = (msg, type='info') => {
+            // Simple telegram webapp toast if available, else fallback could be implemented
+             if(window.Telegram?.WebApp?.showPopup) {
+                 window.Telegram.WebApp.showAlert(msg);
+             } else {
+                 alert(msg);
+             }
+        }
+        window.copyText = (text) => {
+            navigator.clipboard.writeText(text);
+            showToast("Copied to clipboard!");
+        }
+        window.copyNumber = (num, name) => {
+            copyText(num);
+            showToast(`${name} number copied!`);
         }
 
-        async function loadUpdates() {
-            const updatesContainer = document.getElementById('updates-content');
-            updatesContainer.innerHTML = getLoadingHTML();
-            try {
-                const q = query(collection(db, "updates"), orderBy("createdAt", "desc"), limit(1));
-                const snapshot = await getDocs(q);
-                if (snapshot.empty) return updatesContainer.innerHTML = `<div class="card-bg p-6 text-center"><h3 class="font-bold text-xl text-gray-800">No new updates right now!</h3><p class="text-gray-600 mt-2">Check back later.</p></div>`;
-                const updateDoc = snapshot.docs[0];
-                const updateData = updateDoc.data();
-                const updateId = updateDoc.id;
-                const userInteractionDoc = await getDoc(doc(db, "updates", updateId, "userInteractions", userData.tgChatId));
-                const userVote = userInteractionDoc.exists() ? userInteractionDoc.data().vote : null;
-                const isLiked = userVote === 'liked';
-                const isDisliked = userVote === 'disliked';
-                let linkButtonHtml = updateData.linkUrl ? `<a href="${updateData.linkUrl}" target="_blank" class="btn-gradient px-4 py-2 text-sm flex-1 text-center">Learn More</a>` : '';
-                const createdAtDate = updateData.createdAt ? updateData.createdAt.toDate().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
-                updatesContainer.innerHTML = `<div class="card-bg overflow-hidden shadow-lg flex flex-col">${updateData.imageUrl ? `<img src="${updateData.imageUrl}" class="w-full aspect-[16/9] object-cover" alt="Update Banner">` : ''}<div class="p-6 space-y-4 flex flex-col flex-grow"><div><h3 class="text-2xl font-bold text-gray-800">${updateData.title}</h3>${createdAtDate ? `<p class="text-xs text-gray-500 mt-1">${createdAtDate}</p>` : ''}</div><p class="text-gray-600 text-base whitespace-pre-wrap flex-grow leading-relaxed">${updateData.content || ''}</p><div class="flex items-center justify-between gap-4 pt-4 mt-auto border-t border-gray-200"><div class="flex items-center gap-4"><div class="flex items-center space-x-2"><button id="like-btn" class="p-2 rounded-full transition-colors ${isLiked ? 'text-blue-500 bg-blue-100' : 'text-gray-500 hover:bg-gray-100'}" ${isLiked || isDisliked ? 'disabled' : ''}><i data-lucide="thumbs-up" class="w-5 h-5"></i></button><span class="font-semibold text-sm text-gray-700">${updateData.likes || 0}</span></div><div class="flex items-center space-x-2"><button id="dislike-btn" class="p-2 rounded-full transition-colors ${isDisliked ? 'text-red-500 bg-red-100' : 'text-gray-500 hover:bg-gray-100'}" ${isLiked || isDisliked ? 'disabled' : ''}><i data-lucide="thumbs-down" class="w-5 h-5"></i></button><span class="font-semibold text-sm text-gray-700">${updateData.dislikes || 0}</span></div></div>${linkButtonHtml}</div></div></div>`;
-                lucide.createIcons();
-                document.getElementById('like-btn').onclick = () => handleVote('like', updateId);
-                document.getElementById('dislike-btn').onclick = () => handleVote('dislike', updateId);
-            } catch(e) {
-                updatesContainer.innerHTML = `<p class="text-center text-red-600">Failed to load updates.</p>`;
-                console.error("Error loading updates:", e);
-            }
-        }
+        // --- EVENT LISTENERS SETUP ---
+        function setupInteractions() {
+            document.querySelectorAll('.dock-item').forEach(item => {
+                item.addEventListener('click', () => switchView(item.dataset.target));
+            });
+            document.getElementById('btn-menu').addEventListener('click', () => {
+                document.getElementById('main-side-panel').classList.add('open');
+                document.getElementById('panel-overlay').classList.add('open');
+            });
+            document.getElementById('panel-overlay').addEventListener('click', () => {
+                document.getElementById('main-side-panel').classList.remove('open');
+                document.getElementById('panel-overlay').classList.remove('open');
+            });
+            document.getElementById('modal-close').addEventListener('click', closeModal);
+            document.getElementById('modal-backdrop').addEventListener('click', closeModal);
+            document.getElementById('btn-copy-uid').addEventListener('click', () => copyText(userData.tgChatId));
 
-        async function handleVote(voteType, updateId) {
-            loader.style.display = 'flex';
-            const updateRef = doc(db, "updates", updateId);
-            const userInteractionRef = doc(db, "updates", updateId, "userInteractions", userData.tgChatId);
-            try {
-                await runTransaction(db, async (transaction) => {
-                    if ((await transaction.get(userInteractionRef)).exists()) throw new Error("You have already cast your vote.");
-                    const updateDoc = await transaction.get(updateRef);
-                    if (!updateDoc.exists()) throw new Error("Update not found.");
-                    const fieldToUpdate = voteType === 'like' ? 'likes' : 'dislikes';
-                    transaction.update(updateRef, { [fieldToUpdate]: (updateDoc.data()[fieldToUpdate] || 0) + 1 });
-                    transaction.set(userInteractionRef, { vote: voteType, votedAt: serverTimestamp() });
-                });
-                showAlert("Your vote has been submitted successfully!");
-                loadUpdates();
-            } catch (e) { showAlert(e.message || "Failed to submit your vote."); }
-            finally { loader.style.display = 'none'; }
-        }
-
-        function populateAdminMailTypes() {
-            const selectEl = document.getElementById('mail-type-select');
-            selectEl.innerHTML = '<option value="">Select mail type...</option>';
-            (appConfig.mails || []).forEach(mail => { selectEl.innerHTML += `<option value="${mail.stockKey}">${mail.type}</option>`; });
-        }
-
-        async function handleAddMails() {
-            const stockKey = document.getElementById('mail-type-select').value;
-            const mailDataRaw = document.getElementById('mail-data-textarea').value;
-            if (!stockKey || !mailDataRaw.trim()) return showAlert("Please select a mail type and provide mail data.");
-            const lines = mailDataRaw.trim().split('\n').filter(line => line.trim() !== '');
-            if (lines.length === 0) return showAlert("No valid mail data found.");
-            loader.style.display = 'flex';
-            try {
-                const batch = writeBatch(db);
-                let addedCount = 0;
-                lines.forEach(line => {
-                    const parts = line.trim().split('/');
-                    if (parts.length === 4) {
-                        const mailDocRef = doc(collection(db, stockKey));
-                        batch.set(mailDocRef, { email: parts[0], password: parts[1], refresh_token: parts[2], client_id: parts[3], isSold: false, createdAt: serverTimestamp() });
-                        addedCount++;
-                    }
-                });
-                if (addedCount > 0) {
-                    await batch.commit();
-                    showAlert(`Successfully added ${addedCount} new mails to the stock.`);
-                    document.getElementById('mail-data-textarea').value = '';
-                } else showAlert("No valid mails were found to add. Ensure the format is correct.");
-            } catch (error) { showAlert("An error occurred while adding mails."); }
-            finally { loader.style.display = 'none'; }
-        }
-
-        function showAlert(message) {
-            document.getElementById('alert-message').innerText = message;
-            document.getElementById('custom-alert').classList.remove('hidden');
-        }
-
-        window.copyToClipboard = function(text, element, alertMessage = 'কপি করা হয়েছে!') {
-            if (!text || typeof text !== 'string') return;
-            const textArea = document.createElement("textarea");
-            textArea.value = text.trim();
-            textArea.style.position = 'fixed'; textArea.style.top = '-9999px'; textArea.style.left = '-9999px';
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            try {
-                const successful = document.execCommand('copy');
-                if (successful) {
-                    if (element) {
-                        const originalContent = element.innerHTML;
-                        element.innerHTML = `<i data-lucide="check" class="w-4 h-4 text-green-600"></i> Copied`;
-                        lucide.createIcons();
-                        setTimeout(() => { element.innerHTML = originalContent; lucide.createIcons(); }, 1500);
-                    } else { showAlert(alertMessage); }
-                } else { showAlert('দুঃখিত, কপি করা যায়নি।'); }
-            } catch (err) { showAlert('দুঃখিত, কপি করতে একটি ত্রুটি হয়েছে।'); }
-            document.body.removeChild(textArea);
-        }
-
-        window.openApiLink = function(url) {
-            if(url) window.open(url, '_blank');
-        }
-
-        function setupBanner() {
-            const slides = document.querySelectorAll('.slide');
-            const slideContainer = document.getElementById('slides');
-            const dotsContainer = document.getElementById('dots');
-            if (slides.length <= 1) return;
-            let index = 0;
-            dotsContainer.innerHTML = Array.from(slides).map((_, i) => `<span class="dot ${i === 0 ? 'active' : ''}" data-index="${i}"></span>`).join('');
-            const dots = dotsContainer.querySelectorAll('.dot');
-            function showSlide(i) {
-                index = i;
-                slideContainer.style.transform = `translateX(${-i * 100}%)`;
-                dots.forEach(d => d.classList.remove('active'));
-                dots[i].classList.add('active');
-            }
-            dotsContainer.addEventListener('click', e => { if(e.target.matches('.dot')) showSlide(parseInt(e.target.dataset.index)); });
-            setInterval(() => showSlide((index + 1) % slides.length), 5000);
-        }
-
-        async function loadFeaturesPage() {
-            const container = document.getElementById('features-page');
-            container.querySelectorAll('[id$="-display"]').forEach(el => el.textContent = '...');
-            try {
-                const depositQuery = query(collection(db, "deposits"), where("userId", "==", userData.tgChatId), where("status", "==", "approved"));
-                const depositSnapshot = await getDocs(depositQuery);
-                const totalDeposit = depositSnapshot.docs.reduce((sum, doc) => sum + doc.data().amount, 0);
-                document.getElementById('total-deposit-display').textContent = `৳${totalDeposit.toFixed(2)}`;
-                const receivedQuery = query(collection(db, "transfers"), where("toId", "==", userData.tgChatId));
-                const receivedSnapshot = await getDocs(receivedQuery);
-                const totalReceive = receivedSnapshot.docs.reduce((sum, doc) => sum + doc.data().amount, 0);
-                document.getElementById('total-receive-display').textContent = `৳${totalReceive.toFixed(2)}`;
-                const rechargeQuery = query(collection(db, "recharge_requests"), where("userId", "==", userData.tgChatId), where("status", "==", "approved"));
-                const rechargeSnapshot = await getDocs(rechargeQuery);
-                const totalRecharge = rechargeSnapshot.docs.reduce((sum, doc) => sum + doc.data().amount, 0);
-                document.getElementById('total-recharge-display').textContent = `৳${totalRecharge.toFixed(2)}`;
-                const sendQuery = query(collection(db, "transfers"), where("fromId", "==", userData.tgChatId));
-                const sendSnapshot = await getDocs(sendQuery);
-                const totalSend = sendSnapshot.docs.reduce((sum, doc) => sum + doc.data().amount, 0);
-                document.getElementById('total-send-display').textContent = `৳${totalSend.toFixed(2)}`;
-                await loadTransferHistory();
-            } catch (error) {
-                console.error("Error loading features page data:", error);
-                showAlert("Could not load page data.");
-            }
-        }
-
-        async function loadTransferHistory() {
-            const historyList = document.getElementById('transfer-history-list');
-            historyList.innerHTML = getLoadingHTML();
-            const sentQuery = query(collection(db, "transfers"), where("fromId", "==", userData.tgChatId), orderBy("timestamp", "desc"));
-            const receivedQuery = query(collection(db, "transfers"), where("toId", "==", userData.tgChatId), orderBy("timestamp", "desc"));
-            try {
-                const [sentSnapshot, receivedSnapshot] = await Promise.all([getDocs(sentQuery), getDocs(receivedQuery)]);
-                const transactions = [];
-                sentSnapshot.forEach(doc => transactions.push({ id: doc.id, ...doc.data() }));
-                receivedSnapshot.forEach(doc => transactions.push({ id: doc.id, ...doc.data() }));
-                transactions.sort((a, b) => b.timestamp.toMillis() - a.timestamp.toMillis());
-                if (transactions.length === 0) {
-                    historyList.innerHTML = '<p class="text-gray-600 text-center">No transfer history found.</p>';
-                    return;
-                }
-                historyList.innerHTML = transactions.map(item => {
-                    const isSent = item.fromId === userData.tgChatId;
-                    const date = item.timestamp.toDate().toLocaleString('en-GB');
-                    const sign = isSent ? '-' : '+';
-                    const color = isSent ? 'text-red-600' : 'text-green-600';
-                    const actionText = isSent ? `Sent to ${item.toName}` : `Received from ${item.fromName}`;
-                    const amountToShow = isSent ? item.totalDeducted : item.amount;
-                    return `<div class="card-bg p-3 flex items-center justify-between"><div><p class="font-semibold text-gray-800">${actionText}</p><p class="text-xs text-gray-500">${date}</p></div><p class="font-bold text-lg ${color}">${sign}৳${amountToShow.toFixed(2)}</p></div>`;
-                }).join('');
-            } catch (e) { historyList.innerHTML = '<p class="text-red-600 text-center">হিস্টি লোড করা যায়নি।</p>'; }
-        }
-
-        function handleReceive() {
-            const message = `আপনার রিসিভ আইডি:\n\n${userData.tgChatId}\n\nএই আইডি ব্যবহার করে অন্য ব্যবহারকারীর থেকে ব্যালেন্স রিসিভ করতে পারবেন।`;
-            copyToClipboard(userData.tgChatId, null, message);
-        }
-
-        function setupDynamicAmountHandlers(pageType) {
-            const amountInput = document.getElementById(`${pageType}-amount`);
-            const feeDisplay = document.getElementById(`${pageType}-fee-display`);
-            if (!amountInput || !feeDisplay) return;
-            amountInput.addEventListener('input', () => {
-                const maxAmount = Math.floor(userData.balance / 1.05);
-                let currentAmount = parseInt(amountInput.value);
-                if (isNaN(currentAmount) || currentAmount < 0) currentAmount = 0;
-                if (currentAmount > maxAmount) { amountInput.value = maxAmount; currentAmount = maxAmount; }
-                if (currentAmount > 0) {
-                    const fee = currentAmount * 0.05;
-                    feeDisplay.textContent = `Fee (5%): ৳${fee.toFixed(2)}`;
-                } else { feeDisplay.textContent = ''; }
+            // P2P Transfer Logic (Simplified binding)
+            const p2pAmt = document.getElementById('p2p-amount');
+            if(p2pAmt) p2pAmt.addEventListener('input', (e) => {
+                const val = parseFloat(e.target.value) || 0;
+                document.getElementById('p2p-fee-calc').textContent = val > 0 ? `Fee (5%): ৳${(val * 0.05).toFixed(2)}` : '';
             });
         }
 
-        async function handleSendRequest() {
-            const recipientId = document.getElementById('send-recipient-id').value.trim();
-            const amountStr = document.getElementById('send-amount').value;
-            if (!recipientId || !amountStr) return showAlert("অনুগ্রহ করে প্রাপকের আইডি এবং টাকার পরিমাণ লিখুন।");
-            if (recipientId === userData.tgChatId) return showAlert("আপনি নিজের একাউন্টে ব্যালেন্স পাঠাতে পারবেন না।");
-            const amount = parseFloat(amountStr);
-            if (isNaN(amount) || amount < 20) return showAlert("সর্বনিম্ন পাঠানোর পরিমাণ ৳20।");
-            const fee = amount * 0.05;
-            const totalCost = amount + fee;
-            if (totalCost > userData.balance) return showAlert(`আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালেন্স নেই। আপনার প্রয়োজন ৳${totalCost.toFixed(2)}।`);
-            if (!confirm(`আপনি কি ${recipientId} আইডিতে ৳${amount.toFixed(2)} পাঠাতে চান?\n\nফি (5%): ৳${fee.toFixed(2)}\nমোট কাটা হবে: ৳${totalCost.toFixed(2)}\n\nআপনি কি নিশ্চিত?`)) return;
-            loader.style.display = 'flex';
-            const senderRef = doc(db, "users", userData.tgChatId);
-            const recipientRef = doc(db, "users", recipientId);
-            try {
-                const recipientDocForName = await runTransaction(db, async (transaction) => {
-                    const senderDoc = await transaction.get(senderRef);
-                    const recipientDoc = await transaction.get(recipientRef);
-                    if (!senderDoc.exists() || senderDoc.data().balance < totalCost) throw "আপনার পর্যাপ্ত ব্যালেন্স নেই।";
-                    if (!recipientDoc.exists()) throw "প্রাপক আইডি (Recipient ID) খুঁজে পাওয়া যায়নি।";
-                    const newSenderBalance = senderDoc.data().balance - totalCost;
-                    const newRecipientBalance = recipientDoc.data().balance + amount;
-                    transaction.update(senderRef, { balance: newSenderBalance });
-                    transaction.update(recipientRef, { balance: newRecipientBalance });
-                    const transferLogRef = doc(collection(db, "transfers"));
-                    transaction.set(transferLogRef, { fromId: userData.tgChatId, fromName: userData.name, toId: recipientId, toName: recipientDoc.data().name, amount: amount, fee: fee, totalDeducted: totalCost, timestamp: serverTimestamp() });
-                    return recipientDoc.data();
-                });
-                userData.balance -= totalCost;
-                updateUI();
-                showAlert(`সফলভাবে ৳${amount.toFixed(2)} পাঠানো হয়েছে।`);
-                await createPersonalNotification("Balance Sent", `You have successfully sent ৳${amount.toFixed(2)} to ${recipientDocForName.name} (ID: ${recipientId}).`);
-                document.getElementById('send-recipient-id').value = '';
-                document.getElementById('send-amount').value = '';
-                document.getElementById('send-fee-display').textContent = '';
-                navigateTo('features-page');
-            } catch (error) {
-                showAlert(typeof error === 'string' ? error : "ব্যালেন্স পাঠাতে সমস্যা হয়েছে।");
-            } finally { loader.style.display = 'none'; }
+        function initRealtimeListeners() {
+            // Listen for balance changes real-time
+             onSnapshot(doc(db, "users", userData.tgChatId), (doc) => {
+                if(doc.exists()) {
+                    userData.balance = doc.data().balance;
+                    userData.isPremium = doc.data().isPremium;
+                    updateDashboard();
+                }
+            });
         }
 
-        async function handleRechargeRequest() {
-            const number = document.getElementById('recharge-number').value.trim();
-            const amountStr = document.getElementById('recharge-amount').value;
-            const operator = document.getElementById('recharge-operator').value;
-            const type = document.getElementById('recharge-type').value;
-            if (!number || !amountStr || !operator) return showAlert("অনুগ্রহ করে সমস্ত তথ্য সঠিকভাবে পূরণ করুন।");
-            if (!/^(01[3-9])\d{8}$/.test(number)) return showAlert("অনুগ্রহ করে একটি সঠিক বাংলাদেশী মোবাইল নম্বর দিন।");
-            const amount = parseFloat(amountStr);
-            if (isNaN(amount) || amount < 20) return showAlert("সর্বনিম্ন রিচার্জের পরিমাণ ৳20।");
-            const fee = amount * 0.05;
-            const totalCost = amount + fee;
-            if (totalCost > userData.balance) return showAlert(`আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালেন্স নেই। আপনার প্রয়োজন ৳${totalCost.toFixed(2)}।`);
-            if (!confirm(`আপনি কি ${number} নম্বরে ৳${amount.toFixed(2)} রিচার্জ করতে চান?\n\nফি (5%): ৳${fee.toFixed(2)}\nমোট কাটা হবে: ৳${totalCost.toFixed(2)}\n\nআপনি কি নিশ্চিত?`)) return;
-            loader.style.display = 'flex';
-            try {
-                const userRef = doc(db, "users", userData.tgChatId);
-                await runTransaction(db, async (transaction) => {
-                    const userDoc = await transaction.get(userRef);
-                    if (!userDoc.exists() || userDoc.data().balance < totalCost) throw "আপনার পর্যাপ্ত ব্যালেন্স নেই।";
-                    const newBalance = userDoc.data().balance - totalCost;
-                    transaction.update(userRef, { balance: newBalance });
-                    const rechargeRequestRef = doc(collection(db, "recharge_requests"));
-                    transaction.set(rechargeRequestRef, { userId: userData.tgChatId, userName: userData.name, mobileNumber: number, amount: amount, operator: operator, rechargeType: type, fee: fee, totalDeducted: totalCost, status: "pending", requestedAt: serverTimestamp() });
-                });
-                userData.balance -= totalCost;
-                updateUI();
-                showAlert("আপনার রিচার্জ অনুরোধ সফলভাবে জমা হয়েছে।");
-                await createPersonalNotification("Recharge Request Submitted", `Your recharge request of ৳${amount} for ${number} has been submitted.`);
-                document.getElementById('recharge-number').value = '';
-                document.getElementById('recharge-amount').value = '';
-                document.getElementById('recharge-operator').value = '';
-                document.getElementById('recharge-fee-display').textContent = '';
-                loadRechargeHistory();
-            } catch (error) {
-                showAlert(typeof error === 'string' ? error : "রিচার্জ অনুরোধে সমস্যা হয়েছে।");
-            } finally { loader.style.display = 'none'; }
+        // --- PLACEHOLDER LOADERS FOR OTHER VIEWS ---
+        async function loadProfileStats() {
+             // In a real scenario, you'd run aggregations here or fetch pre-calculated stats
+             // For now, we assume they are updated elsewhere or just show placeholders
         }
-
-        async function loadRechargeHistory() {
-            const historyList = document.getElementById('recharge-history-list');
-            historyList.innerHTML = getLoadingHTML();
-            try {
-                const q = query(collection(db, "recharge_requests"), where("userId", "==", userData.tgChatId), orderBy("requestedAt", "desc"));
-                const snapshot = await getDocs(q);
-                if (snapshot.empty) return historyList.innerHTML = '<p class="text-gray-600 text-center">কোনো রিচার্জ হিস্ট্রি পাওয়া যায়নি।</p>';
-                historyList.innerHTML = snapshot.docs.map(doc => {
-                    const item = doc.data();
-                    let statusColor, statusIcon;
-                    switch (item.status) {
-                        case 'approved': statusColor = 'text-green-600'; statusIcon = 'check-circle-2'; break;
-                        case 'rejected': statusColor = 'text-red-600'; statusIcon = 'x-circle'; break;
-                        default: statusColor = 'text-yellow-600'; statusIcon = 'hourglass';
-                    }
-                    const date = item.requestedAt ? item.requestedAt.toDate().toLocaleDateString('en-GB') : 'N/A';
-                    return `<div class="card-bg p-3 flex items-center justify-between"><div><p class="font-semibold text-gray-800">${item.mobileNumber}</p><p class="text-xs text-gray-500">${item.operator} - ${date}</p></div><div class="text-right"><p class="font-bold text-lg text-gray-800">৳${item.amount.toFixed(2)}</p><p class="font-semibold ${statusColor} capitalize text-xs">${item.status}</p></div></div>`;
-                }).join('');
-                lucide.createIcons();
-            } catch (error) {
-                historyList.innerHTML = '<p class="text-red-600 text-center">হিস্ট্রি লোড করা যায়নি।</p>';
-            }
-        }
-
-        async function loadTutorials() {
-            const tutorialListEl = document.getElementById('tutorial-list');
-            tutorialListEl.innerHTML = getLoadingHTML();
-            try {
-                const q = query(collection(db, "tutorials"), orderBy("order"));
-                const snapshot = await getDocs(q);
-                if (snapshot.empty) return tutorialListEl.innerHTML = '<p class="text-center text-gray-600">কোনো টিউটোরিয়াল পাওয়া যায়নি।</p>';
-                tutorialListEl.innerHTML = snapshot.docs.map(doc => {
-                    const tutorial = doc.data();
-                    return `<div class="card-bg p-4"><h3 class="font-bold text-lg text-gray-800 mb-3">${tutorial.title}</h3><div class="video-container-16-9"><iframe src="${tutorial.youtubeEmbedUrl}" title="${tutorial.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div></div>`;
-                }).join('');
-            } catch (e) {
-                tutorialListEl.innerHTML = '<p class="text-center text-red-600">টিউটোরিয়াল লোড করা যায়নি।</p>';
-            }
-        }
-
-        async function loadReviews() {
-            const reviewListEl = document.getElementById('reviews-list');
-            reviewListEl.innerHTML = getLoadingHTML();
-            try {
-                const q = query(collection(db, "reviews"), orderBy("createdAt", "desc"), limit(5));
-                const snapshot = await getDocs(q);
-                if (snapshot.empty) return reviewListEl.innerHTML = '<p class="text-center text-gray-600">কোনো রিভিউ পাওয়া যায়নি।</p>';
-                reviewListEl.innerHTML = snapshot.docs.map(doc => {
-                    const review = doc.data();
-                    let stars = '';
-                    for (let i = 0; i < 5; i++) stars += `<i data-lucide="star" class="w-4 h-4 ${i < review.rating ? 'fill-current' : ''}"></i>`;
-                    return `<div class="review-card-new p-4 rounded-lg"><div class="flex items-start gap-4"><img src="${review.imageUrl}" class="w-12 h-12 rounded-full object-cover" alt="User"><div class="flex-1"><div class="flex justify-between items-center"><h5 class="font-bold">${review.name}</h5><div class="star-rating flex text-sm">${stars}</div></div><p class="text-gray-600 text-sm mt-1">"${review.reviewText}"</p></div></div></div>`;
-                }).join('');
-                lucide.createIcons();
-            } catch (e) {
-                reviewListEl.innerHTML = '<p class="text-center text-red-600">রিভিউ লোড করা যায়নি।</p>';
-            }
-        }
-
-        window.handleLoginMailClick = function() {
-            if (!appConfig || !appConfig.mails || appConfig.mails.length === 0) {
-                 navigateTo('pay-page');
-                 return;
-            }
-            const minPrice = Math.min(...appConfig.mails.map(m => m.priceBdt));
-            if (userData.balance < minPrice) {
-                navigateTo('pay-page');
-            } else {
-                document.getElementById('mail-list').scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-
-        window.handleOtpMailClick = function() {
-            if (appConfig.otpMailLink && appConfig.otpMailLink !== '#') {
-                window.Telegram.WebApp.openLink(appConfig.otpMailLink);
-            } else {
-                showAlert("OTP Mail service is currently unavailable.");
-            }
+        async function loadNewsFeed() {
+             const el = document.getElementById('news-feed');
+             // Example static news, replace with DB fetch
+             el.innerHTML = `
+                <div class="neo-card p-4 rounded-2xl">
+                    <img src="https://via.placeholder.com/400x200/6366f1/ffffff?text=NEXUS+UPDATE" class="w-full rounded-xl mb-3" alt="news">
+                    <h3 class="font-bold text-lg text-slate-200">Major System Upgrade v4.5</h3>
+                    <p class="text-slate-400 text-sm mt-2">We have successfully upgraded our servers for faster delivery speeds. Marketplace stocks are now updated in real-time.</p>
+                    <p class="text-xs text-slate-600 mt-3">2 Hours ago</p>
+                </div>
+             `;
         }
 
     </script>
