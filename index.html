@@ -919,13 +919,11 @@
                         const userDoc = await t.get(userRef);
                         if (!userDoc.exists()) throw "User not found.";
                         
-                        let finalCost = price;
                         let cashback = 0;
                         if (userDoc.data().isPremium && premiumTiers[userDoc.data().premiumTier]?.benefits.mailCashback > 0) {
                             cashback = price * premiumTiers[userDoc.data().premiumTier].benefits.mailCashback;
                         }
-
-                        // The final cost is price, cashback is applied after purchase.
+                        
                         if(userDoc.data().balance < price) throw "Insufficient balance during transaction.";
 
                         const q = query(collection(db, stockKey), where("isSold", "==", false), limit(1));
@@ -933,7 +931,6 @@
                         if(stockSnap.empty) throw "OUT_OF_STOCK";
 
                         const itemDoc = stockSnap.docs[0];
-                        // Deduct price, then add cashback
                         const newBalance = userDoc.data().balance - price + cashback;
                         t.update(userRef, { balance: newBalance });
                         t.update(itemDoc.ref, { isSold: true, soldTo: userData.tgChatId, soldAt: serverTimestamp() });
@@ -1208,7 +1205,6 @@
             btn.disabled = true; btn.textContent = 'PROCESSING...';
             try {
                 // This creates a request for an admin to process.
-                // For a fully automated system, this would need to integrate with a recharge API.
                 await runTransaction(db, async (transaction) => {
                     const userRef = doc(db, "users", userData.tgChatId);
                     const userDoc = await transaction.get(userRef);
@@ -1332,7 +1328,6 @@
             } catch(e) {
                 showToast("Redeem failed: " + e.message, "error");
             } finally {
-                // The modal will be closed on success, so no need to reset the button state if it doesn't exist.
                 if (document.getElementById('btn-exec-redeem')) {
                      btn.disabled = false; btn.textContent = "REDEEM";
                 }
@@ -1392,12 +1387,15 @@
         // --- PLACEHOLDER LOADERS FOR OTHER VIEWS ---
         async function loadProfileStats() { /* Placeholder */ }
 
+        // --- UPDATED AND MORE ROBUST FUNCTION ---
         async function loadActivityLog() {
             const el = document.getElementById('activity-log');
             el.innerHTML = '<div class="loader-ring w-6 h-6 border-2 mx-auto"></div>';
+            
+            let allLogs = [];
 
+            // Fetch P2P transfers
             try {
-                // Get P2P transfers
                 const p2pQuery = query(
                     collection(db, "p2p_logs"), 
                     where("fromId", "==", userData.tgChatId), 
@@ -1405,9 +1403,16 @@
                     limit(5)
                 );
                 const p2pSnap = await getDocs(p2pQuery);
-                const p2pLogs = p2pSnap.docs.map(d => ({...d.data(), type: 'p2p'}));
+                p2pSnap.forEach(d => {
+                    if(d.data().createdAt) allLogs.push({ ...d.data(), type: 'p2p' });
+                });
+            } catch (error) {
+                console.error("Error loading P2P logs:", error);
+                // Do not throw an error, just continue
+            }
 
-                // Get Recharge requests
+            // Fetch Recharge requests
+            try {
                 const rechargeQuery = query(
                     collection(db, "recharge_requests"), 
                     where("userId", "==", userData.tgChatId), 
@@ -1415,39 +1420,43 @@
                     limit(5)
                 );
                 const rechargeSnap = await getDocs(rechargeQuery);
-                const rechargeLogs = rechargeSnap.docs.map(d => ({...d.data(), type: 'recharge'}));
-
-                const allLogs = [...p2pLogs, ...rechargeLogs]
-                    .sort((a, b) => b.createdAt.seconds - a.createdAt.seconds)
-                    .slice(0, 10);
-
-                if (allLogs.length === 0) {
-                    el.innerHTML = 'No recent activities found.';
-                    return;
-                }
-
-                el.innerHTML = allLogs.map(log => {
-                    const date = log.createdAt.toDate().toLocaleDateString();
-                    if (log.type === 'p2p') {
-                        return `<div class="text-left p-2 rounded-lg bg-slate-900/50">
-                                    <p class="text-slate-300">Sent ৳${log.amount} to <span class="font-mono">${log.toId}</span></p>
-                                    <p class="text-slate-500 text-xs">${date}</p>
-                                </div>`;
-                    }
-                    if (log.type === 'recharge') {
-                         const statusColors = { pending: 'text-yellow-500', completed: 'text-emerald-500', failed: 'text-red-500' };
-                        return `<div class="text-left p-2 rounded-lg bg-slate-900/50">
-                                    <p class="text-slate-300">Recharge ৳${log.amount} to <span class="font-mono">${log.mobileNumber}</span></p>
-                                    <p class="text-xs ${statusColors[log.status] || 'text-slate-500'}">${log.status.toUpperCase()} - ${date}</p>
-                                </div>`;
-                    }
-                }).join('');
-
+                rechargeSnap.forEach(d => {
+                     if(d.data().createdAt) allLogs.push({ ...d.data(), type: 'recharge' });
+                });
             } catch (error) {
-                console.error("Error loading activity log:", error);
-                el.innerHTML = '<p class="text-red-500">Could not load activities.</p>';
+                console.error("Error loading recharge logs:", error);
+                // Do not throw an error, just continue
             }
+            
+            // Sort all collected logs by timestamp
+            allLogs.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+            
+            const recentLogs = allLogs.slice(0, 10);
+
+            if (recentLogs.length === 0) {
+                el.innerHTML = 'No recent activities found.';
+                return;
+            }
+
+            el.innerHTML = recentLogs.map(log => {
+                const date = log.createdAt.toDate().toLocaleDateString();
+                if (log.type === 'p2p') {
+                    return `<div class="text-left p-2 rounded-lg bg-slate-900/50">
+                                <p class="text-slate-300">Sent ৳${log.amount} to <span class="font-mono">${log.toId}</span></p>
+                                <p class="text-slate-500 text-xs">${date}</p>
+                            </div>`;
+                }
+                if (log.type === 'recharge') {
+                    const statusColors = { pending: 'text-yellow-500', completed: 'text-emerald-500', failed: 'text-red-500' };
+                    return `<div class="text-left p-2 rounded-lg bg-slate-900/50">
+                                <p class="text-slate-300">Recharge ৳${log.amount} to <span class="font-mono">${log.mobileNumber}</span></p>
+                                <p class="text-xs ${statusColors[log.status] || 'text-slate-500'}">${log.status.toUpperCase()} - ${date}</p>
+                            </div>`;
+                }
+                return '';
+            }).join('');
         }
+
 
         async function loadNewsFeed() {
             const el = document.getElementById('news-feed');
