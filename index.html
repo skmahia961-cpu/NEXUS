@@ -18,10 +18,10 @@
                 extend: {
                     fontFamily: { sans: ['Poppins', 'sans-serif'], mono: ['Roboto Mono', 'monospace'] },
                     colors: {
-                        nexus: { 
-                            dark: '#0f172a', 
-                            card: '#1e293b', 
-                            primary: '#6366f1', 
+                        nexus: {
+                            dark: '#0f172a',
+                            card: '#1e293b',
+                            primary: '#6366f1',
                             accent: '#06b6d4',
                             success: '#10b981',
                             warning: '#f59e0b',
@@ -37,7 +37,7 @@
         body { background-color: var(--nexus-bg); color: #e2e8f0; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
         .no-select { -webkit-user-select: none; user-select: none; }
         .allow-select { -webkit-user-select: text; user-select: text; }
-        
+
         /* New Component Styles */
         .neo-card {
             background: var(--nexus-card); border: 1px solid #334155;
@@ -49,7 +49,7 @@
             background: #0f172a; border: 1px solid #334155; color: #fff; transition: all 0.3s ease;
         }
         .neo-input:focus { border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2); outline: none; }
-        
+
         .action-btn {
             background: var(--primary-grad); color: white; font-weight: 600; border: none;
             position: relative; overflow: hidden; transition: all 0.3s ease;
@@ -61,6 +61,9 @@
         }
         .action-btn:active { transform: scale(0.97); }
         .action-btn:hover::after { opacity: 1; }
+        .action-btn:disabled { background: #334155; color: #64748b; cursor: not-allowed; }
+        .action-btn:disabled::after { display: none; }
+
 
         /* View Management */
         .app-view { display: none; opacity: 0; transform: translateY(10px); transition: opacity 0.3s ease, transform 0.3s ease; }
@@ -153,7 +156,35 @@
             </div>
         </div>
         <div id="panel-content" class="p-4 space-y-2 overflow-y-auto h-[calc(100%-160px)]">
-            <!-- Dynamic Menu Items will be loaded here -->
+            <!-- Menu items are here -->
+            <button onclick="openPremiumPage()" class="neo-card w-full p-4 rounded-xl flex items-center justify-between hover:bg-slate-800 transition">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 rounded-lg bg-yellow-500/10 text-yellow-500"><i data-lucide="gem" class="w-5 h-5"></i></div>
+                    <span class="font-medium">Get Premium</span>
+                </div>
+                <i data-lucide="chevron-right" class="w-5 h-5 text-slate-600"></i>
+            </button>
+            <button onclick="openRedeemCodeModal()" class="neo-card w-full p-4 rounded-xl flex items-center justify-between hover:bg-slate-800 transition">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 rounded-lg bg-green-500/10 text-green-500"><i data-lucide="gift" class="w-5 h-5"></i></div>
+                    <span class="font-medium">Redeem Code</span>
+                </div>
+                <i data-lucide="chevron-right" class="w-5 h-5 text-slate-600"></i>
+            </button>
+            <button onclick="openDonatePage()" class="neo-card w-full p-4 rounded-xl flex items-center justify-between hover:bg-slate-800 transition">
+                 <div class="flex items-center gap-3">
+                    <div class="p-2 rounded-lg bg-emerald-500/10 text-emerald-500"><i data-lucide="heart" class="w-5 h-5"></i></div>
+                    <span class="font-medium">Donate</span>
+                </div>
+                <i data-lucide="chevron-right" class="w-5 h-5 text-slate-600"></i>
+            </button>
+            <button onclick="openLotteryPage()" class="neo-card w-full p-4 rounded-xl flex items-center justify-between hover:bg-slate-800 transition">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 rounded-lg bg-purple-500/10 text-purple-500"><i data-lucide="ticket" class="w-5 h-5"></i></div>
+                    <span class="font-medium">Lottery</span>
+                </div>
+                <i data-lucide="chevron-right" class="w-5 h-5 text-slate-600"></i>
+            </button>
         </div>
         <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-800 bg-slate-900">
             <div class="flex justify-evenly text-slate-400">
@@ -167,7 +198,7 @@
 
     <!-- MAIN APP CONTAINER -->
     <div id="nexus-app" class="min-h-screen">
-        
+
         <!-- TOP BAR -->
         <header class="sticky top-0 z-40 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 px-4 py-3 flex items-center justify-between">
             <div class="flex items-center gap-3" id="user-quick-info">
@@ -196,7 +227,7 @@
         </header>
 
         <main class="p-4">
-            
+
             <!-- DASHBOARD VIEW -->
             <div id="view-dashboard" class="app-view active-view space-y-6">
                 <!-- Promo Slider -->
@@ -231,15 +262,18 @@
                     </div>
                 </div>
 
-                <!-- Live Ticker -->
-                 <div class="news-ticker-wrap">
-                    <div class="news-ticker">
-                        <div class="ticker-item"><i data-lucide="zap" class="w-4 h-4 text-yellow-500"></i> NEXUS লাইভ স্টকে স্বাগতম!</div>
-                        <div class="ticker-item"><i data-lucide="shield" class="w-4 h-4 text-green-500"></i> ১০০% সিকিউর পেমেন্ট সিস্টেম।</div>
-                        <div class="ticker-item"><i data-lucide="clock" class="w-4 h-4 text-indigo-500"></i> ২৪/৭ অটোমেটিক ডেলিভারি।</div>
-                        <div class="ticker-item"><i data-lucide="info" class="w-4 h-4 text-cyan-500"></i> যেকোনো প্রয়োজনে সাপোর্টে মেসেজ দিন।</div>
+                <!-- NEW: Live Transaction Feed -->
+                <div class="neo-card p-4 rounded-2xl">
+                    <h3 class="font-bold text-slate-300 mb-3 flex justify-between items-center">
+                        <span>Live Activity</span>
+                        <span class="text-xs text-emerald-400 flex items-center gap-1"><div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div> LIVE</span>
+                    </h3>
+                    <div id="live-transactions-feed" class="space-y-2 max-h-48 overflow-y-auto">
+                        <!-- Live transactions will be loaded here -->
+                        <p class="text-slate-500 text-center text-sm py-4">Loading activities...</p>
                     </div>
                 </div>
+
 
                 <!-- Quick Actions -->
                 <div id="premium-ads-container">
@@ -249,6 +283,16 @@
 
             <!-- MARKETPLACE VIEW (Previously Mail Page) -->
             <div id="view-marketplace" class="app-view space-y-5">
+                 <!-- Live Ticker -->
+                 <div class="news-ticker-wrap">
+                    <div class="news-ticker">
+                        <div class="ticker-item"><i data-lucide="zap" class="w-4 h-4 text-yellow-500"></i> NEXUS লাইভ স্টকে স্বাগতম!</div>
+                        <div class="ticker-item"><i data-lucide="shield" class="w-4 h-4 text-green-500"></i> ১০০% সিকিউর পেমেন্ট সিস্টেম।</div>
+                        <div class="ticker-item"><i data-lucide="clock" class="w-4 h-4 text-indigo-500"></i> ২৪/৭ অটোমেটিক ডেলিভারি।</div>
+                        <div class="ticker-item"><i data-lucide="info" class="w-4 h-4 text-cyan-500"></i> যেকোনো প্রয়োজনে সাপোর্টে মেসেজ দিন।</div>
+                    </div>
+                </div>
+                
                 <div class="flex justify-between items-center">
                     <h2 class="text-xl font-bold text-slate-100 flex items-center gap-2"><i data-lucide="grid" class="w-6 h-6 text-indigo-500"></i> Marketplace</h2>
                     <div class="flex gap-2">
@@ -271,14 +315,15 @@
                     <!-- Inventory Items Loaded via JS -->
                 </div>
 
+                <!-- UPDATED: User's Purchase History -->
                 <div class="pt-6 border-t border-slate-800">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-slate-300">Recent Orders (4h)</h3>
+                        <h3 class="font-bold text-slate-300">Your Recent Purchases</h3>
                          <button id="btn-dl-history" class="text-xs bg-slate-800 px-3 py-1 rounded-full text-slate-400 flex items-center gap-1 hover:text-slate-200 transition">
                              <i data-lucide="download-cloud" class="w-3 h-3"></i> Save CSV
                          </button>
                     </div>
-                    <div id="order-history-container" class="space-y-3 text-sm">
+                    <div id="order-history-container" class="space-y-3 text-sm max-h-96 overflow-y-auto">
                         <!-- History loaded here -->
                     </div>
                 </div>
@@ -309,14 +354,14 @@
                          <span class="font-mono text-xs text-slate-300">01864260513</span>
                          <span class="text-[10px] text-slate-500 mt-1">Tap to Copy</span>
                      </div>
-                     <div class="neo-card p-3 rounded-xl flex flex-col items-center" onclick="copyNumber('01827750260', 'bKash')">
+                     <div class="neo-card p-3 rounded-xl flex flex-col items-center" onclick="copyNumber('01855879942', 'bKash')">
                          <img src="https://i.postimg.cc/tCwGVkdH/20250922-113514.png" class="w-8 h-8 mb-2 rounded-full" alt="bKash">
-                         <span class="font-mono text-xs text-slate-300">01827750260</span>
+                         <span class="font-mono text-xs text-slate-300">01855879942</span>
                          <span class="text-[10px] text-slate-500 mt-1">Tap to Copy</span>
                      </div>
-                     <div class="neo-card p-3 rounded-xl flex flex-col items-center" onclick="copyNumber('018277502604', 'Rocket')">
-                         <img src="https://i.postimg.cc/htsw10Tj/20250922-113924.png" class="w-8 h-8 mb-2 rounded-full" alt="Rocket">
-                         <span class="font-mono text-xs text-slate-300">018277502604</span>
+                     <div class="neo-card p-3 rounded-xl flex flex-col items-center" onclick="copyNumber('8796384283', 'Binance')">
+                         <img src="https://i.postimg.cc/pXq3r5M1/binance-logo.png" class="w-8 h-8 mb-2 rounded-full bg-white p-1" alt="Binance">
+                         <span class="font-mono text-xs text-slate-300">8796384283</span>
                          <span class="text-[10px] text-slate-500 mt-1">Tap to Copy</span>
                      </div>
                 </div>
@@ -325,10 +370,12 @@
                     <h3 class="font-semibold text-slate-200">Submit Verification Info</h3>
                     <select id="dep-method" class="neo-input w-full p-3 rounded-xl">
                         <option value="" disabled selected>Select Payment Method</option>
-                        <option value="bKash">bKash</option><option value="Nagad">Nagad</option><option value="Rocket">Rocket</option>
+                        <option value="bKash">bKash</option>
+                        <option value="Nagad">Nagad</option>
+                        <option value="Binance">Binance</option>
                     </select>
                     <input type="number" id="dep-amount" placeholder="Amount (Min 500 BDT)" class="neo-input w-full p-3 rounded-xl">
-                    <input type="text" id="dep-sender" placeholder="Sender Number (01xxxxxxxxx)" class="neo-input w-full p-3 rounded-xl">
+                    <input type="text" id="dep-sender" placeholder="Sender Number / Binance ID" class="neo-input w-full p-3 rounded-xl">
                     <input type="text" id="dep-trx" placeholder="Transaction ID (TrxID)" class="neo-input w-full p-3 rounded-xl">
                     <button id="btn-submit-deposit" class="action-btn w-full py-4 rounded-xl text-lg shadow-lg shadow-indigo-500/20">VERIFY DEPOSIT</button>
                 </div>
@@ -347,23 +394,27 @@
                              <img id="profile-user-img" src="" class="w-full h-full rounded-full bg-slate-900 object-cover p-1 hidden" alt="Profile">
                              <div id="profile-user-initials" class="w-full h-full rounded-full bg-slate-800 flex items-center justify-center text-4xl font-bold text-slate-500 border-4 border-slate-900"></div>
                         </div>
-                        <span id="profile-badge" class="absolute bottom-2 right-0 px-2 py-0.5 bg-slate-700 text-[10px] rounded-full border border-slate-600 font-semibold">FREE USER</span>
+                        <span id="profile-badge" class="absolute bottom-2 right-0 px-3 py-1 bg-slate-700 text-xs rounded-full border border-slate-600 font-semibold">FREE USER</span>
                     </div>
-                    <h3 id="profile-name-display" class="text-2xl font-bold text-white">Loading...</h3>
+                    <h3 id="profile-name-display" class="text-2xl font-bold text-white text-center">Loading...</h3>
                     <button id="btn-copy-uid" class="mt-2 text-xs text-slate-400 bg-slate-800/50 px-3 py-1 rounded-full flex items-center gap-1 hover:bg-slate-800 transition">
                         UID: <span id="uid-display">...</span> <i data-lucide="copy" class="w-3 h-3"></i>
                     </button>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
-                     <div class="neo-card p-4 rounded-2xl text-center bg-slate-800/50">
-                         <p class="text-xs text-slate-500">Total Spent</p>
-                         <p id="stat-spent" class="text-lg font-bold text-indigo-400">৳0.00</p>
-                     </div>
-                     <div class="neo-card p-4 rounded-2xl text-center bg-slate-800/50">
-                         <p class="text-xs text-slate-500">Total Deposit</p>
-                         <p id="stat-deposit" class="text-lg font-bold text-emerald-400">৳0.00</p>
-                     </div>
+                <div class="grid grid-cols-3 gap-3 text-center">
+                    <div class="neo-card p-3 rounded-xl bg-slate-800/50">
+                        <p class="text-[11px] text-slate-500">Total Deposit</p>
+                        <p id="stat-deposit" class="text-md font-bold text-emerald-400">৳0.00</p>
+                    </div>
+                    <div class="neo-card p-3 rounded-xl bg-slate-800/50">
+                        <p class="text-[11px] text-slate-500">Total Cashback</p>
+                        <p id="stat-cashback" class="text-md font-bold text-yellow-400">৳0.00</p>
+                    </div>
+                    <div class="neo-card p-3 rounded-xl bg-slate-800/50">
+                        <p class="text-[11px] text-slate-500">Premium Savings</p>
+                        <p id="stat-savings" class="text-md font-bold text-cyan-400">৳0.00</p>
+                    </div>
                 </div>
 
                 <div class="space-y-3">
@@ -390,7 +441,7 @@
                     <button onclick="switchView('view-profile')" class="p-2 rounded-full bg-slate-800 text-slate-400"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
                     <h2 class="text-xl font-bold">Tools & Services</h2>
                 </div>
-                
+
                 <div class="grid grid-cols-2 gap-4">
                     <button onclick="switchView('subview-send')" class="neo-card p-5 rounded-2xl flex flex-col items-center gap-3 hover:border-indigo-500 transition group">
                         <div class="w-14 h-14 rounded-full bg-indigo-500/10 flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-all text-indigo-500">
@@ -408,7 +459,7 @@
 
                 <div class="neo-card p-5 rounded-2xl mt-4 bg-slate-800/30">
                      <h3 class="font-bold text-slate-300 mb-4 flex items-center gap-2"><i data-lucide="activity" class="w-4 h-4"></i> Recent Activities</h3>
-                     <div id="activity-log" class="space-y-3 text-sm text-slate-500 text-center py-4">
+                     <div id="activity-log" class="space-y-3 text-sm text-slate-500 text-center py-4 max-h-60 overflow-y-auto">
                          No recent activities found.
                      </div>
                 </div>
@@ -423,7 +474,7 @@
                 <div class="neo-card p-6 rounded-3xl space-y-5">
                     <div class="bg-yellow-500/10 text-yellow-500 p-3 rounded-xl text-sm flex gap-2 items-start">
                         <i data-lucide="alert-triangle" class="w-5 h-5 shrink-0"></i>
-                        <p>Transfer fee is <strong>5%</strong>. Minimum transfer amount is <strong>৳20</strong>.</p>
+                        <p>Default transfer fee is <strong>5%</strong>. Minimum transfer is <strong>৳20</strong>. Premium members get fee discounts.</p>
                     </div>
                     <div>
                         <label class="text-xs text-slate-400 ml-2 mb-1 block">Recipient UID</label>
@@ -438,10 +489,103 @@
                 </div>
             </div>
 
-            <!-- OTHER VIEWS (Updates, Tutorials etc - Simplified for brevity but exist) -->
+            <!-- NEW: SUBVIEW: FLEXILOAD / RECHARGE -->
+            <div id="subview-recharge" class="app-view space-y-6">
+                <div class="flex items-center gap-3 mb-6">
+                   <button onclick="switchView('view-features')" class="p-2 rounded-full bg-slate-800 text-slate-400"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+                   <h2 class="text-xl font-bold">Mobile Recharge</h2>
+               </div>
+               <div class="neo-card p-6 rounded-3xl space-y-5">
+                    <div class="bg-cyan-500/10 text-cyan-400 p-3 rounded-xl text-sm flex gap-2 items-start">
+                        <i data-lucide="info" class="w-5 h-5 shrink-0"></i>
+                        <p>Enter mobile number and amount to recharge. Service fee may apply.</p>
+                    </div>
+                   <select id="recharge-operator" class="neo-input w-full p-3 rounded-xl">
+                        <option value="" disabled selected>Select Operator</option>
+                        <option value="GP">Grameenphone</option>
+                        <option value="Robi">Robi</option>
+                        <option value="Airtel">Airtel</option>
+                        <option value="Banglalink">Banglalink</option>
+                        <option value="Teletalk">Teletalk</option>
+                   </select>
+                   <input type="number" id="recharge-number" placeholder="Mobile Number (01xxxxxxxxx)" class="neo-input w-full p-3 rounded-xl">
+                   <input type="number" id="recharge-amount" placeholder="Amount" class="neo-input w-full p-3 rounded-xl">
+                   <button id="btn-exec-recharge" class="action-btn w-full py-4 rounded-xl text-lg">RECHARGE NOW</button>
+               </div>
+           </div>
+
+           <!-- NEW: GET PREMIUM VIEW -->
+           <div id="view-premium" class="app-view space-y-6">
+                <div class="flex items-center gap-3 mb-6">
+                   <button onclick="switchView('view-profile')" class="p-2 rounded-full bg-slate-800 text-slate-400"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+                   <h2 class="text-xl font-bold">Premium Membership</h2>
+                </div>
+                <div id="premium-tiers-container" class="space-y-4">
+                    <!-- Tiers will be dynamically loaded here -->
+                </div>
+           </div>
+
+            <!-- NEW: DONATE VIEW -->
+            <div id="view-donate" class="app-view space-y-6">
+                <div class="flex items-center gap-3 mb-6">
+                    <button onclick="switchView('view-dashboard')" class="p-2 rounded-full bg-slate-800 text-slate-400"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+                    <h2 class="text-xl font-bold">Donate for a Cause</h2>
+                </div>
+                <div class="neo-card p-4 rounded-2xl text-center">
+                    <img src="https://i.postimg.cc/13Yv5J5r/360_F_689366496_5_V3_N3_N5_Qe_Su_Yv_V0_Ey_Jv_Y7_Hkl_Za_YAb_Wo_S5.jpg" alt="Donate for a cause" class="rounded-xl w-full h-auto object-cover mb-4">
+                    <p class="text-slate-400 text-sm mb-4">আপনারเล็กน้อย সাহায্য তাদের মুখে হাসি ফোটাতে পারে।</p>
+                    <div class="space-y-3">
+                        <input type="number" id="donate-amount" placeholder="ENTER Donate Amount (min ৳0.01)" class="neo-input w-full p-3 rounded-xl text-center">
+                        <button id="btn-exec-donate" class="action-btn w-full py-3 rounded-xl text-lg">DONATE NOW</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- NEW: LOTTERY VIEW -->
+            <div id="view-lottery" class="app-view space-y-6">
+                <div class="flex items-center gap-3 mb-6">
+                    <button onclick="switchView('view-dashboard')" class="p-2 rounded-full bg-slate-800 text-slate-400"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+                    <h2 class="text-xl font-bold">Join Lottery</h2>
+                </div>
+            
+                <!-- Lottery info card -->
+                <div class="neo-card p-5 rounded-2xl text-center bg-gradient-to-br from-slate-800 to-slate-900">
+                    <h3 class="text-lg font-bold text-yellow-400 flex items-center justify-center gap-2"><i data-lucide="gift"></i> Weekly Mega Lottery</h3>
+                    <p class="text-2xl font-bold text-white my-2">Reward: <span class="text-emerald-400">৳5000</span></p>
+                    
+                    <div class="my-4 grid grid-cols-2 gap-2 text-sm">
+                        <div class="bg-slate-900/50 p-2 rounded-lg">
+                            <p class="text-slate-400">Entry Fee</p> 
+                            <p class="font-bold text-white">৳50</p>
+                        </div>
+                        <div class="bg-slate-900/50 p-2 rounded-lg">
+                            <p class="text-slate-400">Max Participants</p> 
+                            <p class="font-bold text-white">20</p>
+                        </div>
+                    </div>
+            
+                    <button id="btn-join-lottery" class="action-btn w-full py-3 rounded-xl text-lg">JOIN NOW</button>
+                </div>
+            
+                <!-- Participants list -->
+                <div class="neo-card p-4 rounded-2xl">
+                    <h3 class="font-bold text-slate-300 mb-3 flex justify-between items-center">
+                        <span>Participants (<span id="lottery-participant-count">0</span>/20)</span>
+                        <span class="text-xs text-emerald-400 flex items-center gap-1"><div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div> LIVE</span>
+                    </h3>
+                    <div id="lottery-participants-list" class="space-y-2 max-h-60 overflow-y-auto">
+                        <p class="text-slate-500 text-center text-sm py-4">No participants yet.</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- NEWS VIEW -->
             <div id="view-news" class="app-view space-y-4">
                 <h2 class="text-2xl font-bold px-2">Latest News</h2>
-                <div id="news-feed" class="space-y-4"></div>
+                <div id="news-feed" class="space-y-4">
+                    <!-- News will be loaded here from Firebase -->
+                </div>
             </div>
 
         </main>
@@ -487,17 +631,32 @@
         import { getFirestore, doc, setDoc, getDoc, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, limit, runTransaction, onSnapshot, updateDoc, Timestamp, writeBatch } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
         // --- CONFIGURATION ---
-        const MIN_DEPOSIT_AMT = 500; // NEW REQUIREMENT
-        const FAKE_STOCK_START = 958; // NEW REQUIREMENT
+        const MIN_DEPOSIT_AMT = 500;
+        const P2P_FEE_PERCENT = 0.05; // 5%
+        const MIN_P2P_AMT = 20;
+        const MIN_DONATE_AMT = 0.01;
         const ADMIN_ID = "CUb4r6eg1RV6Ljkj5U2V1cSswng1";
+        const LOTTERY_ENTRY_FEE = 50;
+        const LOTTERY_MAX_PARTICIPANTS = 20;
+        
+        // --- PREMIUM TIER CONFIGURATION ---
+        const premiumTiers = {
+            silver:    { name: 'Silver',    price: 10,  benefits: { noAds: true, mailCashback: 0,    depositCashback: 0,    feeReduction: 0 } },
+            palladium: { name: 'Palladium', price: 50,  benefits: { noAds: true, mailCashback: 0.01, depositCashback: 0,    feeReduction: 0 } },
+            diamond:   { name: 'Diamond',   price: 150, benefits: { noAds: true, mailCashback: 0.03, depositCashback: 0,    feeReduction: 0 } },
+            heroic:    { name: 'Heroic',    price: 300, benefits: { noAds: true, mailCashback: 0.04, depositCashback: 0.01, feeReduction: 0 } },
+            master:    { name: 'Master',    price: 500, benefits: { noAds: true, mailCashback: 0.05, depositCashback: 0.05, feeReduction: 0.03 } } // 5% fee - 3% = 2% fee
+        };
 
+        // UPDATED FIREBASE CONFIG
         const fbConfig = {
-            apiKey: "AIzaSyCoCy08FL_sHHdA0f2cJg0BaF-iYAhFuk0",
-            authDomain: "mail-store-4692b.firebaseapp.com",
-            projectId: "mail-store-4692b",
-            storageBucket: "mail-store-4692b.firebasestorage.app",
-            messagingSenderId: "264936867411",
-            appId: "1:264936867411:web:5933919e5bafae617968a6"
+            apiKey: "AIzaSyABzUFAkmkbYmaEPC1mpAIM3TWnG_NkxU0",
+            authDomain: "backup-mail-store.firebaseapp.com",
+            databaseURL: "https://backup-mail-store-default-rtdb.firebaseio.com",
+            projectId: "backup-mail-store",
+            storageBucket: "backup-mail-store.firebasestorage.app",
+            messagingSenderId: "856776939573",
+            appId: "1:856776939573:web:0f8b852e4028249b5ff97c"
         };
 
         const app = initializeApp(fbConfig);
@@ -508,9 +667,10 @@
 
         // --- CORE FUNCTIONS ---
         window.onload = async () => {
-            // Simulated extended loading for "secure connection" feel
             setTimeout(async () => {
                  try {
+                    // This app is designed to run inside Telegram.
+                    // The login process relies on user data provided by the Telegram Web App.
                     if(window.Telegram?.WebApp) {
                         window.Telegram.WebApp.ready();
                         window.Telegram.WebApp.expand();
@@ -518,21 +678,19 @@
                         window.Telegram.WebApp.setBackgroundColor('#0f172a');
                         tgSession = window.Telegram.WebApp.initDataUnsafe.user;
                     }
-                } catch (e) { console.log("Not in TG"); }
+                } catch (e) { console.log("Not in TG environment"); }
 
+                // If tgSession is null, it means the app is not running in Telegram.
                 if (!tgSession) {
-                    // Fallback for testing outside TG (REMOVE IN PRODUCTION if strict)
-                    // tgSession = { id: 123456, first_name: "Test", last_name: "User", username: "testuser" };
-                    document.getElementById('loading-msg').textContent = "Error: Open via Telegram";
+                    document.getElementById('loading-msg').textContent = "Error: Please open via Telegram";
                     document.getElementById('loading-msg').classList.add('text-red-500');
-                     return;
+                    return; // Stop execution if not in Telegram
                 }
 
                 await initSession();
                 setupInteractions();
                 lucide.createIcons();
 
-                // Hide splash
                 document.getElementById('splash-screen').style.opacity = '0';
                 setTimeout(() => document.getElementById('splash-screen').remove(), 500);
             }, 1500);
@@ -542,7 +700,7 @@
             const uid = String(tgSession.id);
             const userRef = doc(db, "users", uid);
             const snap = await getDoc(userRef);
-            
+
             if (snap.exists()) {
                 userData = snap.data();
             } else {
@@ -552,7 +710,9 @@
                     username: tgSession.username || null,
                     balance: 0,
                     createdAt: serverTimestamp(),
-                    isPremium: false
+                    isPremium: false,
+                    premiumTier: null,
+                    lastNotificationCheck: null
                 };
                 await setDoc(userRef, userData);
             }
@@ -565,11 +725,13 @@
             updateDashboard();
             loadConfig();
             initRealtimeListeners();
+            checkNewNotifications();
+            loadLiveTransactions(); // Start live transaction feed
         }
 
         async function loadConfig() {
              const cfg = await getDoc(doc(db, "config", "main"));
-             sysConfig = cfg.exists() ? cfg.data() : { mails: [] };
+             sysConfig = cfg.exists() ? cfg.data() : { mails: [], otpLink: "" };
              if(document.getElementById('view-marketplace').classList.contains('active-view')) loadMarketplace();
         }
 
@@ -578,11 +740,11 @@
             const bal = userData.balance.toFixed(2);
             document.getElementById('main-balance-display').textContent = `৳${bal}`;
             document.getElementById('user-balance-top').textContent = `৳${bal}`;
-            
+
             const initials = (tgSession.first_name?.[0] || 'U') + (tgSession.last_name?.[0] || '');
             document.getElementById('nav-user-initials').textContent = initials.toUpperCase();
             document.getElementById('profile-user-initials').textContent = initials.toUpperCase();
-            
+
             if(tgSession.photo_url) {
                 document.getElementById('nav-user-img').src = tgSession.photo_url;
                 document.getElementById('nav-user-img').classList.remove('hidden');
@@ -592,94 +754,193 @@
                 document.getElementById('profile-user-initials').classList.add('hidden');
             }
 
-            document.getElementById('profile-name-display').textContent = userData.name;
-            document.getElementById('uid-display').textContent = userData.tgChatId;
-
-            if(userData.isPremium) {
-                const badge = document.getElementById('profile-badge');
-                badge.textContent = "PREMIUM MEMBER";
-                badge.className = "absolute bottom-2 right-0 px-3 py-0.5 bg-gradient-to-r from-amber-500 to-orange-500 text-[10px] rounded-full font-bold text-white shadow-lg";
-            }
-        }
-
-        // --- FAKE STOCK LOGIC (NEW) ---
-        function getFakeFluctuatingStock(key) {
-            const storageKey = `nexus_v_stock_${key}`;
-            let data = tryParseJSON(localStorage.getItem(storageKey));
-            const now = Date.now();
-
-            if (!data) {
-                data = { count: FAKE_STOCK_START, lastChange: now };
-            } else if (now - data.lastChange > 15000) { // Change every 15 seconds
-                // Fluctuate between -3 and +2
-                 const change = Math.floor(Math.random() * 6) - 3; 
-                 data.count = Math.max(100, data.count + change); // Keep above 100
-                 data.lastChange = now;
-            }
+            const profileNameEl = document.getElementById('profile-name-display');
+            const profileBadgeEl = document.getElementById('profile-badge');
             
-            localStorage.setItem(storageKey, JSON.stringify(data));
-            return data.count;
+            if (userData.isPremium && userData.premiumTier) {
+                const tierName = premiumTiers[userData.premiumTier]?.name || 'Premium';
+                profileNameEl.innerHTML = `${userData.name} <span class="text-yellow-400" title="Premium User">⭐</span>`;
+                profileBadgeEl.textContent = tierName.toUpperCase();
+                profileBadgeEl.classList.remove('bg-slate-700', 'border-slate-600');
+                profileBadgeEl.classList.add('bg-yellow-500/10', 'text-yellow-400', 'border', 'border-yellow-500/20');
+            } else {
+                profileNameEl.textContent = userData.name;
+                profileBadgeEl.textContent = 'FREE USER';
+                profileBadgeEl.classList.add('bg-slate-700', 'border-slate-600');
+                profileBadgeEl.classList.remove('bg-yellow-500/10', 'text-yellow-400', 'border', 'border-yellow-500/20');
+            }
+
+            document.getElementById('uid-display').textContent = userData.tgChatId;
         }
 
-        function tryParseJSON(jsonString){
-            try { return JSON.parse(jsonString); }
-            catch (e) { return null; }
-        }
 
         // --- VIEW CONTROLLER ---
         window.switchView = function(viewId) {
             document.querySelectorAll('.app-view').forEach(el => el.classList.remove('active-view'));
             document.getElementById(viewId).classList.add('active-view');
-            
-            // Update dock if it's a main view
-            document.querySelectorAll('.dock-item').forEach(btn => {
-                btn.classList.toggle('nav-active', btn.dataset.target === viewId);
-            });
 
-            // View specific loaders
-            if(viewId === 'view-marketplace') loadMarketplace();
+            const mainViews = ['view-dashboard', 'view-marketplace', 'view-deposit', 'view-news', 'view-profile'];
+            if (mainViews.includes(viewId)) {
+                document.querySelectorAll('.dock-item').forEach(btn => {
+                    btn.classList.toggle('nav-active', btn.dataset.target === viewId);
+                });
+            }
+
+            if(viewId === 'view-marketplace') {
+                loadMarketplace();
+                loadPurchaseHistory(); // Load user's purchase history
+            }
             if(viewId === 'view-deposit') loadDepositHistory();
             if(viewId === 'view-profile') loadProfileStats();
             if(viewId === 'view-news') loadNewsFeed();
-             window.scrollTo(0,0);
+            if(viewId === 'view-premium') loadPremiumTiers();
+            if(viewId === 'view-features') loadActivityLog();
+            if(viewId === 'view-lottery') loadLotteryParticipants();
+
+            window.scrollTo(0,0);
+        }
+        
+        // --- PREMIUM TIER FUNCTIONS ---
+        function loadPremiumTiers() {
+            const container = document.getElementById('premium-tiers-container');
+            let html = Object.keys(premiumTiers).map(key => {
+                const tier = premiumTiers[key];
+                const benefitsList = [
+                    tier.benefits.noAds ? '<li><i class="inline-block w-4 h-4" data-lucide="check"></i> No Ads</li>' : '',
+                    tier.benefits.mailCashback > 0 ? `<li><i class="inline-block w-4 h-4" data-lucide="check"></i> ${tier.benefits.mailCashback * 100}% Cashback on Mails</li>` : '',
+                    tier.benefits.depositCashback > 0 ? `<li><i class="inline-block w-4 h-4" data-lucide="check"></i> ${tier.benefits.depositCashback * 100}% Deposit Cashback</li>` : '',
+                    tier.benefits.feeReduction > 0 ? `<li><i class="inline-block w-4 h-4" data-lucide="check"></i> P2P Fee reduced to ${(P2P_FEE_PERCENT - tier.benefits.feeReduction) * 100}%</li>` : ''
+                ].filter(Boolean).join('');
+
+                const isCurrentUserTier = userData.premiumTier === key;
+                const buttonHtml = isCurrentUserTier
+                    ? `<button class="action-btn w-full py-3 rounded-xl" disabled>CURRENT PLAN</button>`
+                    : `<button onclick="purchasePremium('${key}')" class="action-btn w-full py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500">UPGRADE</button>`;
+
+                return `
+                <div class="neo-card p-5 rounded-2xl ${isCurrentUserTier ? 'border-yellow-400/50' : 'border-slate-700'}">
+                    <h3 class="text-2xl font-bold text-yellow-400">${tier.name}</h3>
+                    <p class="text-3xl font-bold my-3">৳${tier.price} <span class="text-lg text-slate-400">/ lifetime</span></p>
+                    <ul class="text-sm text-slate-300 space-y-2 my-4 text-left pl-2">
+                        ${benefitsList}
+                    </ul>
+                    ${buttonHtml}
+                </div>`;
+            }).join('');
+            container.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        window.purchasePremium = async function(tierKey) {
+            const tier = premiumTiers[tierKey];
+            if (userData.balance < tier.price) {
+                return showToast(`Insufficient balance. You need ৳${tier.price}.`, 'error');
+            }
+
+            showModal(`
+                <div class="text-center space-y-4">
+                    <h3 class="text-xl font-bold">Confirm Purchase</h3>
+                    <p>Are you sure you want to buy the ${tier.name} plan for ৳${tier.price}?</p>
+                    <button id="confirm-premium-purchase" class="action-btn w-full py-3 rounded-xl">Confirm</button>
+                    <button onclick="closeModal()" class="neo-card w-full py-2 rounded-xl mt-2">Cancel</button>
+                </div>
+            `);
+
+            document.getElementById('confirm-premium-purchase').onclick = async function() {
+                this.disabled = true; this.textContent = "PROCESSING...";
+                try {
+                    const userRef = doc(db, "users", userData.tgChatId);
+                    await runTransaction(db, async (transaction) => {
+                        const userDoc = await transaction.get(userRef);
+                        if (!userDoc.exists() || userDoc.data().balance < tier.price) {
+                            throw "Transaction failed: Insufficient funds.";
+                        }
+                        const newBalance = userDoc.data().balance - tier.price;
+                        transaction.update(userRef, {
+                            balance: newBalance,
+                            isPremium: true,
+                            premiumTier: tierKey
+                        });
+                    });
+                    
+                    logPublicActivity(`upgraded to ${tier.name} Premium!`);
+                    closeModal();
+                    showToast(`Successfully upgraded to ${tier.name}!`, 'success');
+                    userData.balance -= tier.price;
+                    userData.isPremium = true;
+                    userData.premiumTier = tierKey;
+                    updateDashboard();
+                    loadPremiumTiers();
+
+                } catch (error) {
+                    closeModal();
+                    showToast(error.toString(), 'error');
+                }
+            };
         }
 
         // --- MARKETPLACE FUNCTIONS ---
         async function loadMarketplace() {
             const container = document.getElementById('inventory-list');
             container.innerHTML = '<div class="flex justify-center p-8"><div class="loader-ring w-8 h-8 border-2"></div></div>';
-            
+
             if(!sysConfig.mails) { await loadConfig(); }
 
-            let html = '';
-            sysConfig.mails.forEach(item => {
-                // USE FAKE STOCK FOR DISPLAY
-                const displayStock = getFakeFluctuatingStock(item.stockKey);
-                const isLow = displayStock < 150;
-
-                html += `
-                <div class="neo-card p-4 rounded-2xl flex items-center justify-between relative overflow-hidden">
+            let html = sysConfig.mails.map(item => {
+                const realStockQuery = query(collection(db, item.stockKey), where("isSold", "==", false));
+                getDocs(realStockQuery).then(snap => {
+                    const realStockCount = snap.size;
+                    const cardElement = document.getElementById(`stock-card-${item.stockKey}`);
+                    if (cardElement) {
+                         const isOutOfStock = realStockCount <= 0;
+                         // UPDATED: Multiply stock by 12 if > 0
+                         const displayStock = isOutOfStock ? 0 : realStockCount * 12;
+                         cardElement.querySelector('.stock-count').textContent = `Stock: ${displayStock} units`;
+                         if(isOutOfStock){
+                            cardElement.querySelector('.stock-count').classList.add('text-red-500');
+                            cardElement.querySelector('.buy-now-btn').disabled = true;
+                            cardElement.querySelector('.buy-now-btn').textContent = 'OUT OF STOCK';
+                         }
+                    }
+                });
+                
+                // Initial render shows Loading
+                return `
+                <div class="neo-card p-4 rounded-2xl flex items-center justify-between relative overflow-hidden" id="stock-card-${item.stockKey}">
                     <div class="flex items-center gap-4 z-10">
                         <img src="${item.logoUrl}" class="w-12 h-12 rounded-xl object-cover bg-slate-800" alt="icon">
                         <div>
                             <h4 class="font-bold text-slate-100 text-lg">${item.type}</h4>
-                            <p class="text-xs ${isLow ? 'text-orange-400' : 'text-emerald-400'} flex items-center gap-1">
-                                <i data-lucide="package" class="w-3 h-3"></i> Stock: ${displayStock} units
+                            <p class="stock-count text-xs text-emerald-400 flex items-center gap-1">
+                                <i data-lucide="package" class="w-3 h-3"></i> Stock: Loading...
                             </p>
                         </div>
                     </div>
                     <div class="text-right z-10 flex flex-col items-end gap-2">
                         <span class="font-bold text-xl text-indigo-400">৳${item.priceBdt}</span>
-                        <button onclick="initPurchase('${item.type}', ${item.priceBdt}, '${item.stockKey}')" class="action-btn px-5 py-2 rounded-lg text-sm shadow-lg shadow-indigo-500/20">
-                            BUY NOW
-                        </button>
+                        <button onclick="initPurchase('${item.type}', ${item.priceBdt}, '${item.stockKey}')" class="buy-now-btn action-btn px-5 py-2 rounded-lg text-sm shadow-lg shadow-indigo-500/20">BUY NOW</button>
                     </div>
                      <div class="absolute -bottom-6 -left-6 w-24 h-24 bg-indigo-500/5 rounded-full blur-xl"></div>
                 </div>`;
-            });
+            }).join('');
             container.innerHTML = html;
             lucide.createIcons();
         }
+        
+        window.openSpecialLink = (type) => {
+            if (type === 'login') {
+                const inventorySection = document.getElementById('inventory-list');
+                if (inventorySection) {
+                    inventorySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            } else if (type === 'otp') {
+                if (sysConfig.otpLink && sysConfig.otpLink.startsWith('http')) {
+                    window.open(sysConfig.otpLink, '_blank');
+                } else {
+                    showToast('This service is currently unavailable.', 'warning');
+                }
+            }
+        };
 
         window.initPurchase = async (type, price, stockKey) => {
             if(userData.balance < price) return showModal(`
@@ -690,57 +951,60 @@
                     <button onclick="switchView('view-deposit'); closeModal()" class="action-btn w-full py-3 rounded-xl mt-2">ADD FUNDS NOW</button>
                 </div>
             `);
+             
+            let cashbackInfo = '';
+            if (userData.isPremium && premiumTiers[userData.premiumTier]?.benefits.mailCashback > 0) {
+                const cashbackAmount = price * premiumTiers[userData.premiumTier].benefits.mailCashback;
+                cashbackInfo = `<div class="flex justify-between text-emerald-400"><span>Cashback:</span> <span class="font-bold">- ৳${cashbackAmount.toFixed(2)}</span></div>`;
+            }
 
-            // CONFIRMATION
              showModal(`
                 <div class="space-y-4">
                     <h3 class="text-lg font-bold text-white flex items-center gap-2"><i data-lucide="shopping-cart" class="w-5 h-5 text-indigo-500"></i> Confirm Purchase</h3>
                     <div class="neo-card p-3 rounded-xl bg-slate-800/50 text-sm space-y-2">
                         <div class="flex justify-between"><span>Item:</span> <span class="font-bold text-white">${type}</span></div>
                          <div class="flex justify-between"><span>Price:</span> <span class="font-bold text-indigo-400">৳${price}</span></div>
+                         ${cashbackInfo}
                     </div>
-                    <button id="confirm-buy-btn" class="action-btn w-full py-3 rounded-xl">CONFIRM PAY ৳${price}</button>
+                    <button id="confirm-buy-btn" class="action-btn w-full py-3 rounded-xl">CONFIRM PAY</button>
                 </div>
             `);
-            
+
             document.getElementById('confirm-buy-btn').onclick = async function() {
-                const btn = this;
-                btn.disabled = true; btn.textContent = "PROCESSING...";
-                
+                this.disabled = true; this.textContent = "PROCESSING...";
                 try {
-                    // ACTUAL STOCK CHECK HAPPENS HERE (Hidden from user)
                     const result = await runTransaction(db, async (t) => {
                         const userRef = doc(db, "users", userData.tgChatId);
                         const userDoc = await t.get(userRef);
+                        if (!userDoc.exists()) throw "User not found.";
+                        
+                        let cashback = 0;
+                        if (userDoc.data().isPremium && premiumTiers[userDoc.data().premiumTier]?.benefits.mailCashback > 0) {
+                            cashback = price * premiumTiers[userDoc.data().premiumTier].benefits.mailCashback;
+                        }
+                        
                         if(userDoc.data().balance < price) throw "Insufficient balance during transaction.";
 
                         const q = query(collection(db, stockKey), where("isSold", "==", false), limit(1));
                         const stockSnap = await getDocs(q);
-                        if(stockSnap.empty) throw "OUT_OF_STOCK"; // Real stock is empty
+                        if(stockSnap.empty) throw "OUT_OF_STOCK";
 
                         const itemDoc = stockSnap.docs[0];
-                        const itemData = itemDoc.data();
-
-                        t.update(userRef, { balance: userDoc.data().balance - price });
+                        const newBalance = userDoc.data().balance - price + cashback;
+                        t.update(userRef, { balance: newBalance });
                         t.update(itemDoc.ref, { isSold: true, soldTo: userData.tgChatId, soldAt: serverTimestamp() });
 
-                        // Log purchase
-                         const logRef = doc(collection(db, "mail_purchases"));
-                         t.set(logRef, {
-                            userId: userData.tgChatId,
-                            mailType: type,
-                            cost: price,
-                            data: itemData, // Storing full data for history
-                            purchasedAt: serverTimestamp()
-                        });
-
-                        return itemData;
+                        const logRef = doc(collection(db, "mail_purchases"));
+                        t.set(logRef, { userId: userData.tgChatId, mailType: type, cost: price, cashback, itemData: itemDoc.data(), purchasedAt: serverTimestamp() });
+                        return { item: itemDoc.data(), cashback };
                     });
-
-                    userData.balance -= price;
-                    updateDashboard();
-                    showPurchaseSuccess(result);
-
+                    
+                    logPublicActivity(`purchased a ${type}.`);
+                    showPurchaseSuccess(result.item);
+                    loadPurchaseHistory(); // Refresh history after purchase
+                    if (result.cashback > 0) {
+                        showToast(`You received ৳${result.cashback.toFixed(2)} cashback!`, 'success');
+                    }
                 } catch(e) {
                     closeModal();
                     if(e === "OUT_OF_STOCK") showToast("Sorry, this item just went out of stock!", "error");
@@ -759,24 +1023,64 @@
                         <div>
                             <label class="text-xs text-slate-500">EMAIL / USER</label>
                             <div class="flex justify-between items-center bg-slate-900 p-2 rounded-lg border border-slate-700">
-                                <code class="text-emerald-400 text-sm truncate pr-2">${data.email}</code>
+                                <code class="text-emerald-400 text-sm truncate pr-2 allow-select">${data.email}</code>
                                 <button onclick="copyText('${data.email}')" class="text-slate-400 hover:text-white"><i data-lucide="copy" class="w-4 h-4"></i></button>
                             </div>
                         </div>
                         <div>
                             <label class="text-xs text-slate-500">PASSWORD / DATA</label>
                             <div class="flex justify-between items-center bg-slate-900 p-2 rounded-lg border border-slate-700">
-                                <code class="text-indigo-400 text-sm truncate pr-2">${data.password || 'N/A'}</code>
+                                <code class="text-indigo-400 text-sm truncate pr-2 allow-select">${data.password || 'N/A'}</code>
                                 <button onclick="copyText('${data.password || ''}')" class="text-slate-400 hover:text-white"><i data-lucide="copy" class="w-4 h-4"></i></button>
                             </div>
                         </div>
                     </div>
-                    <p class="text-xs text-slate-500">Data saved to order history.</p>
+                    <p class="text-xs text-slate-500">Data saved to your purchase history.</p>
                     <button onclick="closeModal()" class="neo-card w-full py-3 rounded-xl border-slate-600 hover:bg-slate-800">CLOSE</button>
                 </div>
             `);
             lucide.createIcons();
         }
+
+        // --- NEW: USER'S OWN PURCHASE HISTORY ---
+        async function loadPurchaseHistory() {
+            const container = document.getElementById('order-history-container');
+            container.innerHTML = '<div class="flex justify-center p-4"><div class="loader-ring w-6 h-6 border-2"></div></div>';
+            
+            const q = query(collection(db, "mail_purchases"), where("userId", "==", userData.tgChatId), orderBy("purchasedAt", "desc"), limit(15));
+            const snap = await getDocs(q);
+
+            if (snap.empty) {
+                container.innerHTML = '<p class="text-slate-600 text-center text-xs py-4">You haven\'t purchased any mails yet.</p>';
+                return;
+            }
+
+            let html = snap.docs.map(doc => {
+                const purchase = doc.data();
+                const item = purchase.itemData;
+                const date = purchase.purchasedAt.toDate().toLocaleString();
+                return `
+                <div class="neo-card p-3 rounded-xl bg-slate-800/50 space-y-2">
+                    <div class="flex justify-between items-center">
+                        <h4 class="font-bold text-slate-200">${purchase.mailType}</h4>
+                        <span class="text-xs text-slate-500">${date}</span>
+                    </div>
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-center bg-slate-900/70 p-1.5 rounded-md">
+                            <code class="text-emerald-400 text-xs truncate pr-2 allow-select">${item.email}</code>
+                            <button onclick="copyText('${item.email}')" class="text-slate-400 hover:text-white p-1"><i data-lucide="copy" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="flex justify-between items-center bg-slate-900/70 p-1.5 rounded-md">
+                            <code class="text-indigo-400 text-xs truncate pr-2 allow-select">${item.password || 'N/A'}</code>
+                            <button onclick="copyText('${item.password || ''}')" class="text-slate-400 hover:text-white p-1"><i data-lucide="copy" class="w-3 h-3"></i></button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+            container.innerHTML = html;
+            lucide.createIcons();
+        }
+
 
         // --- DEPOSIT FUNCTIONS ---
         document.getElementById('btn-submit-deposit').addEventListener('click', async () => {
@@ -786,8 +1090,7 @@
             const trx = document.getElementById('dep-trx').value.trim();
 
             if(!method || !amount || !sender || !trx) return showToast("Please fill all fields", "warning");
-            
-            // MINIMUM DEPOSIT CHECK
+
             if(amount < MIN_DEPOSIT_AMT) return showModal(`
                 <div class="text-center text-red-400 space-y-3">
                      <i data-lucide="alert-octagon" class="w-12 h-12 mx-auto"></i>
@@ -795,35 +1098,34 @@
                      <p class="text-slate-300">Minimum deposit amount is <span class="font-bold text-white">৳${MIN_DEPOSIT_AMT}</span>.</p>
                      <button onclick="closeModal()" class="neo-card w-full py-2 rounded-xl mt-4">OK</button>
                 </div>
-            `); lucide.createIcons();
+            `);
 
             const btn = document.getElementById('btn-submit-deposit');
             btn.disabled = true; btn.innerText = "VERIFYING...";
 
             try {
-                // Check for duplicate TrxID first
                 const q = query(collection(db, "deposits"), where("transactionId", "==", trx));
                 const snap = await getDocs(q);
                 if(!snap.empty) throw new Error("This Transaction ID is already used.");
 
                 await addDoc(collection(db, "deposits"), {
-                    userId: userData.tgChatId,
-                    userName: userData.name,
-                    method, amount, senderNumber: sender, transactionId: trx,
-                    status: "pending",
-                    requestedAt: serverTimestamp()
+                    userId: userData.tgChatId, userName: userData.name, method, amount, senderNumber: sender, transactionId: trx,
+                    status: "pending", requestedAt: serverTimestamp()
                 });
-
+                
                 showModal(`<div class="text-center space-y-3"><i data-lucide="check-circle" class="w-12 h-12 text-emerald-500 mx-auto"></i><h3 class="text-lg font-bold text-white">Submitted!</h3><p class="text-slate-400">Your deposit of ৳${amount} is under review. It typically takes 5-30 minutes.</p><button onclick="closeModal()" class="action-btn w-full py-2 rounded-xl">OK</button></div>`);
-                document.getElementById('dep-amount').value = '';
-                document.getElementById('dep-trx').value = '';
+                
+                if (userData.isPremium && premiumTiers[userData.premiumTier]?.benefits.depositCashback > 0) {
+                    const expectedCashback = amount * premiumTiers[userData.premiumTier].benefits.depositCashback;
+                    setTimeout(() => showToast(`As a ${premiumTiers[userData.premiumTier].name} member, you'll get ৳${expectedCashback.toFixed(2)} cashback upon approval.`), 1000);
+                }
+
+                document.getElementById('dep-amount').value = ''; document.getElementById('dep-trx').value = '';
                 loadDepositHistory();
 
-            } catch(e) {
-                showToast(e.message, "error");
+            } catch(e) { showToast(e.message, "error");
             } finally {
-                btn.disabled = false; btn.innerText = "VERIFY DEPOSIT";
-                lucide.createIcons();
+                btn.disabled = false; btn.innerText = "VERIFY DEPOSIT"; lucide.createIcons();
             }
         });
 
@@ -831,11 +1133,8 @@
             const el = document.getElementById('deposit-history-log');
             const q = query(collection(db, "deposits"), where("userId", "==", userData.tgChatId), orderBy("requestedAt", "desc"), limit(10));
             const snap = await getDocs(q);
-            
-            if(snap.empty) {
-                el.innerHTML = '<p class="text-slate-600 text-center text-xs py-2">No transactions yet.</p>';
-                return;
-            }
+
+            if(snap.empty) { el.innerHTML = '<p class="text-slate-600 text-center text-xs py-2">No transactions yet.</p>'; return; }
 
             el.innerHTML = snap.docs.map(d => {
                 const data = d.data();
@@ -851,39 +1150,408 @@
             }).join('');
         }
 
+        // --- NOTIFICATION & LIVE FEED FUNCTIONS ---
+        async function checkNewNotifications() {
+            const lastCheck = userData.lastNotificationCheck || Timestamp.fromDate(new Date(0));
+            const q = query(collection(db, "notifications"), where("createdAt", ">", lastCheck), limit(1));
+            const snap = await getDocs(q);
+            if (!snap.empty) {
+                document.getElementById('badge-notify').classList.remove('hidden');
+            }
+        }
+
+        async function loadNotifications() {
+            const q = query(collection(db, "notifications"), orderBy("createdAt", "desc"), limit(10));
+            const snap = await getDocs(q);
+
+            let content = `<h3 class="text-lg font-bold text-white mb-4">Notifications</h3><div class="space-y-3 max-h-80 overflow-y-auto">`;
+            if (snap.empty) {
+                content += `<p class="text-slate-500 text-center">No new notifications.</p>`;
+            } else {
+                content += snap.docs.map(doc => {
+                    const n = doc.data();
+                    const date = n.createdAt.toDate().toLocaleString();
+                    return `<div class="p-3 bg-slate-800/50 rounded-lg border border-slate-700">
+                                <p class="font-semibold text-slate-200">${n.title}</p>
+                                <p class="text-sm text-slate-400">${n.message}</p>
+                                <p class="text-xs text-slate-600 text-right mt-2">${date}</p>
+                           </div>`;
+                }).join('');
+            }
+            content += `</div>`;
+            showModal(content);
+            lucide.createIcons();
+
+            document.getElementById('badge-notify').classList.add('hidden');
+            await updateDoc(doc(db, "users", userData.tgChatId), {
+                lastNotificationCheck: serverTimestamp()
+            });
+        }
+        
+        // NEW: Function to log public activities
+        async function logPublicActivity(actionText) {
+            try {
+                await addDoc(collection(db, "public_activity"), {
+                    userId: userData.tgChatId,
+                    userName: userData.name,
+                    userPhoto: tgSession.photo_url || null,
+                    action: actionText,
+                    timestamp: serverTimestamp()
+                });
+            } catch (e) {
+                console.error("Failed to log public activity:", e);
+            }
+        }
+
+        // NEW: Function to load the live transaction feed on dashboard
+        function loadLiveTransactions() {
+            const feedEl = document.getElementById('live-transactions-feed');
+            const q = query(collection(db, "public_activity"), orderBy("timestamp", "desc"), limit(7));
+
+            onSnapshot(q, (snapshot) => {
+                if (snapshot.empty) {
+                    feedEl.innerHTML = '<p class="text-slate-500 text-center text-sm py-4">No recent activities.</p>';
+                    return;
+                }
+                
+                feedEl.innerHTML = snapshot.docs.map(doc => {
+                    const activity = doc.data();
+                    const userPhoto = activity.userPhoto || `https://ui-avatars.com/api/?name=${activity.userName}&background=1e293b&color=94a3b8`;
+                    
+                    return `
+                    <div class="flex items-center gap-3 p-2 bg-slate-900/50 rounded-lg animate-fade-in">
+                        <img src="${userPhoto}" class="w-8 h-8 rounded-full object-cover">
+                        <p class="text-sm text-slate-300">
+                            <span class="font-bold">${activity.userName}</span> ${activity.action}
+                        </p>
+                    </div>`;
+                }).join('');
+            });
+        }
+
+
         // --- HELPER FUNCTIONS ---
+        window.openPremiumPage = () => { closeSidePanel(); switchView('view-premium'); };
+        window.openLotteryPage = () => { closeSidePanel(); switchView('view-lottery'); };
+        window.openSupport = () => { window.open("https://t.me/your_support_username", '_blank'); };
+        window.openDonatePage = () => { closeSidePanel(); switchView('view-donate'); };
+        window.closeSidePanel = () => {
+            document.getElementById('main-side-panel').classList.remove('open');
+            document.getElementById('panel-overlay').classList.remove('open');
+        };
         window.showModal = (html) => {
             const modal = document.getElementById('nexus-modal');
-            const content = document.getElementById('modal-body');
-            content.innerHTML = html;
-            modal.style.pointerEvents = 'auto';
-            modal.style.opacity = '1';
+            document.getElementById('modal-body').innerHTML = html;
+            modal.style.pointerEvents = 'auto'; modal.style.opacity = '1';
             document.getElementById('modal-content').classList.remove('scale-95');
             document.getElementById('modal-content').classList.add('scale-100');
-        }
+            lucide.createIcons();
+        };
         window.closeModal = () => {
              const modal = document.getElementById('nexus-modal');
-             modal.style.opacity = '0';
-             modal.style.pointerEvents = 'none';
+             modal.style.opacity = '0'; modal.style.pointerEvents = 'none';
              document.getElementById('modal-content').classList.add('scale-95');
              document.getElementById('modal-content').classList.remove('scale-100');
-        }
+        };
         window.showToast = (msg, type='info') => {
-            // Simple telegram webapp toast if available, else fallback could be implemented
-             if(window.Telegram?.WebApp?.showPopup) {
-                 window.Telegram.WebApp.showAlert(msg);
-             } else {
-                 alert(msg);
-             }
+             if(window.Telegram?.WebApp?.showPopup) { window.Telegram.WebApp.showAlert(msg); }
+             else { alert(msg); }
+        };
+        window.copyText = (text) => { navigator.clipboard.writeText(text); showToast("Copied to clipboard!"); };
+        window.copyNumber = (num, name) => { copyText(num); showToast(`${name} number copied!`); };
+        
+        // --- NEW ACTIONS ---
+        async function executeP2PTransfer() {
+            const recipientUid = document.getElementById('p2p-uid').value.trim();
+            const amount = parseFloat(document.getElementById('p2p-amount').value);
+            const btn = document.getElementById('btn-exec-p2p');
+
+            if (!recipientUid || !amount) return showToast("Please enter UID and amount.", "warning");
+            if (recipientUid === userData.tgChatId) return showToast("You cannot transfer to yourself.", "error");
+            if (amount < MIN_P2P_AMT) return showToast(`Minimum transfer amount is ৳${MIN_P2P_AMT}.`, "warning");
+            
+            let feePercent = P2P_FEE_PERCENT;
+            if (userData.isPremium && premiumTiers[userData.premiumTier]?.benefits.feeReduction > 0) {
+                feePercent -= premiumTiers[userData.premiumTier].benefits.feeReduction;
+            }
+            const fee = amount * feePercent;
+            const totalCost = amount + fee;
+
+            if (userData.balance < totalCost) return showToast(`Insufficient balance. You need ৳${totalCost.toFixed(2)}.`, "error");
+
+            btn.disabled = true; btn.textContent = 'PROCESSING...';
+            try {
+                await runTransaction(db, async (transaction) => {
+                    const senderRef = doc(db, "users", userData.tgChatId);
+                    const recipientRef = doc(db, "users", recipientUid);
+
+                    const [senderDoc, recipientDoc] = await Promise.all([
+                        transaction.get(senderRef),
+                        transaction.get(recipientRef)
+                    ]);
+
+                    if (!senderDoc.exists()) throw new Error("Your user data could not be found.");
+                    if (!recipientDoc.exists()) throw new Error("Recipient User ID not found.");
+                    
+                    const senderData = senderDoc.data();
+                    if (senderData.balance < totalCost) throw new Error("Insufficient balance for this transaction.");
+
+                    transaction.update(senderRef, { balance: senderData.balance - totalCost });
+                    transaction.update(recipientRef, { balance: recipientDoc.data().balance + amount });
+
+                    const logRef = doc(collection(db, "p2p_logs"));
+                    transaction.set(logRef, {
+                        fromId: userData.tgChatId, fromName: userData.name,
+                        toId: recipientUid, toName: recipientDoc.data().name || 'N/A',
+                        amount: amount, fee: fee, status: "completed", createdAt: serverTimestamp()
+                    });
+                });
+
+                showModal(`<div class="text-center space-y-3"><i data-lucide="check-circle" class="w-12 h-12 text-emerald-500 mx-auto"></i><h3 class="text-lg font-bold text-white">Transfer Successful!</h3><p class="text-slate-400">Successfully sent ৳${amount} to UID ${recipientUid}.</p><button onclick="closeModal(); switchView('view-features');" class="action-btn w-full py-2 rounded-xl">OK</button></div>`);
+                document.getElementById('p2p-uid').value = '';
+                document.getElementById('p2p-amount').value = '';
+            } catch (e) {
+                showToast("Transfer failed: " + e.message, "error");
+            } finally {
+                btn.disabled = false; btn.textContent = 'CONFIRM TRANSFER';
+                lucide.createIcons();
+            }
         }
-        window.copyText = (text) => {
-            navigator.clipboard.writeText(text);
-            showToast("Copied to clipboard!");
+
+        async function executeRecharge() {
+            const operator = document.getElementById('recharge-operator').value;
+            const number = document.getElementById('recharge-number').value.trim();
+            const amount = parseFloat(document.getElementById('recharge-amount').value);
+            const btn = document.getElementById('btn-exec-recharge');
+
+            if (!operator || !number || !amount) return showToast("Please fill all fields.", "warning");
+            if (number.length < 11) return showToast("Please enter a valid mobile number.", "warning");
+            if (amount <= 0) return showToast("Please enter a valid amount.", "warning");
+            if (userData.balance < amount) return showToast(`Insufficient balance. You need ৳${amount.toFixed(2)}.`, "error");
+
+            btn.disabled = true; btn.textContent = 'PROCESSING...';
+            try {
+                await runTransaction(db, async (transaction) => {
+                    const userRef = doc(db, "users", userData.tgChatId);
+                    const userDoc = await transaction.get(userRef);
+
+                    if (!userDoc.exists()) throw new Error("User not found.");
+                    if (userDoc.data().balance < amount) throw new Error("Insufficient balance.");
+
+                    const newBalance = userDoc.data().balance - amount;
+                    transaction.update(userRef, { balance: newBalance });
+                    
+                    const reqRef = doc(collection(db, "recharge_requests"));
+                    transaction.set(reqRef, {
+                        userId: userData.tgChatId, userName: userData.name,
+                        operator: operator, mobileNumber: number,
+                        amount: amount, status: "pending", createdAt: serverTimestamp()
+                    });
+                });
+                
+                showModal(`<div class="text-center space-y-3"><i data-lucide="check-circle" class="w-12 h-12 text-emerald-500 mx-auto"></i><h3 class="text-lg font-bold text-white">Recharge Request Sent!</h3><p class="text-slate-400">Your recharge of ৳${amount} for ${number} is being processed.</p><button onclick="closeModal(); switchView('view-features');" class="action-btn w-full py-2 rounded-xl">OK</button></div>`);
+                document.getElementById('recharge-operator').value = '';
+                document.getElementById('recharge-number').value = '';
+                document.getElementById('recharge-amount').value = '';
+            } catch (e) {
+                showToast("An error occurred: " + e.message, "error");
+            } finally {
+                btn.disabled = false; btn.textContent = 'RECHARGE NOW';
+            }
         }
-        window.copyNumber = (num, name) => {
-            copyText(num);
-            showToast(`${name} number copied!`);
+        
+        async function executeDonation() {
+            const amount = parseFloat(document.getElementById('donate-amount').value);
+            const btn = document.getElementById('btn-exec-donate');
+
+            if (!amount) return showToast("Please enter a donation amount.", "warning");
+            if (amount < MIN_DONATE_AMT) return showToast(`Minimum donation is ৳${MIN_DONATE_AMT}.`, "warning");
+            if (userData.balance < amount) return showToast("Insufficient balance to make this donation.", "error");
+            
+            btn.disabled = true; btn.textContent = 'PROCESSING...';
+
+            try {
+                 await runTransaction(db, async (transaction) => {
+                    const userRef = doc(db, "users", userData.tgChatId);
+                    const userDoc = await transaction.get(userRef);
+
+                    if (!userDoc.exists()) throw new Error("User not found.");
+                    if (userDoc.data().balance < amount) throw new Error("Insufficient balance.");
+
+                    const newBalance = userDoc.data().balance - amount;
+                    transaction.update(userRef, { balance: newBalance });
+
+                    const donationRef = doc(collection(db, "donations"));
+                    transaction.set(donationRef, {
+                        userId: userData.tgChatId,
+                        userName: userData.name,
+                        amount: amount,
+                        donatedAt: serverTimestamp()
+                    });
+                });
+                
+                logPublicActivity(`donated ৳${amount.toFixed(2)} for a cause.`);
+                showModal(`<div class="text-center space-y-3"><i data-lucide="heart" class="w-12 h-12 text-emerald-500 mx-auto"></i><h3 class="text-lg font-bold text-white">Thank You!</h3><p class="text-slate-400">Your generous donation of ৳${amount.toFixed(2)} has been received.</p><button onclick="closeModal(); switchView('view-dashboard');" class="action-btn w-full py-2 rounded-xl">OK</button></div>`);
+                document.getElementById('donate-amount').value = '';
+
+            } catch (e) {
+                showToast("Donation failed: " + e.message, "error");
+            } finally {
+                btn.disabled = false; btn.textContent = 'DONATE NOW';
+            }
         }
+
+        window.openRedeemCodeModal = () => {
+            closeSidePanel();
+            showModal(`
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold text-white">Redeem a Code</h3>
+                    <p class="text-sm text-slate-400">Enter your gift or promo code below to claim your reward.</p>
+                    <input type="text" id="redeem-code-input" placeholder="Enter Code" class="neo-input w-full p-3 rounded-xl uppercase tracking-widest text-center">
+                    <button id="btn-exec-redeem" class="action-btn w-full py-3 rounded-xl">REDEEM</button>
+                </div>
+            `);
+            document.getElementById('btn-exec-redeem').onclick = executeRedeemCode;
+        };
+
+        async function executeRedeemCode() {
+            const codeInput = document.getElementById('redeem-code-input');
+            const code = codeInput.value.trim().toUpperCase();
+            const btn = document.getElementById('btn-exec-redeem');
+
+            if (!code) return showToast("Please enter a code.", "warning");
+
+            btn.disabled = true; btn.textContent = "VERIFYING...";
+
+            try {
+                await runTransaction(db, async (transaction) => {
+                    const codeRef = doc(db, "redeem_codes", code);
+                    const codeDoc = await transaction.get(codeRef);
+
+                    if (!codeDoc.exists()) throw new Error("Invalid code.");
+                    
+                    const codeData = codeDoc.data();
+                    if (codeData.isUsed) throw new Error("This code has already been used.");
+                    if (codeData.usedBy) throw new Error("This code has already been claimed.");
+                    
+                    const userRef = doc(db, "users", userData.tgChatId);
+                    const userDoc = await transaction.get(userRef);
+                    if (!userDoc.exists()) throw new Error("User not found.");
+                    
+                    let newBalance = userDoc.data().balance;
+                    
+                    if (codeData.rewardAmount) {
+                         newBalance += codeData.rewardAmount;
+                    }
+                    
+                    const updates = { balance: newBalance };
+                    
+                    if (codeData.rewardTier) {
+                        updates.isPremium = true;
+                        updates.premiumTier = codeData.rewardTier;
+                    }
+
+                    transaction.update(userRef, updates);
+                    transaction.update(codeRef, { 
+                        isUsed: true, 
+                        usedBy: userData.tgChatId,
+                        usedAt: serverTimestamp()
+                    });
+                });
+
+                closeModal();
+                showToast("Code redeemed successfully! Your account has been updated.", "success");
+
+            } catch(e) {
+                showToast("Redeem failed: " + e.message, "error");
+            } finally {
+                if (document.getElementById('btn-exec-redeem')) {
+                     btn.disabled = false; btn.textContent = "REDEEM";
+                }
+            }
+        }
+        
+        async function joinLottery() {
+            const btn = document.getElementById('btn-join-lottery');
+            if (userData.balance < LOTTERY_ENTRY_FEE) {
+                return showToast(`Insufficient balance. You need ৳${LOTTERY_ENTRY_FEE}.`, 'error');
+            }
+        
+            btn.disabled = true;
+            btn.textContent = 'PROCESSING...';
+        
+            try {
+                const lotteryRef = doc(db, "lottery", "current_week");
+                
+                await runTransaction(db, async (transaction) => {
+                    const userRef = doc(db, "users", userData.tgChatId);
+                    const lotteryDoc = await transaction.get(lotteryRef);
+        
+                    let participants = lotteryDoc.exists() ? lotteryDoc.data().participants : [];
+        
+                    if (participants.length >= LOTTERY_MAX_PARTICIPANTS) {
+                        throw new Error("Lottery is already full.");
+                    }
+                    if (participants.some(p => p.id === userData.tgChatId)) {
+                        throw new Error("You have already joined this lottery.");
+                    }
+        
+                    const userDoc = await transaction.get(userRef);
+                    if (userDoc.data().balance < LOTTERY_ENTRY_FEE) {
+                        throw new Error("Insufficient balance.");
+                    }
+        
+                    transaction.update(userRef, { balance: userDoc.data().balance - LOTTERY_ENTRY_FEE });
+                    
+                    participants.push({
+                        id: userData.tgChatId,
+                        name: userData.name,
+                        photo: tgSession.photo_url || null
+                    });
+                    
+                    transaction.set(lotteryRef, { participants: participants }, { merge: true });
+                });
+        
+                logPublicActivity('joined the weekly lottery.');
+                showToast("Successfully joined the lottery!", "success");
+        
+            } catch (e) {
+                showToast("Failed to join: " + e.message, "error");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'JOIN NOW';
+            }
+        }
+
+        function loadLotteryParticipants() {
+            const listEl = document.getElementById('lottery-participants-list');
+            const countEl = document.getElementById('lottery-participant-count');
+        
+            const lotteryRef = doc(db, "lottery", "current_week");
+            onSnapshot(lotteryRef, (doc) => {
+                if (doc.exists()) {
+                    const participants = doc.data().participants || [];
+                    countEl.textContent = participants.length;
+        
+                    if (participants.length === 0) {
+                        listEl.innerHTML = '<p class="text-slate-500 text-center text-sm py-4">Be the first to join!</p>';
+                        return;
+                    }
+        
+                    listEl.innerHTML = participants.map(p => `
+                        <div class="flex items-center gap-3 p-2 bg-slate-900/50 rounded-lg">
+                            <img src="${p.photo || `https://ui-avatars.com/api/?name=${p.name}&background=1e293b&color=94a3b8`}" class="w-8 h-8 rounded-full object-cover">
+                            <span class="text-sm text-slate-300">${p.name}</span>
+                        </div>
+                    `).join('');
+        
+                } else {
+                    countEl.textContent = '0';
+                    listEl.innerHTML = '<p class="text-slate-500 text-center text-sm py-4">Lottery not active.</p>';
+                }
+            });
+        }
+
 
         // --- EVENT LISTENERS SETUP ---
         function setupInteractions() {
@@ -894,49 +1562,157 @@
                 document.getElementById('main-side-panel').classList.add('open');
                 document.getElementById('panel-overlay').classList.add('open');
             });
-            document.getElementById('panel-overlay').addEventListener('click', () => {
-                document.getElementById('main-side-panel').classList.remove('open');
-                document.getElementById('panel-overlay').classList.remove('open');
-            });
+            document.getElementById('panel-overlay').addEventListener('click', closeSidePanel);
+            document.getElementById('btn-notifications').addEventListener('click', loadNotifications);
             document.getElementById('modal-close').addEventListener('click', closeModal);
             document.getElementById('modal-backdrop').addEventListener('click', closeModal);
             document.getElementById('btn-copy-uid').addEventListener('click', () => copyText(userData.tgChatId));
+            
+            document.getElementById('btn-exec-p2p').addEventListener('click', executeP2PTransfer);
+            document.getElementById('btn-exec-recharge').addEventListener('click', executeRecharge);
+            document.getElementById('btn-exec-donate').addEventListener('click', executeDonation);
+            document.getElementById('btn-join-lottery').addEventListener('click', joinLottery);
 
-            // P2P Transfer Logic (Simplified binding)
-            const p2pAmt = document.getElementById('p2p-amount');
-            if(p2pAmt) p2pAmt.addEventListener('input', (e) => {
+
+            document.getElementById('p2p-amount').addEventListener('input', (e) => {
                 const val = parseFloat(e.target.value) || 0;
-                document.getElementById('p2p-fee-calc').textContent = val > 0 ? `Fee (5%): ৳${(val * 0.05).toFixed(2)}` : '';
+                let feePercent = P2P_FEE_PERCENT;
+                if (userData.isPremium && premiumTiers[userData.premiumTier]?.benefits.feeReduction > 0) {
+                    feePercent -= premiumTiers[userData.premiumTier].benefits.feeReduction;
+                }
+                const fee = val * feePercent;
+                document.getElementById('p2p-fee-calc').textContent = val > 0 ? `Fee (${(feePercent*100).toFixed(0)}%): ৳${fee.toFixed(2)}` : '';
             });
         }
 
         function initRealtimeListeners() {
-            // Listen for balance changes real-time
              onSnapshot(doc(db, "users", userData.tgChatId), (doc) => {
                 if(doc.exists()) {
-                    userData.balance = doc.data().balance;
-                    userData.isPremium = doc.data().isPremium;
-                    updateDashboard();
+                    const oldData = {...userData};
+                    const newData = doc.data();
+                    userData = {...userData, ...newData};
+                    
+                    if (oldData.balance !== newData.balance || oldData.isPremium !== newData.isPremium || oldData.premiumTier !== newData.premiumTier) {
+                         updateDashboard();
+                    }
                 }
             });
         }
 
-        // --- PLACEHOLDER LOADERS FOR OTHER VIEWS ---
         async function loadProfileStats() {
-             // In a real scenario, you'd run aggregations here or fetch pre-calculated stats
-             // For now, we assume they are updated elsewhere or just show placeholders
+            const statDepositEl = document.getElementById('stat-deposit');
+            const statCashbackEl = document.getElementById('stat-cashback');
+            const statSavingsEl = document.getElementById('stat-savings');
+        
+            statDepositEl.textContent = '...';
+            statCashbackEl.textContent = '...';
+            statSavingsEl.textContent = '...';
+        
+            const uid = userData.tgChatId;
+        
+            try {
+                const depositQuery = query(collection(db, "deposits"), where("userId", "==", uid), where("status", "==", "approved"));
+                const depositSnap = await getDocs(depositQuery);
+                const totalDeposit = depositSnap.docs.reduce((sum, doc) => sum + doc.data().amount, 0);
+                statDepositEl.textContent = `৳${totalDeposit.toFixed(2)}`;
+        
+                const purchaseQuery = query(collection(db, "mail_purchases"), where("userId", "==", uid));
+                const purchaseSnap = await getDocs(purchaseQuery);
+                const totalCashback = purchaseSnap.docs.reduce((sum, doc) => sum + (doc.data().cashback || 0), 0);
+                statCashbackEl.textContent = `৳${totalCashback.toFixed(2)}`;
+        
+                const p2pQuery = query(collection(db, "p2p_logs"), where("fromId", "==", uid));
+                const p2pSnap = await getDocs(p2pQuery);
+                let totalSavings = 0;
+                p2pSnap.forEach(doc => {
+                    const log = doc.data();
+                    const defaultFee = log.amount * P2P_FEE_PERCENT;
+                    const actualFee = log.fee;
+                    const savings = defaultFee - actualFee;
+                    if (savings > 0) {
+                        totalSavings += savings;
+                    }
+                });
+                statSavingsEl.textContent = `৳${totalSavings.toFixed(2)}`;
+        
+            } catch (error) {
+                console.error("Error loading profile stats:", error);
+                statDepositEl.textContent = 'Error';
+                statCashbackEl.textContent = 'Error';
+                statSavingsEl.textContent = 'Error';
+            }
         }
+
+        async function loadActivityLog() {
+            const el = document.getElementById('activity-log');
+            el.innerHTML = '<div class="loader-ring w-6 h-6 border-2 mx-auto"></div>';
+            
+            let allLogs = [];
+
+            try {
+                const p2pQuery = query(collection(db, "p2p_logs"), where("fromId", "==", userData.tgChatId), orderBy("createdAt", "desc"), limit(5));
+                const p2pSnap = await getDocs(p2pQuery);
+                p2pSnap.forEach(d => { if(d.data().createdAt) allLogs.push({ ...d.data(), type: 'p2p' }); });
+            } catch (error) { console.error("Error loading P2P logs:", error); }
+
+            try {
+                const rechargeQuery = query(collection(db, "recharge_requests"), where("userId", "==", userData.tgChatId), orderBy("createdAt", "desc"), limit(5));
+                const rechargeSnap = await getDocs(rechargeQuery);
+                rechargeSnap.forEach(d => { if(d.data().createdAt) allLogs.push({ ...d.data(), type: 'recharge' }); });
+            } catch (error) { console.error("Error loading recharge logs:", error); }
+            
+            allLogs.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+            const recentLogs = allLogs.slice(0, 10);
+
+            if (recentLogs.length === 0) {
+                el.innerHTML = 'No recent activities found.';
+                return;
+            }
+
+            el.innerHTML = recentLogs.map(log => {
+                const date = log.createdAt.toDate().toLocaleDateString();
+                if (log.type === 'p2p') {
+                    return `<div class="text-left p-2 rounded-lg bg-slate-900/50">
+                                <p class="text-slate-300">Sent ৳${log.amount} to <span class="font-mono">${log.toId}</span></p>
+                                <p class="text-slate-500 text-xs">${date}</p>
+                            </div>`;
+                }
+                if (log.type === 'recharge') {
+                    const statusColors = { pending: 'text-yellow-500', completed: 'text-emerald-500', failed: 'text-red-500' };
+                    return `<div class="text-left p-2 rounded-lg bg-slate-900/50">
+                                <p class="text-slate-300">Recharge ৳${log.amount} to <span class="font-mono">${log.mobileNumber}</span></p>
+                                <p class="text-xs ${statusColors[log.status] || 'text-slate-500'}">${log.status.toUpperCase()} - ${date}</p>
+                            </div>`;
+                }
+                return '';
+            }).join('');
+        }
+
         async function loadNewsFeed() {
-             const el = document.getElementById('news-feed');
-             // Example static news, replace with DB fetch
-             el.innerHTML = `
-                <div class="neo-card p-4 rounded-2xl">
-                    <img src="https://via.placeholder.com/400x200/6366f1/ffffff?text=NEXUS+UPDATE" class="w-full rounded-xl mb-3" alt="news">
-                    <h3 class="font-bold text-lg text-slate-200">Major System Upgrade v4.5</h3>
-                    <p class="text-slate-400 text-sm mt-2">We have successfully upgraded our servers for faster delivery speeds. Marketplace stocks are now updated in real-time.</p>
-                    <p class="text-xs text-slate-600 mt-3">2 Hours ago</p>
-                </div>
-             `;
+            const el = document.getElementById('news-feed');
+            el.innerHTML = '<div class="flex justify-center p-8"><div class="loader-ring w-8 h-8 border-2"></div></div>';
+            try {
+                const q = query(collection(db, "news"), orderBy("createdAt", "desc"), limit(5));
+                const snap = await getDocs(q);
+                if (snap.empty) {
+                    el.innerHTML = '<p class="text-slate-500 text-center">No news available right now.</p>';
+                    return;
+                }
+                el.innerHTML = snap.docs.map(doc => {
+                    const news = doc.data();
+                    const date = news.createdAt.toDate().toLocaleString();
+                    return `
+                    <div class="neo-card p-4 rounded-2xl">
+                        ${news.imageUrl ? `<img src="${news.imageUrl}" class="w-full h-40 object-cover rounded-xl mb-3" alt="news">` : ''}
+                        <h3 class="font-bold text-lg text-slate-200">${news.title}</h3>
+                        <p class="text-slate-400 text-sm mt-2">${news.content}</p>
+                        <p class="text-xs text-slate-600 mt-3">${date}</p>
+                    </div>`;
+                }).join('');
+            } catch (error) {
+                console.error("Error loading news:", error);
+                el.innerHTML = '<p class="text-red-500 text-center">Could not load news feed.</p>';
+            }
         }
 
     </script>
