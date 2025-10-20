@@ -361,14 +361,14 @@
                          <span class="font-mono text-xs text-slate-300">01864260513</span>
                          <span class="text-[10px] text-slate-500 mt-1">Tap to Copy</span>
                      </div>
-                     <div class="neo-card p-3 rounded-xl flex flex-col items-center" onclick="copyNumber('01827750260', 'bKash')">
+                     <div class="neo-card p-3 rounded-xl flex flex-col items-center" onclick="copyNumber('01855879942', 'bKash')">
                          <img src="https://i.postimg.cc/tCwGVkdH/20250922-113514.png" class="w-8 h-8 mb-2 rounded-full" alt="bKash">
-                         <span class="font-mono text-xs text-slate-300">01827750260</span>
+                         <span class="font-mono text-xs text-slate-300">01855879942</span>
                          <span class="text-[10px] text-slate-500 mt-1">Tap to Copy</span>
                      </div>
-                     <div class="neo-card p-3 rounded-xl flex flex-col items-center" onclick="copyNumber('018277502604', 'Rocket')">
+                     <div class="neo-card p-3 rounded-xl flex flex-col items-center" onclick="copyNumber('8796384283', 'binance')">
                          <img src="https://i.postimg.cc/htsw10Tj/20250922-113924.png" class="w-8 h-8 mb-2 rounded-full" alt="Rocket">
-                         <span class="font-mono text-xs text-slate-300">018277502604</span>
+                         <span class="font-mono text-xs text-slate-300">8796384283</span>
                          <span class="text-[10px] text-slate-500 mt-1">Tap to Copy</span>
                      </div>
                 </div>
@@ -658,13 +658,15 @@
         };
 
         const fbConfig = {
-            apiKey: "AIzaSyCoCy08FL_sHHdA0f2cJg0BaF-iYAhFuk0",
-            authDomain: "mail-store-4692b.firebaseapp.com",
-            projectId: "mail-store-4692b",
-            storageBucket: "mail-store-4692b.firebasestorage.app",
-            messagingSenderId: "264936867411",
-            appId: "1:264936867411:web:5933919e5bafae617968a6"
-        };
+const firebaseConfig = {
+  apiKey: "AIzaSyCoCy08FL_sHHdA0f2cJg0BaF-iYAhFuk0",
+  authDomain: "mail-store-4692b.firebaseapp.com",
+  databaseURL: "https://mail-store-4692b-default-rtdb.firebaseio.com",
+  projectId: "mail-store-4692b",
+  storageBucket: "mail-store-4692b.firebasestorage.app",
+  messagingSenderId: "264936867411",
+  appId: "1:264936867411:web:5933919e5bafae617968a6"
+};
 
         const app = initializeApp(fbConfig);
         const db = getFirestore(app);
