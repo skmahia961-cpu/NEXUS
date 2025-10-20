@@ -262,15 +262,19 @@
                     </div>
                 </div>
 
-                <!-- NEW: Live Transaction Feed -->
+                <!-- NEW: Live Reviews Feed -->
                 <div class="neo-card p-4 rounded-2xl">
                     <h3 class="font-bold text-slate-300 mb-3 flex justify-between items-center">
-                        <span>Live Activity</span>
+                        <span class="flex items-center gap-2">
+                            <span>LIVE Reviews</span>
+                            <button id="btn-add-review" class="w-6 h-6 bg-emerald-500/10 text-emerald-400 rounded-full flex items-center justify-center hover:bg-emerald-500/20 transition">
+                                <i data-lucide="plus" class="w-4 h-4"></i>
+                            </button>
+                        </span>
                         <span class="text-xs text-emerald-400 flex items-center gap-1"><div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div> LIVE</span>
                     </h3>
-                    <div id="live-transactions-feed" class="space-y-2 max-h-48 overflow-y-auto">
-                        <!-- Live transactions will be loaded here -->
-                        <p class="text-slate-500 text-center text-sm py-4">Loading activities...</p>
+                    <div id="live-reviews-feed" class="space-y-2 max-h-48 overflow-y-auto">
+                        <p class="text-slate-500 text-center text-sm py-4">Loading reviews...</p>
                     </div>
                 </div>
 
@@ -723,7 +727,7 @@
             loadConfig();
             initRealtimeListeners();
             checkNewNotifications();
-            loadLiveTransactions(); // Start live transaction feed
+            loadLiveReviews(); // Start live reviews feed
         }
 
         async function loadConfig() {
@@ -1050,11 +1054,19 @@
             const container = document.getElementById('order-history-container');
             container.innerHTML = '<div class="flex justify-center p-4"><div class="loader-ring w-6 h-6 border-2"></div></div>';
             
-            const q = query(collection(db, "mail_purchases"), where("userId", "==", userData.tgChatId), orderBy("purchasedAt", "desc"), limit(15));
+            const threeHoursAgo = Timestamp.fromMillis(Date.now() - 3 * 60 * 60 * 1000);
+            
+            const q = query(
+                collection(db, "mail_purchases"), 
+                where("userId", "==", userData.tgChatId), 
+                where("purchasedAt", ">", threeHoursAgo),
+                orderBy("purchasedAt", "desc"), 
+                limit(15)
+            );
             const snap = await getDocs(q);
 
             if (snap.empty) {
-                container.innerHTML = '<p class="text-slate-600 text-center text-xs py-4">You haven\'t purchased any mails yet.</p>';
+                container.innerHTML = '<p class="text-slate-600 text-center text-xs py-4">You have no purchases in the last 3 hours.</p>';
                 return;
             }
 
@@ -1062,6 +1074,10 @@
                 const purchase = doc.data();
                 const item = purchase.itemData;
                 const date = purchase.purchasedAt.toDate().toLocaleString();
+                // Escape single quotes in email and password for the copyText function
+                const escapedEmail = item.email.replace(/'/g, "\\'");
+                const escapedPassword = (item.password || 'N/A').replace(/'/g, "\\'");
+
                 return `
                 <div class="neo-card p-3 rounded-xl bg-slate-800/50 space-y-2">
                     <div class="flex justify-between items-center">
@@ -1071,11 +1087,11 @@
                     <div class="space-y-1">
                         <div class="flex justify-between items-center bg-slate-900/70 p-1.5 rounded-md">
                             <code class="text-emerald-400 text-xs truncate pr-2 allow-select">${item.email}</code>
-                            <button onclick="copyText('${item.email}')" class="text-slate-400 hover:text-white p-1"><i data-lucide="copy" class="w-3 h-3"></i></button>
+                            <button onclick="copyText('${escapedEmail}')" class="text-slate-400 hover:text-white p-1"><i data-lucide="copy" class="w-3 h-3"></i></button>
                         </div>
                         <div class="flex justify-between items-center bg-slate-900/70 p-1.5 rounded-md">
                             <code class="text-indigo-400 text-xs truncate pr-2 allow-select">${item.password || 'N/A'}</code>
-                            <button onclick="copyText('${item.password || ''}')" class="text-slate-400 hover:text-white p-1"><i data-lucide="copy" class="w-3 h-3"></i></button>
+                            <button onclick="copyText('${escapedPassword}')" class="text-slate-400 hover:text-white p-1"><i data-lucide="copy" class="w-3 h-3"></i></button>
                         </div>
                     </div>
                 </div>`;
@@ -1206,30 +1222,79 @@
             }
         }
 
-        // NEW: Function to load the live transaction feed on dashboard
-        function loadLiveTransactions() {
-            const feedEl = document.getElementById('live-transactions-feed');
-            const q = query(collection(db, "public_activity"), orderBy("timestamp", "desc"), limit(7));
+        // NEW: Function to load the live reviews feed on dashboard
+        function loadLiveReviews() {
+            const feedEl = document.getElementById('live-reviews-feed');
+            const q = query(collection(db, "reviews"), orderBy("createdAt", "desc"), limit(7));
 
             onSnapshot(q, (snapshot) => {
                 if (snapshot.empty) {
-                    feedEl.innerHTML = '<p class="text-slate-500 text-center text-sm py-4">No recent activities.</p>';
+                    feedEl.innerHTML = '<p class="text-slate-500 text-center text-sm py-4">No reviews yet. Be the first!</p>';
                     return;
                 }
                 
                 feedEl.innerHTML = snapshot.docs.map(doc => {
-                    const activity = doc.data();
-                    const userPhoto = activity.userPhoto || `https://ui-avatars.com/api/?name=${activity.userName}&background=1e293b&color=94a3b8`;
+                    const review = doc.data();
+                    const userPhoto = review.userPhoto || `https://ui-avatars.com/api/?name=${review.userName}&background=1e293b&color=94a3b8`;
                     
                     return `
-                    <div class="flex items-center gap-3 p-2 bg-slate-900/50 rounded-lg animate-fade-in">
+                    <div class="flex items-start gap-3 p-2 bg-slate-900/50 rounded-lg animate-fade-in">
                         <img src="${userPhoto}" class="w-8 h-8 rounded-full object-cover">
-                        <p class="text-sm text-slate-300">
-                            <span class="font-bold">${activity.userName}</span> ${activity.action}
-                        </p>
+                        <div>
+                            <p class="font-bold text-sm text-slate-200">${review.userName}</p>
+                            <p class="text-sm text-slate-400">${review.text}</p>
+                        </div>
                     </div>`;
                 }).join('');
             });
+        }
+        
+        // NEW: Functions for review submission
+        async function openReviewModal() {
+            // Check if user has already reviewed
+            const q = query(collection(db, "reviews"), where("userId", "==", userData.tgChatId));
+            const snap = await getDocs(q);
+
+            if (!snap.empty) {
+                return showToast("You have already submitted a review.", "warning");
+            }
+
+            showModal(`
+                <div class="space-y-4">
+                    <h3 class="text-xl font-bold text-white text-center">Write a Review</h3>
+                    <textarea id="review-text-input" placeholder="Share your experience..." class="neo-input w-full p-3 rounded-xl h-24" maxlength="200"></textarea>
+                    <button id="btn-submit-review" class="action-btn w-full py-3 rounded-xl">SUBMIT REVIEW</button>
+                </div>
+            `);
+
+            document.getElementById('btn-submit-review').onclick = submitReview;
+        }
+
+        async function submitReview() {
+            const reviewText = document.getElementById('review-text-input').value.trim();
+            if (!reviewText) {
+                return showToast("Please write something in your review.", "warning");
+            }
+
+            const btn = document.getElementById('btn-submit-review');
+            btn.disabled = true;
+            btn.textContent = "SUBMITTING...";
+
+            try {
+                await addDoc(collection(db, "reviews"), {
+                    userId: userData.tgChatId,
+                    userName: userData.name,
+                    userPhoto: tgSession.photo_url || null,
+                    text: reviewText,
+                    createdAt: serverTimestamp()
+                });
+                closeModal();
+                showToast("Thank you for your review!", "success");
+            } catch (e) {
+                showToast("Failed to submit review. Please try again.", "error");
+                btn.disabled = false;
+                btn.textContent = "SUBMIT REVIEW";
+            }
         }
 
 
@@ -1260,7 +1325,22 @@
              if(window.Telegram?.WebApp?.showPopup) { window.Telegram.WebApp.showAlert(msg); }
              else { alert(msg); }
         };
-        window.copyText = (text) => { navigator.clipboard.writeText(text); showToast("Copied to clipboard!"); };
+        window.copyText = (text) => { 
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast("Copied to clipboard!");
+                });
+            } else {
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast("Copied to clipboard!");
+            }
+        };
         window.copyNumber = (num, name) => { copyText(num); showToast(`${name} number copied!`); };
         
         // --- NEW ACTIONS ---
@@ -1583,6 +1663,7 @@
             document.getElementById('modal-backdrop').addEventListener('click', closeModal);
             document.getElementById('btn-copy-uid').addEventListener('click', () => copyText(userData.tgChatId));
             
+            document.getElementById('btn-add-review').addEventListener('click', openReviewModal);
             document.getElementById('btn-exec-p2p').addEventListener('click', executeP2PTransfer);
             document.getElementById('btn-exec-recharge').addEventListener('click', executeRecharge);
             document.getElementById('btn-exec-donate').addEventListener('click', executeDonation);
