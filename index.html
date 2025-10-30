@@ -29,23 +29,24 @@
     }
 </script>
 <style>
-    :root { 
+    :root {
         --app-bg: #0f172a; /* Slate-900 */
         --app-card: #1e293b; /* Slate-800 */
         --app-text: #f1f5f9; /* Slate-100 */
         --app-subtext: #94a3b8; /* Slate-400 */
         --app-border: #334155; /* Slate-700 */
-        --primary-grad: linear-gradient(135deg, #6366f1, #8b5cf6); 
+        --primary-grad: linear-gradient(135deg, #6366f1, #8b5cf6);
     }
-    body { 
-        background-color: var(--app-bg); 
-        color: var(--app-text); 
-        font-family: 'Poppins', sans-serif; 
-        -webkit-tap-highlight-color: transparent; 
+    body {
+        background-color: var(--app-bg);
+        background-image: linear-gradient(180deg, #0f172a 0%, #0c1322 100%);
+        color: var(--app-text);
+        font-family: 'Poppins', sans-serif;
+        -webkit-tap-highlight-color: transparent;
     }
     .no-select { -webkit-user-select: none; user-select: none; }
     .neo-card {
-        background: var(--app-card); 
+        background: var(--app-card);
         border: 1px solid var(--app-border);
         box-shadow: 0 4px 12px -1px rgba(0, 0, 0, 0.1), 0 2px 8px -1px rgba(0, 0, 0, 0.06);
         transition: transform 0.2s, box-shadow 0.2s;
@@ -56,15 +57,15 @@
     }
     .neo-input {
         background: #334155; /* Slate-700 */
-        border: 1px solid var(--app-border); 
-        color: var(--app-text); 
+        border: 1px solid var(--app-border);
+        color: var(--app-text);
         transition: all 0.3s ease;
     }
     .neo-input::placeholder { color: #64748b; } /* Slate-500 */
-    .neo-input:focus { 
-        border-color: #6366f1; 
-        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3); 
-        outline: none; 
+    .neo-input:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+        outline: none;
         background: var(--app-card);
     }
     .action-btn {
@@ -75,13 +76,13 @@
     .action-btn:active { transform: scale(0.97); }
     .action-btn:hover { box-shadow: 0 6px 20px -3px rgba(99, 102, 241, 0.5); }
     .action-btn:disabled { background: #475569; color: #94a3b8; cursor: not-allowed; box-shadow: none; }
-    
+
     .app-view { display: none; opacity: 0; transform: translateY(10px); transition: opacity 0.3s ease, transform 0.3s ease; }
     .app-view.active-view { display: block; opacity: 1; transform: translateY(0); }
-    
+
     .dock-nav {
         position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-        width: 95%; max-width: 400px; 
+        width: 95%; max-width: 400px;
         background: rgba(30, 41, 59, 0.8); /* Slate-800 with transparency */
         backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
         border-radius: 24px; border: 1px solid rgba(51, 65, 85, 0.5);
@@ -123,7 +124,7 @@
     .glass-modal {
         background: rgba(30, 41, 59, 0.9); /* Slate-800 with transparency */
         backdrop-filter: blur(10px);
-        border: 1px solid rgba(99, 102, 241, 0.3); 
+        border: 1px solid rgba(99, 102, 241, 0.3);
         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         color: var(--app-text);
     }
@@ -134,7 +135,14 @@
         0%, 100% { box-shadow: 0 0 5px #6366f1, 0 0 10px #6366f1, 0 0 15px #8b5cf6; }
         50% { box-shadow: 0 0 10px #8b5cf6, 0 0 20px #8b5cf6, 0 0 30px #6366f1; }
     }
-    .form-step { display: none; }
+    .attractive-glow-button {
+        animation: pulse-glow-yellow 2.5s infinite ease-in-out;
+        border: 1px solid #f59e0b;
+    }
+     @keyframes pulse-glow-yellow {
+        0%, 100% { box-shadow: 0 0 8px #f59e0b, 0 0 15px #f59e0b, 0 0 20px #facc15; }
+        50% { box-shadow: 0 0 12px #facc15, 0 0 25px #facc15, 0 0 35px #f59e0b; }
+    }
 </style>
 </head>
 <body class="max-w-md mx-auto min-h-screen overflow-x-hidden no-select pb-28">
@@ -194,10 +202,10 @@
             </div>
             <i data-lucide="external-link" class="w-5 h-5 text-slate-600"></i>
         </button>
-        <button onclick="openPremiumPage()" class="neo-card bg-slate-800/50 border-slate-700 w-full p-4 rounded-xl flex items-center justify-between hover:bg-slate-700/60 transition mt-4 border-t border-slate-700 pt-6">
+        <button onclick="openExtraIncomePage()" class="neo-card bg-slate-800/50 border-slate-700 w-full p-4 rounded-xl flex items-center justify-between hover:bg-slate-700/60 transition mt-4 border-t border-slate-700 pt-6">
             <div class="flex items-center gap-3">
-                <div class="p-2 rounded-lg bg-yellow-500/10 text-yellow-400"><i data-lucide="gem" class="w-5 h-5"></i></div>
-                <span class="font-medium text-slate-200">Get Premium</span>
+                <div class="p-2 rounded-lg bg-yellow-500/10 text-yellow-400"><i data-lucide="zap" class="w-5 h-5"></i></div>
+                <span class="font-medium text-slate-200">Extra Income</span>
             </div>
             <i data-lucide="chevron-right" class="w-5 h-5 text-slate-600"></i>
         </button>
@@ -243,74 +251,59 @@
 <div id="view-landing" class="app-view space-y-6">
     <div class="text-center pt-4">
         <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">Welcome!</h1>
-        <p class="text-app-subtext mt-2">To get started, please fund your account or choose a popular plan.</p>
+        <p class="text-app-subtext mt-2">To get started, please fund your account or choose an income tier.</p>
     </div>
 
     <!-- Deposit Section -->
-    <div id="landing-deposit-section">
-        <h2 class="text-xl font-bold text-app-text mb-4">1. Add Funds</h2>
-        <div class="grid grid-cols-3 gap-3 text-center">
-             <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('0x82f67a0590e10f679c062f8e2c235af4ea980bc9', 'USDT', 'landing')">
+    <div id="landing-deposit-section" class="neo-card p-5 rounded-2xl border border-indigo-500/30">
+        <h2 class="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">1. Add Funds</h2>
+        <div class="p-4 rounded-xl bg-indigo-500/10 border-indigo-500/20">
+            <div class="flex items-start gap-3">
+                <i data-lucide="alert-circle" class="w-6 h-6 text-indigo-400 shrink-0 mt-1"></i>
+                <div>
+                     <h4 class="font-bold text-indigo-300 mb-1">IMPORTANT NOTE</h4>
+                     <p class="text-xs text-indigo-400 leading-relaxed">
+                        Please use a valid payment method. Minimum deposit is <span id="min-deposit-text-landing" class="text-indigo-300 font-bold">$10.00</span>.
+                     </p>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-3 gap-3 text-center mt-4">
+             <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('0x82f67a0590e10f679c062f8e2c235af4ea980bc9', 'USDT')">
                  <img src="https://i.postimg.cc/dkyYkPk2/usdt-logo.png" class="w-8 h-8 mb-2 rounded-full" alt="USDT">
                  <span class="font-mono text-xs text-app-text">USDT (TRC20)</span>
                  <span class="text-[10px] text-app-subtext mt-1">Tap to Copy</span>
              </div>
-             <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('1RBJu6cHBetMCYHxDZH1x8nw41buXVxJX', 'BTC', 'landing')">
+             <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('1RBJu6cHBetMCYHxDZH1x8nw41buXVxJX', 'BTC')">
                  <img src="https://i.postimg.cc/gxWnGs7Z/btc-logo.png" class="w-8 h-8 mb-2 rounded-full" alt="BTC">
                  <span class="font-mono text-xs text-app-text">Bitcoin</span>
                  <span class="text-[10px] text-app-subtext mt-1">Tap to Copy</span>
              </div>
-             <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('900749799', 'Binance', 'landing')">
+             <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('900749799', 'Binance')">
                  <img src="https://i.postimg.cc/21r8s6bf/binance-logo.png" class="w-8 h-8 mb-2 rounded-full bg-white p-1" alt="Binance">
                  <span class="font-mono text-xs text-app-text">Binance Pay</span>
                  <span class="text-[10px] text-app-subtext mt-1">Tap to Copy</span>
              </div>
         </div>
-        <div class="neo-card p-5 rounded-2xl space-y-4 mt-4">
-            <div id="dep-amount-wrapper-landing" class="form-step">
-                <input type="number" id="dep-amount-landing" placeholder="Amount (USD)" class="neo-input w-full p-3 rounded-xl">
-            </div>
-            <div id="dep-sender-wrapper-landing" class="form-step">
-                <input type="text" id="dep-sender-landing" placeholder="Your Wallet Address / Binance ID" class="neo-input w-full p-3 rounded-xl">
-            </div>
-            <div id="dep-button-wrapper-landing" class="form-step">
-                <button id="btn-submit-deposit-landing" class="action-btn w-full py-4 rounded-xl text-lg">VERIFY DEPOSIT</button>
-            </div>
+        <div class="p-5 rounded-2xl space-y-4 mt-4 bg-slate-900/50">
+            <h3 class="font-semibold text-app-text">Submit Verification Info</h3>
+            <input type="number" id="dep-amount-landing" placeholder="Amount (USD)" class="neo-input w-full p-3 rounded-xl">
+            <input type="text" id="dep-sender-landing" placeholder="Your Wallet Address / Binance ID" class="neo-input w-full p-3 rounded-xl">
+            <button id="btn-submit-deposit-landing" class="action-btn w-full py-4 rounded-xl text-lg">VERIFY DEPOSIT</button>
         </div>
     </div>
     
-    <!-- Premium Section -->
-    <div id="landing-premium-section" class="pt-6">
-        <h2 class="text-xl font-bold text-app-text mb-4">Popular Plans</h2>
-        <div id="premium-tiers-container-landing" class="grid grid-cols-3 gap-2">
-            <!-- Tiers will be dynamically loaded here in a grid -->
-        </div>
-    </div>
-    
-    <!-- Leaderboards Section -->
-    <div id="leaderboards-section" class="pt-6">
-        <h2 class="text-xl font-bold text-app-text mb-4">Leaderboards</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Top Earners -->
-            <div class="neo-card p-4 rounded-xl">
-                <h3 class="font-semibold text-center mb-3 text-yellow-400 flex items-center justify-center gap-2"><i data-lucide="trending-up" class="w-4 h-4"></i> Top Earners</h3>
-                <div id="top-earners-list" class="space-y-2">
-                    <!-- Loaded by JS -->
-                </div>
-            </div>
-            <!-- Top Referrers -->
-            <div class="neo-card p-4 rounded-xl">
-                <h3 class="font-semibold text-center mb-3 text-cyan-400 flex items-center justify-center gap-2"><i data-lucide="users" class="w-4 h-4"></i> Top Referrers</h3>
-                <div id="top-referrers-list" class="space-y-2">
-                    <!-- Loaded by JS -->
-                </div>
-            </div>
+    <!-- Tiers Section -->
+    <div id="landing-tiers-section" class="pt-6 neo-card p-5 rounded-2xl border border-yellow-500/30">
+        <h2 class="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-orange-400">2. Or, Choose a Tier</h2>
+        <div id="income-tiers-container-landing" class="space-y-4">
+            <!-- Tiers will be dynamically loaded here -->
         </div>
     </div>
 </div>
 
 <!-- DASHBOARD VIEW -->
-<div id="view-dashboard" class="app-view space-y-6">
+<div id="view-dashboard" class="app-view active-view space-y-6">
     <!-- Promo Slider -->
     <div class="rounded-2xl overflow-hidden relative aspect-video shadow-lg shadow-black/20">
         <div id="promo-slider" class="h-full flex transition-transform duration-500 ease-out">
@@ -321,32 +314,36 @@
                 <img src="https://i.postimg.cc/W1syFD8p/Grey-Blue-Illustration-Refer-a-Friend-Instagram-Post-1080-x-720-px-20250917-223749-0000.png" class="w-full h-full object-cover" alt="Promo 2">
             </div>
         </div>
-        <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2" id="slider-dots"></div>
-    </div>
-
-    <!-- Main Balance Card -->
-    <div class="neo-card p-6 rounded-3xl relative overflow-hidden">
-        <div class="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl"></div>
-        <p class="text-app-subtext font-medium mb-2 flex items-center gap-2"><i data-lucide="wallet" class="w-4 h-4"></i> Available Balance</p>
-        <h2 id="main-balance-display" class="text-4xl font-bold text-app-text tracking-tight mb-6">$0.00</h2>
-        <div class="grid grid-cols-2 gap-3">
-            <button onclick="switchView('view-deposit')" class="action-btn py-3 rounded-xl flex items-center justify-center gap-2">
-                <i data-lucide="plus-circle" class="w-5 h-5"></i> DEPOSIT
-            </button>
-             <button onclick="switchView('view-withdrawal')" class="action-btn py-3 rounded-xl flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-500">
-                <i data-lucide="arrow-up-circle" class="w-5 h-5"></i> WITHDRAW
-            </button>
+        <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2" id="slider-dots">
+            <!-- Dots here -->
         </div>
     </div>
 
-    <!-- Live Withdrawal Feed -->
-    <div id="live-withdrawal-feed" class="space-y-3">
-        <h3 class="text-lg font-semibold text-app-text px-2 flex items-center gap-2">
-            <i data-lucide="arrow-up-right" class="w-5 h-5 text-cyan-400"></i>
-            Live Withdrawals
-        </h3>
-        <div id="withdrawal-feed-container" class="h-48 overflow-hidden relative space-y-3"></div>
+<!-- Main Balance Card -->
+<div class="neo-card p-6 rounded-3xl relative overflow-hidden">
+    <div class="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl"></div>
+    <p class="text-app-subtext font-medium mb-2 flex items-center gap-2"><i data-lucide="wallet" class="w-4 h-4"></i> Available Balance</p>
+    <h2 id="main-balance-display" class="text-4xl font-bold text-app-text tracking-tight mb-6">$0.00</h2>
+    <div class="grid grid-cols-2 gap-3">
+        <button onclick="switchView('view-deposit')" class="action-btn py-3 rounded-xl flex items-center justify-center gap-2">
+            <i data-lucide="plus-circle" class="w-5 h-5"></i> DEPOSIT
+        </button>
+         <button onclick="switchView('view-withdrawal')" class="action-btn py-3 rounded-xl flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-500">
+            <i data-lucide="arrow-up-circle" class="w-5 h-5"></i> WITHDRAW
+        </button>
     </div>
+</div>
+
+<!-- Live Withdrawal Feed -->
+<div id="live-withdrawal-feed" class="space-y-3">
+    <h3 class="text-lg font-semibold text-app-text px-2 flex items-center gap-2">
+        <i data-lucide="arrow-up-right" class="w-5 h-5 text-cyan-400"></i>
+        Live Withdrawals
+    </h3>
+    <div id="withdrawal-feed-container" class="h-48 overflow-hidden relative space-y-3">
+        <!-- Feed items will be injected here -->
+    </div>
+</div>
 </div>
 
 <!-- TASKS VIEW -->
@@ -355,7 +352,9 @@
        <h2 class="text-2xl font-bold text-app-text">Daily Tasks</h2>
        <p class="text-app-subtext text-sm">Complete simple tasks to earn rewards</p>
    </div>
-   <div id="task-list" class="space-y-4"></div>
+   <div id="task-list" class="space-y-4">
+       <!-- Tasks will be dynamically inserted here -->
+   </div>
 </div>
 
 <!-- REFER VIEW -->
@@ -402,18 +401,29 @@
         <h2 class="text-2xl font-bold text-app-text">Add Funds</h2>
         <p class="text-app-subtext text-sm">Secure & Fast Balance Top-up</p>
     </div>
+    <div class="neo-card p-5 rounded-2xl bg-indigo-500/10 border-indigo-500/20">
+        <div class="flex items-start gap-3">
+            <i data-lucide="alert-circle" class="w-6 h-6 text-indigo-400 shrink-0 mt-1"></i>
+            <div>
+                 <h4 class="font-bold text-indigo-300 mb-1">IMPORTANT NOTE</h4>
+                 <p class="text-xs text-indigo-400 leading-relaxed">
+                    Please use a valid payment method. Minimum deposit is <span id="min-deposit-text" class="text-indigo-300 font-bold">$10.00</span>.
+                 </p>
+            </div>
+        </div>
+    </div>
     <div class="grid grid-cols-3 gap-3 text-center">
-         <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('0x82f67a0590e10f679c062f8e2c235af4ea980bc9', 'USDT', 'main')">
+         <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('0x82f67a0590e10f679c062f8e2c235af4ea980bc9', 'USDT')">
              <img src="https://i.postimg.cc/dkyYkPk2/usdt-logo.png" class="w-8 h-8 mb-2 rounded-full" alt="USDT">
              <span class="font-mono text-xs text-app-text">USDT (TRC20)</span>
              <span class="text-[10px] text-app-subtext mt-1">Tap to Copy</span>
          </div>
-         <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('1RBJu6cHBetMCYHxDZH1x8nw41buXVxJX', 'BTC', 'main')">
+         <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('1RBJu6cHBetMCYHxDZH1x8nw41buXVxJX', 'BTC')">
              <img src="https://i.postimg.cc/gxWnGs7Z/btc-logo.png" class="w-8 h-8 mb-2 rounded-full" alt="BTC">
              <span class="font-mono text-xs text-app-text">Bitcoin</span>
              <span class="text-[10px] text-app-subtext mt-1">Tap to Copy</span>
          </div>
-         <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('900749799', 'Binance', 'main')">
+         <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('900749799', 'Binance')">
              <img src="https://i.postimg.cc/21r8s6bf/binance-logo.png" class="w-8 h-8 mb-2 rounded-full bg-white p-1" alt="Binance">
              <span class="font-mono text-xs text-app-text">Binance Pay</span>
              <span class="text-[10px] text-app-subtext mt-1">Tap to Copy</span>
@@ -421,15 +431,14 @@
     </div>
     <div class="neo-card p-5 rounded-2xl space-y-4">
         <h3 class="font-semibold text-app-text">Submit Verification Info</h3>
-        <div id="dep-amount-wrapper-main" class="form-step">
-            <input type="number" id="dep-amount" placeholder="Amount (USD)" class="neo-input w-full p-3 rounded-xl">
-        </div>
-        <div id="dep-sender-wrapper-main" class="form-step">
-            <input type="text" id="dep-sender" placeholder="Your Wallet Address / Binance ID" class="neo-input w-full p-3 rounded-xl">
-        </div>
-        <div id="dep-button-wrapper-main" class="form-step">
-             <button id="btn-submit-deposit" class="action-btn w-full py-4 rounded-xl text-lg">VERIFY DEPOSIT</button>
-        </div>
+        <input type="hidden" id="dep-method" value="">
+        <button id="dep-method-selector" class="neo-input w-full p-3 rounded-xl text-left text-app-subtext flex justify-between items-center">
+            <span id="dep-method-text">Select Payment Method</span>
+            <i data-lucide="chevron-down" class="w-5 h-5"></i>
+        </button>
+        <input type="number" id="dep-amount" placeholder="Amount (USD)" class="neo-input w-full p-3 rounded-xl">
+        <input type="text" id="dep-sender" placeholder="Your Wallet Address / Binance ID" class="neo-input w-full p-3 rounded-xl">
+        <button id="btn-submit-deposit" class="action-btn w-full py-4 rounded-xl text-lg">VERIFY DEPOSIT</button>
     </div>
     <div class="pt-4">
         <h3 class="text-sm font-bold text-app-subtext mb-3 px-2">Transaction History</h3>
@@ -530,11 +539,11 @@
             </div>
             <span class="font-semibold text-app-text">P2P Transfer</span>
         </button>
-        <button onclick="switchView('view-premium')" class="neo-card p-5 rounded-2xl flex flex-col items-center gap-3 hover:border-yellow-400 transition group">
+        <button onclick="switchView('view-extra-income')" class="neo-card p-5 rounded-2xl flex flex-col items-center gap-3 transition group attractive-glow-button">
             <div class="w-14 h-14 rounded-full bg-yellow-500/10 flex items-center justify-center group-hover:bg-yellow-500 group-hover:text-white transition-all text-yellow-400">
-                <i data-lucide="gem" class="w-7 h-7"></i>
+                <i data-lucide="trending-up" class="w-7 h-7"></i>
             </div>
-            <span class="font-semibold text-app-text">Premium</span>
+            <span class="font-semibold text-app-text">Extra Income</span>
         </button>
     </div>
     <div class="neo-card p-5 rounded-2xl mt-4 bg-slate-800/50">
@@ -554,7 +563,7 @@
     <div class="neo-card p-6 rounded-3xl space-y-5">
         <div class="bg-yellow-500/10 text-yellow-300 p-3 rounded-xl text-sm flex gap-2 items-start">
             <i data-lucide="alert-triangle" class="w-5 h-5 shrink-0"></i>
-            <p>Default transfer fee is <strong>5%</strong>. Minimum transfer is <strong>$0.50</strong>. Premium members get fee discounts.</p>
+            <p>Default transfer fee is <strong>5%</strong>. Minimum transfer is <strong>$0.50</strong>. Upgraded members get fee discounts.</p>
         </div>
         <div>
             <label class="text-xs text-app-subtext ml-2 mb-1 block">Recipient UID</label>
@@ -569,13 +578,13 @@
     </div>
 </div>
 
-<!-- GET PREMIUM VIEW -->
-<div id="view-premium" class="app-view space-y-6">
+<!-- GET EXTRA INCOME VIEW -->
+<div id="view-extra-income" class="app-view space-y-6">
     <div class="flex items-center gap-3 mb-6">
        <button onclick="switchView('view-profile')" class="p-2 rounded-full bg-slate-800 text-app-subtext"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
-       <h2 class="text-xl font-bold text-app-text">Premium Membership</h2>
+       <h2 class="text-xl font-bold text-app-text">Extra Income Tiers</h2>
     </div>
-    <div id="premium-tiers-container" class="space-y-4">
+    <div id="income-tiers-container" class="space-y-4">
         <!-- Tiers will be dynamically loaded here -->
     </div>
 </div>
@@ -632,7 +641,7 @@
     import { getFirestore, doc, setDoc, getDoc, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, limit, runTransaction, onSnapshot, updateDoc, Timestamp, writeBatch } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
     // --- CONFIGURATION ---
-    let MIN_DEPOSIT_AMT = 10; 
+    let MIN_DEPOSIT_AMT = 10;
     let MIN_WITHDRAWAL_AMT = 5;
     let MIN_REFERRALS_FOR_WITHDRAWAL = 2;
     let REFERRAL_BONUS = 1;
@@ -640,14 +649,12 @@
     const P2P_FEE_PERCENT = 0.05; // 5%
     const MIN_P2P_AMT = 0.5;
     const ADMIN_ID = "CUb4r6eg1RV6Ljkj5U2V1cSswng1";
-    
-    let premiumTiers = {
-        plan0: { name: 'Free', price: 0,  level: 0, duration: 3, taskLimit: 1, benefits: { feeReduction: 0, benefit_text_1: "Daily Task Limit: 1" } },
-        plan1: { name: 'Plan 1', price: 10,  level: 1, duration: 30, taskLimit: 2, benefits: { feeReduction: 0.01, benefit_text_1: "Daily Task Limit: 2" } },
-        plan2: { name: 'Plan 2', price: 20,  level: 2, duration: 30, taskLimit: 4, benefits: { feeReduction: 0.02, benefit_text_1: "Daily Task Limit: 4" } },
-        plan3: { name: 'Plan 3', price: 30, level: 3, duration: 30, taskLimit: 6, benefits: { feeReduction: 0.03, benefit_text_1: "Daily Task Limit: 6" } },
-        plan4: { name: 'Plan 4', price: 40, level: 4, duration: 30, taskLimit: 8, benefits: { feeReduction: 0.04, benefit_text_1: "Daily Task Limit: 8" } },
-        plan5: { name: 'Plan 5', price: 50, level: 5, duration: 30, taskLimit: 10, benefits: { feeReduction: 0.05, benefit_text_1: "Daily Task Limit: 10" } }
+
+    let membershipTiers = {
+        free: { name: 'Free', price: 0,  level: 0, duration: 3, taskLimit: 1, benefits: { feeReduction: 0, benefit_text_1: "Daily Task Limit: 1" } },
+        try: { name: 'Try', price: 10,  level: 1, duration: 30, taskLimit: 2, benefits: { feeReduction: 0.01, benefit_text_1: "Daily Task Limit: 2" } },
+        pro: { name: 'Pro', price: 30, level: 3, duration: 30, taskLimit: 6, benefits: { feeReduction: 0.03, benefit_text_1: "Daily Task Limit: 6" } },
+        super: { name: 'Super', price: 50, level: 5, duration: 30, taskLimit: 10, benefits: { feeReduction: 0.05, benefit_text_1: "Daily Task Limit: 10" } }
     };
 
     // FIREBASE CONFIG
@@ -666,7 +673,7 @@
     let tgSession = null;
     let userData = null;
     let sysConfig = {};
-    let activeTimers = []; 
+    let activeTimers = [];
     let firebaseUser = null;
 
     // --- CORE FUNCTIONS ---
@@ -681,8 +688,8 @@
                     tgSession = window.Telegram.WebApp.initDataUnsafe.user;
                 }
             }
-        } catch (e) { 
-            console.error("Telegram WebApp initialization failed:", e); 
+        } catch (e) {
+            console.error("Telegram WebApp initialization failed:", e);
         }
 
         if (!tgSession) {
@@ -699,7 +706,6 @@
         }
 
         try {
-            // Use signInAnonymously for session-based authentication
             const userCredential = await signInAnonymously(auth);
             firebaseUser = userCredential.user;
             await initializeAppLogic();
@@ -720,10 +726,10 @@
         const depositSnap = await getDocs(depositsQuery);
         const hasApprovedDeposit = !depositSnap.empty;
 
-        const isPremiumExpired = userData.premiumExpiry && userData.premiumExpiry.toDate() < new Date();
-        const hasActivePlan = userData.isPremium && userData.premiumTier !== 'plan0' && !isPremiumExpired;
-        
-        if (!hasApprovedDeposit && !hasActivePlan) {
+        const isMemberExpired = userData.membershipExpiry && userData.membershipExpiry.toDate() < new Date();
+        const hasActiveTier = userData.hasActiveMembership && userData.membershipTier !== 'free' && !isMemberExpired;
+
+        if (!hasApprovedDeposit && !hasActiveTier) {
             switchView('view-landing');
         } else {
             switchView('view-dashboard');
@@ -740,9 +746,8 @@
 
         if (snap.exists()) {
             userData = snap.data();
-            // Associate the current anonymous auth UID with the user data
             if (!userData.firebaseUid || userData.firebaseUid !== firebaseUser.uid) {
-                await updateDoc(userRef, { firebaseUid: firebaseUser.uid, lastLogin: serverTimestamp() });
+                await updateDoc(userRef, { firebaseUid: firebaseUser.uid });
                 userData.firebaseUid = firebaseUser.uid;
             }
         } else {
@@ -751,12 +756,11 @@
                 firebaseUid: firebaseUser.uid,
                 name: `${tgSession.first_name} ${tgSession.last_name || ''}`.trim(),
                 username: tgSession.username || null,
-                photoUrl: tgSession.photo_url || null,
                 balance: 0,
                 createdAt: serverTimestamp(),
-                isPremium: false,
-                premiumTier: 'plan0',
-                premiumExpiry: null,
+                hasActiveMembership: false,
+                membershipTier: 'free',
+                membershipExpiry: null,
                 lastNotificationCheck: null,
                 dailyCompletedTasks: [],
                 referredBy: null
@@ -768,7 +772,7 @@
             document.body.innerHTML = '<div class="flex items-center justify-center h-screen text-red-500 font-bold">ACCOUNT SUSPENDED</div>';
             throw new Error("User account is blocked.");
         }
-        
+
         updateDashboard();
         initRealtimeListeners();
         checkNewNotifications();
@@ -789,19 +793,21 @@
                 REFERRAL_BONUS = sysConfig.referralBonus || 1;
                 TASK_REWARD = sysConfig.taskReward || 0.5;
 
+                document.getElementById('min-deposit-text').textContent = `$${MIN_DEPOSIT_AMT.toFixed(2)}`;
+                document.getElementById('min-deposit-text-landing').textContent = `$${MIN_DEPOSIT_AMT.toFixed(2)}`;
                 document.getElementById('min-withdrawal-text').textContent = `$${MIN_WITHDRAWAL_AMT.toFixed(2)}`;
                 const withdrawalInfoText = `Withdrawals are processed within 24 hours. Minimum withdrawal is <span class="font-bold">$${MIN_WITHDRAWAL_AMT.toFixed(2)}</span>. You need at least <span class="font-bold">${MIN_REFERRALS_FOR_WITHDRAWAL}</span> referrals to withdraw.`;
                 document.getElementById('withdrawal-info-text').innerHTML = withdrawalInfoText;
                 
-                if(configData.premiumTiers) {
-                     Object.keys(premiumTiers).forEach(key => {
-                        if(configData.premiumTiers[key]) {
-                            const remoteTier = configData.premiumTiers[key];
-                            premiumTiers[key].price = remoteTier.price !== undefined ? remoteTier.price : premiumTiers[key].price;
-                            premiumTiers[key].duration = remoteTier.duration !== undefined ? remoteTier.duration : premiumTiers[key].duration;
-                            premiumTiers[key].taskLimit = remoteTier.taskLimit !== undefined ? remoteTier.taskLimit : premiumTiers[key].taskLimit;
+                if(configData.membershipTiers) {
+                     Object.keys(membershipTiers).forEach(key => {
+                        if(configData.membershipTiers[key]) {
+                            const remoteTier = configData.membershipTiers[key];
+                            membershipTiers[key].price = remoteTier.price !== undefined ? remoteTier.price : membershipTiers[key].price;
+                            membershipTiers[key].duration = remoteTier.duration !== undefined ? remoteTier.duration : membershipTiers[key].duration;
+                            membershipTiers[key].taskLimit = remoteTier.taskLimit !== undefined ? remoteTier.taskLimit : membershipTiers[key].taskLimit;
                             if(remoteTier.benefits) {
-                                premiumTiers[key].benefits = {...premiumTiers[key].benefits, ...remoteTier.benefits};
+                                membershipTiers[key].benefits = {...membershipTiers[key].benefits, ...remoteTier.benefits};
                             }
                         }
                     });
@@ -822,27 +828,27 @@
         document.getElementById('nav-user-initials').textContent = initials.toUpperCase();
         document.getElementById('profile-user-initials').textContent = initials.toUpperCase();
 
-        if(userData.photoUrl) {
-            document.getElementById('nav-user-img').src = userData.photoUrl;
+        if(tgSession.photo_url) {
+            document.getElementById('nav-user-img').src = tgSession.photo_url;
             document.getElementById('nav-user-img').classList.remove('hidden');
             document.getElementById('nav-user-initials').classList.add('hidden');
-            document.getElementById('profile-user-img').src = userData.photoUrl;
+            document.getElementById('profile-user-img').src = tgSession.photo_url;
             document.getElementById('profile-user-img').classList.remove('hidden');
             document.getElementById('profile-user-initials').classList.add('hidden');
         }
 
         const profileNameEl = document.getElementById('profile-name-display');
-        const isPremiumExpired = userData.premiumExpiry && userData.premiumExpiry.toDate() < new Date();
+        const isMemberExpired = userData.membershipExpiry && userData.membershipExpiry.toDate() < new Date();
         
-        if (userData.isPremium && userData.premiumTier !== 'plan0' && !isPremiumExpired) {
+        if (userData.hasActiveMembership && userData.membershipTier !== 'free' && !isMemberExpired) {
              profileNameEl.innerHTML = `
                 <span>${userData.name}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6" fill="currentColor">
-                  <path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12c0 1.357-.6 2.573-1.549 3.397a4.49 4.49 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.306 4.491 4.491 0 01-1.307-3.498A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.491 4.491 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-d(2),3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" style="color: #3b82f6;"></path>
+                  <path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12c0 1.357-.6 2.573-1.549 3.397a4.49 4.49 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.306 4.491 4.491 0 01-1.307-3.498A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.491 4.491 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" style="color: #3b82f6;"></path>
                 </svg>`;
         } else {
-            if(userData.isPremium && isPremiumExpired){
-                updateDoc(doc(db, "users", userData.tgChatId), { isPremium: false, premiumTier: 'plan0', premiumExpiry: null });
+            if(userData.hasActiveMembership && isMemberExpired){
+                updateDoc(doc(db, "users", userData.tgChatId), { hasActiveMembership: false, membershipTier: 'free', membershipExpiry: null });
             }
             profileNameEl.innerHTML = `<span>${userData.name}</span>`;
         }
@@ -850,11 +856,11 @@
     }
     
     function checkFreeTrialExpiry() {
-        if (!userData || !userData.createdAt || userData.premiumTier !== 'plan0' || !(userData.createdAt.toDate)) return;
+        if (!userData || !userData.createdAt || userData.membershipTier !== 'free' || !(userData.createdAt.toDate)) return;
 
         const accountCreationDate = userData.createdAt.toDate();
         const trialEndDate = new Date(accountCreationDate);
-        const trialDurationDays = premiumTiers.plan0.duration;
+        const trialDurationDays = membershipTiers.free.duration;
         trialEndDate.setDate(trialEndDate.getDate() + trialDurationDays);
 
         if (new Date() > trialEndDate) {
@@ -862,11 +868,11 @@
                 <div class="text-center space-y-4">
                     <i data-lucide="clock" class="w-12 h-12 mx-auto text-yellow-400"></i>
                     <h3 class="text-xl font-bold">Free Trial Ended</h3>
-                    <p class="text-app-subtext">Your ${trialDurationDays}-day free trial has expired. Please upgrade to a premium plan to continue earning rewards.</p>
-                    <button onclick="switchView('view-premium'); closeModal();" class="action-btn w-full py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500">View Plans</button>
+                    <p class="text-app-subtext">Your ${trialDurationDays}-day free trial has expired. Please upgrade to a higher tier to continue earning rewards.</p>
+                    <button onclick="switchView('view-extra-income'); closeModal();" class="action-btn w-full py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500">View Tiers</button>
                 </div>
             `;
-            showModal(modalHTML, false); 
+            showModal(modalHTML, false);
         }
     }
 
@@ -897,19 +903,18 @@
         
         const topDepositBtn = document.querySelector('header .flex.items-center.gap-2 > button:first-child');
         if (topDepositBtn) {
-           topDepositBtn.style.display = (viewId === 'view-deposit' || viewId === 'view-withdrawal' || viewId === 'view-landing') ? 'none' : 'inline-flex';
+           topDepositBtn.style.display = (viewId === 'view-deposit' || viewId === 'view-withdrawal') ? 'none' : 'inline-flex';
         }
         
         if(viewId === 'view-landing') {
-            loadPremiumTiers('premium-tiers-container-landing');
-            loadLeaderboards();
+            loadIncomeTiers('income-tiers-container-landing');
         }
         if(viewId === 'view-tasks') loadTasksView();
         if(viewId === 'view-deposit') loadDepositHistory();
         if(viewId === 'view-withdrawal') loadWithdrawalHistory();
         if(viewId === 'view-profile') loadProfileStats();
         if(viewId === 'view-news') loadNewsFeed();
-        if(viewId === 'view-premium') loadPremiumTiers('premium-tiers-container');
+        if(viewId === 'view-extra-income') loadIncomeTiers('income-tiers-container');
         if(viewId === 'view-features') loadActivityLog();
         if(viewId === 'view-refer') {
             loadReferralView();
@@ -919,151 +924,6 @@
         window.scrollTo(0,0);
     }
     
-    window.copyNumber = (num, name, formType) => {
-        navigator.clipboard.writeText(num);
-        showToast(`${name} address copied!`);
-        document.getElementById(`dep-amount-wrapper-${formType}`).style.display = 'block';
-    };
-
-    async function loadLeaderboards() {
-        const earnersList = document.getElementById('top-earners-list');
-        const referrersList = document.getElementById('top-referrers-list');
-        earnersList.innerHTML = '<p class="text-center text-sm text-app-subtext">Loading...</p>';
-        referrersList.innerHTML = '<p class="text-center text-sm text-app-subtext">Loading...</p>';
-
-        try {
-            // Load Top Earners by balance
-            const earnersQuery = query(collection(db, "users"), orderBy("balance", "desc"), limit(5));
-            const earnersSnap = await getDocs(earnersQuery);
-            let earnersHtml = '';
-            if (earnersSnap.empty) {
-                earnersHtml = '<p class="text-center text-sm text-app-subtext">No data yet.</p>';
-            } else {
-                earnersSnap.forEach(doc => {
-                    const user = doc.data();
-                    const userInitials = (user.name.split(' ')[0]?.[0] || 'U') + (user.name.split(' ')[1]?.[0] || '');
-                    const photoEl = user.photoUrl 
-                        ? `<img src="${user.photoUrl}" class="w-8 h-8 rounded-full object-cover">`
-                        : `<div class="w-8 h-8 rounded-full bg-slate-700 flex-shrink-0 flex items-center justify-center font-bold text-slate-300 text-xs">${userInitials}</div>`;
-                    
-                    earnersHtml += `
-                        <div class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-700/50">
-                            <div class="flex items-center gap-2">
-                                ${photoEl}
-                                <span class="text-sm font-medium">${user.name}</span>
-                            </div>
-                            <span class="font-bold text-sm text-yellow-400">$${user.balance.toFixed(2)}</span>
-                        </div>`;
-                });
-            }
-            earnersList.innerHTML = earnersHtml;
-
-            // Load Top Referrers
-            const usersSnap = await getDocs(query(collection(db, "users"), where("referredBy", "!=", null)));
-            const referralCounts = {};
-            usersSnap.forEach(doc => {
-                const referredBy = doc.data().referredBy;
-                if (referredBy) {
-                    referralCounts[referredBy] = (referralCounts[referredBy] || 0) + 1;
-                }
-            });
-
-            const sortedReferrers = Object.entries(referralCounts)
-                .sort(([,a],[,b]) => b-a)
-                .slice(0, 5);
-
-            let referrersHtml = '';
-            if (sortedReferrers.length === 0) {
-                referrersHtml = '<p class="text-center text-sm text-app-subtext">No data yet.</p>';
-            } else {
-                for (const [userId, count] of sortedReferrers) {
-                    const userDoc = await getDoc(doc(db, "users", userId));
-                    if (userDoc.exists()) {
-                        const user = userDoc.data();
-                        const userInitials = (user.name.split(' ')[0]?.[0] || 'U') + (user.name.split(' ')[1]?.[0] || '');
-                         const photoEl = user.photoUrl 
-                            ? `<img src="${user.photoUrl}" class="w-8 h-8 rounded-full object-cover">`
-                            : `<div class="w-8 h-8 rounded-full bg-slate-700 flex-shrink-0 flex items-center justify-center font-bold text-slate-300 text-xs">${userInitials}</div>`;
-
-                        referrersHtml += `
-                             <div class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-700/50">
-                                <div class="flex items-center gap-2">
-                                    ${photoEl}
-                                    <span class="text-sm font-medium">${user.name}</span>
-                                </div>
-                                <span class="font-bold text-sm text-cyan-400">${count} Referrals</span>
-                            </div>`;
-                    }
-                }
-            }
-            referrersList.innerHTML = referrersHtml;
-
-        } catch (error) {
-            console.error("Error loading leaderboards:", error);
-            earnersList.innerHTML = '<p class="text-center text-sm text-red-400">Could not load.</p>';
-            referrersList.innerHTML = '<p class="text-center text-sm text-red-400">Could not load.</p>';
-        }
-    }
-
-    async function loadPremiumTiers(containerId) {
-        const container = document.getElementById(containerId);
-        const isLanding = containerId === 'premium-tiers-container-landing';
-        const tierKeys = Object.keys(premiumTiers).sort((a,b) => premiumTiers[a].level - premiumTiers[b].level);
-        const isPremiumExpired = userData.premiumExpiry && userData.premiumExpiry.toDate() < new Date();
-        const currentUserLevel = (userData.isPremium && !isPremiumExpired) ? premiumTiers[userData.premiumTier]?.level || 0 : 0;
-        
-        let html = '';
-        if (isLanding) {
-            html = tierKeys.map(key => {
-                const tier = premiumTiers[key];
-                if (tier.level === 0) return '';
-                return `
-                <div class="neo-card p-3 rounded-xl text-center flex flex-col justify-between h-full">
-                    <div>
-                        <h4 class="font-bold text-sm text-yellow-400">${tier.name}</h4>
-                        <p class="text-lg font-bold my-1 text-app-text">$${tier.price}</p>
-                    </div>
-                    <button onclick="purchasePremium('${key}')" class="action-btn w-full py-1.5 rounded-lg text-xs mt-2">UPGRADE</button>
-                </div>`;
-            }).join('');
-        } else {
-            html = tierKeys.map(key => {
-                const tier = premiumTiers[key];
-                if (tier.level === 0) return '';
-                
-                let benefitsList = [];
-                for (const bKey in tier.benefits) { if (bKey.startsWith('benefit_text_')) { benefitsList.push(`<li><i class="inline-block w-4 h-4 mr-2 text-green-400" data-lucide="check"></i>${tier.benefits[bKey]}</li>`); } }
-                if (tier.benefits.feeReduction > 0) { const reducedFee = (P2P_FEE_PERCENT - tier.benefits.feeReduction) * 100; benefitsList.push(`<li><i class="inline-block w-4 h-4 mr-2 text-green-400" data-lucide="check"></i>P2P Fee reduced to <strong>${reducedFee.toFixed(0)}%</strong></li>`); }
-                
-                let buttonHtml;
-                const isCurrentPlan = tier.level === currentUserLevel && !isPremiumExpired;
-                
-                if (isCurrentPlan) { 
-                    buttonHtml = `<div class="text-center font-semibold text-lg text-green-400 py-3">CURRENT PLAN</div>`; 
-                    if(userData.premiumExpiry) {
-                        const expiryElId = `countdown-${key}`;
-                        buttonHtml += `<div id="${expiryElId}" class="text-center font-mono text-sm text-cyan-400 pb-3"></div>`;
-                        const countdownInterval = setInterval(() => {
-                            const expiryEl = document.getElementById(expiryElId);
-                            if (!expiryEl) { clearInterval(countdownInterval); return; }
-                            const now = new Date().getTime(); const expiryTime = userData.premiumExpiry.toDate().getTime(); const distance = expiryTime - now;
-                            if (distance < 0) { clearInterval(countdownInterval); expiryEl.innerHTML = "EXPIRED"; return; }
-                            const days = Math.floor(distance / (1000*60*60*24)); const hours = Math.floor((distance % (1000*60*60*24))/(1000*60*60)); const minutes = Math.floor((distance % (1000*60*60))/(1000*60)); const seconds = Math.floor((distance % (1000*60))/1000);
-                            expiryEl.innerHTML = `Expires in: ${days}d ${hours}h ${minutes}m ${seconds}s`;
-                        }, 1000);
-                        activeTimers.push(countdownInterval);
-                    }
-                }
-                else if (tier.level < currentUserLevel && !isPremiumExpired) { buttonHtml = `<button class="action-btn w-full py-3 rounded-xl" disabled>Activated</button>`; }
-                else { buttonHtml = `<button onclick="purchasePremium('${key}')" class="action-btn w-full py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500">UPGRADE</button>`; }
-
-                return `<div class="neo-card p-5 rounded-2xl ${isCurrentPlan ? 'border-yellow-400' : 'border-app-border'}"><h3 class="text-2xl font-bold text-yellow-400">${tier.name}</h3><p class="text-3xl font-bold my-3 text-app-text">$${tier.price} <span class="text-lg text-app-subtext">/ ${tier.duration} days</span></p><ul class="text-sm text-app-subtext space-y-2 my-4 text-left pl-2">${benefitsList.join('')}</ul>${buttonHtml}</div>`;
-            }).join('');
-        }
-        container.innerHTML = html;
-        lucide.createIcons();
-    }
-
     async function loadMyReferrals() {
         const container = document.getElementById('my-referrals-list');
         if (!container) return;
@@ -1117,10 +977,10 @@
     }
     
     function loadTasksView() {
-        if (userData.premiumTier === 'plan0' && userData.createdAt && userData.createdAt.toDate) {
+        if (userData.membershipTier === 'free' && userData.createdAt && userData.createdAt.toDate) {
             const accountCreationDate = userData.createdAt.toDate();
             const trialEndDate = new Date(accountCreationDate);
-            trialEndDate.setDate(trialEndDate.getDate() + premiumTiers.plan0.duration);
+            trialEndDate.setDate(trialEndDate.getDate() + membershipTiers.free.duration);
             if (new Date() > trialEndDate) {
                 checkFreeTrialExpiry();
                 document.getElementById('task-list').innerHTML = '';
@@ -1134,11 +994,11 @@
         const taskReward = TASK_REWARD;
         const taskLink = sysConfig.taskLink || "https://adexora.my.id/dl/AqMmpgSA5cUt";
         
-        let taskLimit = premiumTiers.plan0.taskLimit;
-        const isPremiumExpired = userData.premiumExpiry && userData.premiumExpiry.toDate() < new Date();
+        let taskLimit = membershipTiers.free.taskLimit;
+        const isMemberExpired = userData.membershipExpiry && userData.membershipExpiry.toDate() < new Date();
         
-        if (userData.isPremium && userData.premiumTier && !isPremiumExpired) {
-            taskLimit = premiumTiers[userData.premiumTier]?.taskLimit || taskLimit;
+        if (userData.hasActiveMembership && userData.membershipTier && !isMemberExpired) {
+            taskLimit = membershipTiers[userData.membershipTier]?.taskLimit || taskLimit;
         }
 
         const today = new Date().toISOString().split('T')[0];
@@ -1201,7 +1061,7 @@
                             <p id="new-task-countdown" class="text-cyan-400 font-bold text-sm font-mono">--:--:--</p>
                         </div>
                     </div>
-                    <button onclick="switchView('view-premium')" class="action-btn px-5 py-2 rounded-lg text-sm">GET MORE</button>
+                    <button onclick="switchView('view-extra-income')" class="action-btn px-5 py-2 rounded-lg text-sm">UPGRADE</button>
                 </div>`;
             taskListContainer.innerHTML += newTasksCardHTML;
             startTaskCountdown();
@@ -1219,11 +1079,16 @@
         try {
             const fakeQ = query(collection(db, "fake_deposits"), limit(20));
             const fakeSnap = await getDocs(fakeQ);
-            fakeSnap.forEach(doc => { allActivities.push({ ...doc.data(), isFake: true }); });
+            fakeSnap.forEach(doc => {
+                allActivities.push({ ...doc.data(), isFake: true });
+            });
 
             const realQ = query(collection(db, "withdrawals"), where("status", "==", "approved"), orderBy("requestedAt", "desc"), limit(10));
             const realSnap = await getDocs(realQ);
-            realSnap.forEach(doc => { allActivities.push({ name: doc.data().userName, amount: doc.data().amount, isFake: false }); });
+            realSnap.forEach(doc => {
+                const data = doc.data();
+                allActivities.push({ name: data.userName, amount: data.amount, isFake: false });
+            });
 
             allActivities.sort(() => 0.5 - Math.random());
 
@@ -1255,7 +1120,10 @@
                 container.prepend(item);
                 lucide.createIcons();
 
-                if (container.children.length > 10) { container.lastChild.remove(); }
+                if (container.children.length > 10) {
+                    container.lastChild.remove();
+                }
+
                 currentIndex = (currentIndex + 1) % allActivities.length;
             }
 
@@ -1263,7 +1131,10 @@
             const feedInterval = setInterval(showNextActivity, Math.random() * (8000 - 4000) + 4000);
             activeTimers.push(feedInterval);
 
-        } catch (e) { console.error("Failed to load activity feed:", e); }
+        } catch (e) {
+            console.error("Failed to load activity feed:", e);
+            container.innerHTML = '<p class="text-center text-red-500 text-sm">Could not load feed.</p>';
+        }
     }
     
     async function loadDepositHistory() {
@@ -1411,9 +1282,8 @@
         }
     }
 
-    async function submitDepositRequest(amount, sender, btn, callback) {
-        const method = "Crypto"; // Method is implicitly chosen by tapping the copy button
-        if(!amount || !sender) return showToast("Please fill all fields", "warning");
+    async function submitDepositRequest(amount, sender, method, btn, callback) {
+        if(!method || !amount || !sender) return showToast("Please fill all fields", "warning");
         if(amount < MIN_DEPOSIT_AMT) return showModal(`<div class="text-center text-red-400 space-y-3"><i data-lucide="alert-octagon" class="w-12 h-12 mx-auto"></i><h3 class="font-bold text-lg">Invalid Amount</h3><p class="text-app-text">Minimum deposit amount is <span class="font-bold text-app-text">$${MIN_DEPOSIT_AMT.toFixed(2)}</span>.</p><button onclick="closeModal()" class="neo-card w-full py-2 rounded-xl mt-4">OK</button></div>`);
 
         btn.disabled = true; btn.innerText = "VERIFYING...";
@@ -1422,11 +1292,11 @@
             await addDoc(collection(db, "deposits"), {
                 userId: userData.tgChatId,
                 firebaseUid: userData.firebaseUid,
-                userName: userData.name, 
-                method, 
-                amount, 
+                userName: userData.name,
+                method,
+                amount,
                 senderNumber: sender,
-                status: "pending", 
+                status: "pending",
                 requestedAt: serverTimestamp()
             });
             
@@ -1473,7 +1343,7 @@
                 const snap = await getDocs(q);
                 
                 refCountEl.textContent = snap.docs.length;
-                const referralEarnings = snap.docs.length * REFERRAL_BONUS; 
+                const referralEarnings = snap.docs.length * REFERRAL_BONUS;
                 refEarningsEl.textContent = `$${referralEarnings.toFixed(2)}`;
                 
             } catch (error) {
@@ -1537,7 +1407,7 @@
             userData.balance += rewardAmount;
             userData.referredBy = code;
             updateDashboard();
-            loadReferralView(); 
+            loadReferralView();
 
         } catch (e) {
             showToast("Error: " + e.message, "error");
@@ -1575,9 +1445,9 @@
     async function checkNewNotifications() {
         const lastCheck = userData.lastNotificationCheck || Timestamp.fromDate(new Date(0));
         const q = query(
-            collection(db, "notifications"), 
+            collection(db, "notifications"),
             where("userId", "==", userData.tgChatId),
-            where("createdAt", ">", lastCheck), 
+            where("createdAt", ">", lastCheck),
             limit(1)
         );
         const snap = await getDocs(q);
@@ -1588,9 +1458,9 @@
 
     async function loadNotifications() {
         const q = query(
-            collection(db, "notifications"), 
+            collection(db, "notifications"),
             where("userId", "==", userData.tgChatId),
-            orderBy("createdAt", "desc"), 
+            orderBy("createdAt", "desc"),
             limit(10)
         );
         const snap = await getDocs(q);
@@ -1633,10 +1503,10 @@
         }
     }
 
-    window.openPremiumPage = () => { closeSidePanel(); switchView('view-premium'); };
-    window.openSupport = () => { 
+    window.openExtraIncomePage = () => { closeSidePanel(); switchView('view-extra-income'); };
+    window.openSupport = () => {
         const supportLink = sysConfig.supportLink || "https://t.me/sarahmartinBTC";
-        window.open(supportLink, '_blank'); 
+        window.open(supportLink, '_blank');
     };
     window.visitWebsite = () => {
         const websiteUrl = sysConfig.websiteUrl || "#";
@@ -1652,6 +1522,7 @@
          else { alert(msg); }
     };
     window.copyText = (text) => { navigator.clipboard.writeText(text); showToast("Copied to clipboard!"); };
+    window.copyNumber = (num, name) => { copyText(num); showToast(`${name} address copied!`); };
     
     function showMethodSelector(targetInputId, targetTextId, title, options) {
         let optionsHTML = options.map(opt =>
@@ -1690,9 +1561,9 @@
         if (amount < MIN_P2P_AMT) return showToast(`Minimum transfer amount is $${MIN_P2P_AMT.toFixed(2)}.`, "warning");
         
         let feePercent = P2P_FEE_PERCENT;
-        const isPremiumExpired = userData.premiumExpiry && userData.premiumExpiry.toDate() < new Date();
-        if (userData.isPremium && !isPremiumExpired && premiumTiers[userData.premiumTier]?.benefits.feeReduction > 0) {
-            feePercent -= premiumTiers[userData.premiumTier].benefits.feeReduction;
+        const isMemberExpired = userData.membershipExpiry && userData.membershipExpiry.toDate() < new Date();
+        if (userData.hasActiveMembership && !isMemberExpired && membershipTiers[userData.membershipTier]?.benefits.feeReduction > 0) {
+            feePercent -= membershipTiers[userData.membershipTier].benefits.feeReduction;
         }
         const fee = amount * feePercent;
         const totalCost = amount + fee;
@@ -1739,61 +1610,64 @@
     }
 
     function setupInteractions() {
+        // Dock Navigation
         document.querySelectorAll('.dock-item').forEach(item => {
             item.addEventListener('click', () => switchView(item.dataset.target));
         });
+
+        // Side Panel
         document.getElementById('btn-menu').addEventListener('click', () => {
             document.getElementById('main-side-panel').classList.add('open');
             document.getElementById('panel-overlay').classList.add('open');
         });
         document.getElementById('panel-overlay').addEventListener('click', closeSidePanel);
+
+        // Modals & Notifications
         document.getElementById('btn-notifications').addEventListener('click', loadNotifications);
         document.getElementById('modal-close').addEventListener('click', closeModal);
         document.getElementById('modal-backdrop').addEventListener('click', closeModal);
+
+        // Copy UID
         document.getElementById('btn-copy-uid').addEventListener('click', () => copyText(userData.tgChatId));
+        
+        // P2P Transfer
         document.getElementById('btn-exec-p2p').addEventListener('click', executeP2PTransfer);
         
+        // Referral Verification
         const verifyBtn = document.getElementById('btn-verify-referral');
         if (verifyBtn) {
             verifyBtn.addEventListener('click', verifyReferralCode);
         }
 
-        ['landing', 'main'].forEach(formType => {
-            const amountInput = document.getElementById(`dep-amount-${formType}`);
-            const senderInput = document.getElementById(`dep-sender-${formType}`);
-            const submitBtn = document.getElementById(`btn-submit-deposit-${formType}`);
+        // Deposit from Landing Page
+        document.getElementById('btn-submit-deposit-landing').addEventListener('click', () => {
+            const amount = parseFloat(document.getElementById('dep-amount-landing').value);
+            const sender = document.getElementById('dep-sender-landing').value.trim();
+            const btn = document.getElementById('btn-submit-deposit-landing');
+            // Assuming a default method or you can add a selector here too
+            submitDepositRequest(amount, sender, 'Crypto', btn, () => {
+                document.getElementById('dep-amount-landing').value = '';
+                document.getElementById('dep-sender-landing').value = '';
+            });
+        });
 
-            if(amountInput) {
-                amountInput.addEventListener('input', () => {
-                    if (amountInput.value.length > 0 && parseFloat(amountInput.value) >= MIN_DEPOSIT_AMT) {
-                        document.getElementById(`dep-sender-wrapper-${formType}`).style.display = 'block';
-                    } else {
-                        document.getElementById(`dep-sender-wrapper-${formType}`).style.display = 'none';
-                        document.getElementById(`dep-button-wrapper-${formType}`).style.display = 'none';
-                    }
-                });
-            }
-            if(senderInput) {
-                senderInput.addEventListener('input', () => {
-                    if (senderInput.value.length > 0) {
-                        document.getElementById(`dep-button-wrapper-${formType}`).style.display = 'block';
-                    } else {
-                        document.getElementById(`dep-button-wrapper-${formType}`).style.display = 'none';
-                    }
-                });
-            }
-            if(submitBtn) {
-                 submitBtn.addEventListener('click', () => {
-                    const amount = parseFloat(amountInput.value);
-                    const sender = senderInput.value.trim();
-                    submitDepositRequest(amount, sender, submitBtn, () => {
-                        amountInput.value = '';
-                        senderInput.value = '';
-                    });
-                });
-            }
+        // Deposit from Deposit Page
+        document.getElementById('btn-submit-deposit').addEventListener('click', () => {
+            const method = document.getElementById('dep-method').value;
+            const amount = parseFloat(document.getElementById('dep-amount').value);
+            const sender = document.getElementById('dep-sender').value.trim();
+            const btn = document.getElementById('btn-submit-deposit');
+            submitDepositRequest(method, amount, sender, btn, () => {
+                document.getElementById('dep-method').value = '';
+                document.getElementById('dep-method-text').textContent = 'Select Payment Method';
+                document.getElementById('dep-method-selector').classList.add('text-app-subtext');
+                document.getElementById('dep-amount').value = '';
+                document.getElementById('dep-sender').value = '';
+                loadDepositHistory();
+            });
         });
         
+        // Withdrawal
         document.getElementById('btn-submit-withdrawal').addEventListener('click', async () => {
             const method = document.getElementById('wd-method').value;
             const address = document.getElementById('wd-address').value.trim();
@@ -1829,27 +1703,35 @@
             } finally { btn.disabled = false; btn.innerText = "SUBMIT WITHDRAWAL"; lucide.createIcons(); }
         });
 
+        // Method Selectors
+        document.getElementById('dep-method-selector').addEventListener('click', () => {
+            const options = [ { value: 'USDT', text: 'USDT (TRC20)' }, { value: 'BTC', text: 'BTC' }, { value: 'Binance', text: 'Binance Pay' } ];
+            showMethodSelector('dep-method', 'dep-method-text', 'Select Payment Method', options);
+        });
         document.getElementById('wd-method-selector').addEventListener('click', () => {
             const options = [ { value: 'USDT', text: 'USDT (TRC20)' }, { value: 'BTC', text: 'BTC' }, { value: 'Binance', text: 'Binance Pay ID' } ];
             showMethodSelector('wd-method', 'wd-method-text', 'Select Withdrawal Method', options);
         });
 
+        // P2P Fee Calculator
         document.getElementById('p2p-amount').addEventListener('input', (e) => {
             const val = parseFloat(e.target.value) || 0;
             let feePercent = P2P_FEE_PERCENT;
-            const isPremiumExpired = userData.premiumExpiry && userData.premiumExpiry.toDate() < new Date();
-             if (userData.isPremium && !isPremiumExpired && premiumTiers[userData.premiumTier]?.benefits.feeReduction > 0) {
-                feePercent -= premiumTiers[userData.premiumTier].benefits.feeReduction;
+            const isMemberExpired = userData.membershipExpiry && userData.membershipExpiry.toDate() < new Date();
+             if (userData.hasActiveMembership && !isMemberExpired && membershipTiers[userData.membershipTier]?.benefits.feeReduction > 0) {
+                feePercent -= membershipTiers[userData.membershipTier].benefits.feeReduction;
             }
             const fee = val * feePercent;
             document.getElementById('p2p-fee-calc').textContent = val > 0 ? `Fee (${(feePercent*100).toFixed(0)}%): $${fee.toFixed(2)}` : '';
         });
 
+        // Promo Slider
         const slider = document.getElementById('promo-slider');
         const dotsContainer = document.getElementById('slider-dots');
         if (slider && slider.children.length > 1) {
             const slides = slider.children;
             let currentSlide = 0;
+            // Create dots
             for (let i = 0; i < slides.length; i++) {
                 const dot = document.createElement('span');
                 dot.className = 'w-2 h-2 rounded-full bg-black/20 backdrop-blur-sm transition-all';
@@ -1865,7 +1747,7 @@
                     dot.classList.toggle('bg-white/90', index === currentSlide);
                     dot.classList.toggle('bg-black/20', index !== currentSlide);
                 });
-            }, 5000);
+            }, 5000); // Change slide every 5 seconds
         }
     }
 
@@ -1876,14 +1758,14 @@
                 const newData = doc.data();
                 userData = {...userData, ...newData};
                 
-                if (oldData.balance !== newData.balance || oldData.isPremium !== newData.isPremium || oldData.premiumTier !== newData.premiumTier) {
+                if (oldData.balance !== newData.balance || oldData.hasActiveMembership !== newData.hasActiveMembership || oldData.membershipTier !== newData.membershipTier) {
                      updateDashboard();
                 }
                 if (document.getElementById('view-tasks').classList.contains('active-view')) {
                     loadTasksView();
                 }
                 if(document.getElementById('view-refer').classList.contains('active-view')) {
-                    loadMyReferrals();
+                    loadMyReferrals(); // Refresh referral list on data change
                 }
             }
         });
@@ -1904,7 +1786,7 @@
             const totalTasks = (userData.dailyCompletedTasks && Array.isArray(userData.dailyCompletedTasks)) ? userData.dailyCompletedTasks.length : 0;
             statTasksEl.textContent = totalTasks;
     
-            const taskReward = TASK_REWARD; 
+            const taskReward = TASK_REWARD;
             const totalTaskEarnings = totalTasks * taskReward;
             statIncomeEl.textContent = `$${totalTaskEarnings.toFixed(2)}`;
     
@@ -1978,22 +1860,93 @@
             el.innerHTML = '<p class="text-red-500 text-center">Could not load news feed.</p>';
         }
     }
-    window.purchasePremium = async function(tierKey) {
-        const tier = premiumTiers[tierKey];
+
+    async function loadIncomeTiers(containerId) {
+        const container = document.getElementById(containerId);
+        const tierKeys = Object.keys(membershipTiers).sort((a,b) => membershipTiers[a].level - membershipTiers[b].level);
+        const isMemberExpired = userData.membershipExpiry && userData.membershipExpiry.toDate() < new Date();
+        const currentUserLevel = (userData.hasActiveMembership && !isMemberExpired) ? membershipTiers[userData.membershipTier]?.level || 0 : 0;
+        
+        let html = tierKeys.map(key => {
+            const tier = membershipTiers[key];
+            if (tier.level === 0) return ''; // Don't show the 'Free' tier for purchase
+            
+            let benefitsList = [];
+            for (const bKey in tier.benefits) {
+                if (bKey.startsWith('benefit_text_')) {
+                    benefitsList.push(`<li><i class="inline-block w-4 h-4 mr-2 text-green-400" data-lucide="check"></i>${tier.benefits[bKey]}</li>`);
+                }
+            }
+            if (tier.benefits.feeReduction > 0) {
+                 const reducedFee = (P2P_FEE_PERCENT - tier.benefits.feeReduction) * 100;
+                 benefitsList.push(`<li><i class="inline-block w-4 h-4 mr-2 text-green-400" data-lucide="check"></i>P2P Fee reduced to <strong>${reducedFee.toFixed(0)}%</strong></li>`);
+            }
+            
+            let buttonHtml;
+            const isCurrentTier = tier.level === currentUserLevel && !isMemberExpired;
+            
+            if (isCurrentTier) {
+                buttonHtml = `<div class="text-center font-semibold text-lg text-green-400 py-3">CURRENT TIER</div>`;
+                if(userData.membershipExpiry) {
+                    const expiryElId = `countdown-${key}-${containerId}`;
+                    buttonHtml += `<div id="${expiryElId}" class="text-center font-mono text-sm text-cyan-400 pb-3"></div>`;
+                    const countdownInterval = setInterval(() => {
+                        const expiryEl = document.getElementById(expiryElId);
+                        if (!expiryEl) { clearInterval(countdownInterval); return; }
+                        const now = new Date().getTime();
+                        const expiryTime = userData.membershipExpiry.toDate().getTime();
+                        const distance = expiryTime - now;
+
+                        if (distance < 0) {
+                            clearInterval(countdownInterval);
+                            expiryEl.innerHTML = "EXPIRED";
+                            return;
+                        }
+
+                        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                        
+                        expiryEl.innerHTML = `Expires in: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+                    }, 1000);
+                    activeTimers.push(countdownInterval);
+                }
+            } else if (tier.level < currentUserLevel && !isMemberExpired) {
+                buttonHtml = `<button class="action-btn w-full py-3 rounded-xl" disabled>Activated</button>`;
+            } else {
+                buttonHtml = `<button onclick="purchaseTier('${key}')" class="action-btn w-full py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500">UPGRADE</button>`;
+            }
+
+            return `
+            <div class="neo-card p-5 rounded-2xl ${isCurrentTier ? 'border-yellow-400' : 'border-app-border'}">
+                <h3 class="text-2xl font-bold text-yellow-400">${tier.name}</h3>
+                <p class="text-3xl font-bold my-3 text-app-text">$${tier.price} <span class="text-lg text-app-subtext">/ ${tier.duration} days</span></p>
+                <ul class="text-sm text-app-subtext space-y-2 my-4 text-left pl-2">
+                    ${benefitsList.join('')}
+                </ul>
+                ${buttonHtml}
+            </div>`;
+        }).join('');
+        container.innerHTML = html;
+        lucide.createIcons();
+    }
+    window.purchaseTier = async function(tierKey) {
+        const tier = membershipTiers[tierKey];
         if (userData.balance < tier.price) {
-            return showToast(`Insufficient balance. You need $${tier.price}. Please deposit funds first.`, 'error');
+            return showToast(`Insufficient balance. You need $${tier.price}.`, 'error');
         }
 
         showModal(`
             <div class="text-center space-y-4">
                 <h3 class="text-xl font-bold text-app-text">Confirm Purchase</h3>
-                <p class="text-app-subtext">Are you sure you want to buy the ${tier.name} plan for $${tier.price} (${tier.duration} days)?</p>
-                <button id="confirm-premium-purchase" class="action-btn w-full py-3 rounded-xl">Confirm</button>
+                <p class="text-app-subtext">Are you sure you want to buy the ${tier.name} tier for $${tier.price} (${tier.duration} days)?</p>
+                <button id="confirm-tier-purchase" class="action-btn w-full py-3 rounded-xl">Confirm</button>
                 <button onclick="closeModal()" class="neo-card w-full py-2 rounded-xl mt-2">Cancel</button>
             </div>
         `);
 
-        document.getElementById('confirm-premium-purchase').onclick = async function() {
+        document.getElementById('confirm-tier-purchase').onclick = async function() {
             this.disabled = true; this.textContent = "PROCESSING...";
             try {
                 const userRef = doc(db, "users", userData.tgChatId);
@@ -2009,13 +1962,13 @@
                     
                     transaction.update(userRef, {
                         balance: newBalance,
-                        isPremium: true,
-                        premiumTier: tierKey,
-                        premiumExpiry: Timestamp.fromDate(expiryDate)
+                        hasActiveMembership: true,
+                        membershipTier: tierKey,
+                        membershipExpiry: Timestamp.fromDate(expiryDate)
                     });
                 });
                 
-                logPublicActivity(`upgraded to ${tier.name} Premium!`);
+                logPublicActivity(`upgraded to ${tier.name} tier!`);
                 closeModal();
                 showToast(`Successfully upgraded to ${tier.name}!`, 'success');
                 setTimeout(() => window.location.reload(), 1500);
