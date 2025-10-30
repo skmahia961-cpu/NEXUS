@@ -256,41 +256,58 @@
 
 <!-- (NEW) LANDING VIEW FOR NEW USERS -->
 <div id="view-landing" class="app-view space-y-6">
-    <div class="text-center pt-8">
-        <div class="w-24 h-24 bg-gradient-to-tr from-indigo-500 to-cyan-400 rounded-full flex items-center justify-center mx-auto shadow-lg shadow-indigo-500/30 mb-6">
-             <i data-lucide="rocket" class="w-12 h-12 text-white"></i>
-        </div>
+    <div class="text-center pt-4">
         <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400" data-lang-key="welcome">Welcome!</h1>
         <p class="text-app-subtext mt-2" data-lang-key="unlock_potential">Unlock Your Earning Potential</p>
     </div>
 
-    <!-- Main Action -->
+    <!-- Animated Statistics -->
     <div class="neo-card p-6 rounded-3xl text-center relative border-2 border-indigo-500/50 shadow-lg shadow-indigo-500/10">
-        <p class="text-app-subtext mb-4">Choose a plan to begin your journey and start earning rewards today.</p>
-        <button onclick="switchView('view-extra-income')" class="action-btn w-full py-4 rounded-2xl text-lg font-bold flex items-center justify-center gap-2 animated-task-button">
-            <i data-lucide="zap" class="w-5 h-5"></i>
-            <span>Start Earning</span>
+        <div class="absolute inset-0 bg-grid-slate-800/50 [mask-image:linear-gradient(0deg,#000000,rgba(0,0,0,0))]"></div>
+        <div class="grid grid-cols-2 gap-4 text-center">
+            <div class="bg-slate-900/50 p-3 rounded-xl">
+                <p class="text-xs text-app-subtext" data-lang-key="total_active_members">TOTAL ACTIVE MEMBERS</p>
+                <p class="font-bold text-app-text text-2xl stat-number" data-target="1578">0</p>
+            </div>
+            <div class="bg-slate-900/50 p-3 rounded-xl">
+                <p class="text-xs text-app-subtext" data-lang-key="total_visit">TOTAL VISIT</p>
+                <p class="font-bold text-app-text text-2xl stat-number" data-target="10234">0</p>
+            </div>
+            <div class="bg-slate-900/50 p-3 rounded-xl">
+                <p class="text-xs text-app-subtext" data-lang-key="total_user">TOTAL USER</p>
+                <p class="font-bold text-app-text text-2xl stat-number" data-target="2350">0</p>
+            </div>
+            <div class="bg-slate-900/50 p-3 rounded-xl">
+                <p class="text-xs text-app-subtext" data-lang-key="total_income">TOTAL INCOME</p>
+                <p class="font-bold text-emerald-400 text-2xl stat-number" data-target="5680" data-currency-prefix="$">0</p>
+            </div>
+        </div>
+         <button onclick="showUnlockModal()" class="action-btn w-full py-4 mt-6 rounded-2xl text-lg font-bold flex items-center justify-center gap-2">
+            <i data-lucide="unlock" class="w-5 h-5"></i>
+            <span data-lang-key="unlock_dashboard">UNLOCK FULL DASHBOARD</span>
         </button>
     </div>
     
-    <!-- Community Leaders Section -->
-    <div class="space-y-4">
-        <h3 class="text-lg font-semibold text-app-text px-2 flex items-center gap-2">
-            <i data-lucide="sparkles" class="w-5 h-5 text-yellow-400"></i> <span>Community Leaders</span>
-        </h3>
-        <div class="grid grid-cols-2 gap-4">
-            <button onclick="showLeaderboardModal('earners')" class="neo-card p-4 rounded-xl flex items-center justify-center gap-3 hover:border-yellow-400/50 transition">
-                <i data-lucide="trophy" class="w-6 h-6 text-yellow-400"></i>
-                <span class="font-semibold" data-lang-key="top_earners">Top Earners</span>
-            </button>
-            <button onclick="showLeaderboardModal('referrers')" class="neo-card p-4 rounded-xl flex items-center justify-center gap-3 hover:border-cyan-400/50 transition">
-                <i data-lucide="users" class="w-6 h-6 text-cyan-400"></i>
-                <span class="font-semibold" data-lang-key="top_referrers">Top Referrers</span>
-            </button>
+    <!-- Top Lists Sections -->
+    <div class="space-y-6">
+        <div>
+            <h3 class="text-lg font-semibold text-app-text px-2 flex items-center gap-2 mb-3">
+                <i data-lucide="trophy" class="w-5 h-5 text-yellow-400"></i> <span data-lang-key="top_earners">Top Earners</span>
+            </h3>
+            <div id="top-earners-list" class="space-y-2">
+                <!-- Top earners will be injected here -->
+            </div>
+        </div>
+        <div>
+            <h3 class="text-lg font-semibold text-app-text px-2 flex items-center gap-2 mb-3">
+                <i data-lucide="users" class="w-5 h-5 text-cyan-400"></i> <span data-lang-key="top_referrers">Top Referrers</span>
+            </h3>
+            <div id="top-referrers-list" class="space-y-2">
+                 <!-- Top referrers will be injected here -->
+            </div>
         </div>
     </div>
 </div>
-
 
 <!-- DASHBOARD VIEW -->
 <div id="view-dashboard" class="app-view active-view space-y-6">
@@ -693,15 +710,15 @@
     };
 
     // FIREBASE CONFIG
-    const firebaseConfig = {
-      apiKey: "AIzaSyBvbP66g1BYLQEj2XOJRA21meZN4ioJKpc",
-      authDomain: "reward-claim-2cc72.firebaseapp.com",
-      databaseURL: "https://reward-claim-2cc72-default-rtdb.firebaseio.com",
-      projectId: "reward-claim-2cc72",
-      storageBucket: "reward-claim-2cc72.firebasestorage.app",
-      messagingSenderId: "158110437555",
-      appId: "1:158110437555:web:e7c671b33fc0b7b24120c6"
-    };
+const firebaseConfig = {
+  apiKey: "AIzaSyBIc-NOutYozH8KdfA5Je3FvDxuSrDZlIk",
+  authDomain: "next-task-62007.firebaseapp.com",
+  databaseURL: "https://next-task-62007-default-rtdb.firebaseio.com",
+  projectId: "next-task-62007",
+  storageBucket: "next-task-62007.firebasestorage.app",
+  messagingSenderId: "459990176243",
+  appId: "1:459990176243:web:9274f38a3e4826fb0dc286"
+};
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
@@ -1056,6 +1073,30 @@
         lucide.createIcons();
         initLiveWithdrawalFeed();
         
+        // Setup animated counters
+        const stats = document.querySelectorAll('.stat-number');
+        stats.forEach(stat => {
+            const target = +stat.dataset.target;
+            const prefix = stat.dataset.currencyPrefix || '';
+            let current = 0;
+            const increment = target / 100;
+
+            const updateCount = () => {
+                if(current < target) {
+                    current += increment;
+                    stat.innerText = prefix + Math.ceil(current);
+                    requestAnimationFrame(updateCount);
+                } else {
+                    stat.innerText = prefix + target;
+                }
+            };
+            updateCount();
+        });
+        
+        // Setup Top Earners/Referrers lists
+        showTopEarnersList();
+        showTopReferrersList();
+
         const depositsQuery = query(collection(db, "deposits"), where("userId", "==", userData.tgChatId), where("status", "==", "approved"), limit(1));
         const depositSnap = await getDocs(depositsQuery);
         const hasApprovedDeposit = !depositSnap.empty;
@@ -1526,58 +1567,71 @@
          document.getElementById('modal-content').classList.remove('scale-100');
     };
 
-    window.showLeaderboardModal = function(type) {
-        let title, icon, listHTML;
-
-        if (type === 'earners') {
-            title = 'Top Earners';
-            icon = '<i data-lucide="trophy" class="w-6 h-6 text-yellow-400"></i>';
-            const topEarners = [
-                { name: 'John D.', amount: 2345.67, photo: 'https://i.pravatar.cc/150?img=1' },
-                { name: 'Maria S.', amount: 2109.45, photo: 'https://i.pravatar.cc/150?img=2' },
-                { name: 'Ahmed K.', amount: 1987.12, photo: 'https://i.pravatar.cc/150?img=3' },
-                { name: 'Li W.', amount: 1850.00, photo: 'https://i.pravatar.cc/150?img=4' },
-                { name: 'Sophia R.', amount: 1765.88, photo: 'https://i.pravatar.cc/150?img=5' },
-            ];
-            listHTML = topEarners.map((user, index) => `
-                <div class="flex items-center justify-between p-2 bg-slate-800/50 rounded-lg">
-                    <div class="flex items-center gap-3">
-                        <span class="font-bold text-lg w-6 text-center text-app-subtext">${index + 1}</span>
-                        <img src="${user.photo}" class="w-10 h-10 rounded-full object-cover"/>
-                        <span class="font-semibold text-app-text">${user.name}</span>
-                    </div>
-                    <span class="font-bold text-emerald-400">${formatCurrency(user.amount)}</span>
-                </div>
-            `).join('');
-        } else {
-            title = 'Top Referrers';
-            icon = '<i data-lucide="users" class="w-6 h-6 text-cyan-400"></i>';
-            const topReferrers = [
-                { name: 'Mike T.', count: 152, photo: 'https://i.pravatar.cc/150?img=6' },
-                { name: 'Isabella C.', count: 139, photo: 'https://i.pravatar.cc/150?img=7' },
-                { name: 'Carlos G.', count: 121, photo: 'https://i.pravatar.cc/150?img=8' },
-                { name: 'Fatima Z.', count: 115, photo: 'https://i.pravatar.cc/150?img=9' },
-                { name: 'David L.', count: 98, photo: 'https://i.pravatar.cc/150?img=10' },
-            ];
-            listHTML = topReferrers.map((user, index) => `
-                 <div class="flex items-center justify-between p-2 bg-slate-800/50 rounded-lg">
-                    <div class="flex items-center gap-3">
-                        <span class="font-bold text-lg w-6 text-center text-app-subtext">${index + 1}</span>
-                        <img src="${user.photo}" class="w-10 h-10 rounded-full object-cover"/>
-                        <span class="font-semibold text-app-text">${user.name}</span>
-                    </div>
-                    <span class="font-bold text-cyan-400">${user.count} Referrals</span>
-                </div>
-            `).join('');
-        }
-
+    window.showUnlockModal = function() {
         const modalHTML = `
             <div class="text-center space-y-4">
-                <h3 class="text-xl font-bold flex items-center justify-center gap-2">${icon} ${title}</h3>
-                <div class="space-y-2 max-h-80 overflow-y-auto text-left p-1">${listHTML}</div>
-            </div>`;
+                <i data-lucide="zap" class="w-12 h-12 mx-auto text-yellow-400"></i>
+                <h3 class="text-xl font-bold">Activate Your Account</h3>
+                <p class="text-app-subtext">To start earning and unlock all features, please fund your account or choose an income tier.</p>
+                <div class="grid grid-cols-1 gap-3 pt-2">
+                     <button id="modal-go-to-deposit" class="action-btn w-full py-3 rounded-xl">Add Funds</button>
+                     <button id="modal-go-to-tiers" class="action-btn w-full py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500">Choose Tier</button>
+                </div>
+            </div>
+        `;
         showModal(modalHTML);
+        document.getElementById('modal-go-to-deposit').onclick = () => { switchView('view-deposit'); closeModal(); };
+        document.getElementById('modal-go-to-tiers').onclick = () => { switchView('view-extra-income'); closeModal(); };
     }
+
+    window.showTopEarnersList = function() {
+        const container = document.getElementById('top-earners-list');
+        const topEarners = [
+            { name: 'John D.', amount: 2345.67, photo: 'https://i.pravatar.cc/150?img=1' },
+            { name: 'Maria S.', amount: 2109.45, photo: 'https://i.pravatar.cc/150?img=2' },
+            { name: 'Ahmed K.', amount: 1987.12, photo: 'https://i.pravatar.cc/150?img=3' },
+            { name: 'Li W.', amount: 1850.00, photo: 'https://i.pravatar.cc/150?img=4' },
+            { name: 'Sophia R.', amount: 1765.88, photo: 'https://i.pravatar.cc/150?img=5' },
+        ];
+
+        let listHTML = topEarners.map((user, index) => `
+            <div class="flex items-center justify-between p-2 neo-card rounded-lg">
+                <div class="flex items-center gap-3">
+                    <span class="font-bold text-lg w-6 text-center text-app-subtext">${index + 1}</span>
+                    <img src="${user.photo}" class="w-10 h-10 rounded-full object-cover"/>
+                    <span class="font-semibold text-app-text">${user.name}</span>
+                </div>
+                <span class="font-bold text-emerald-400">${formatCurrency(user.amount)}</span>
+            </div>
+        `).join('');
+
+        container.innerHTML = listHTML;
+    }
+
+    window.showTopReferrersList = function() {
+        const container = document.getElementById('top-referrers-list');
+        const topReferrers = [
+            { name: 'Mike T.', count: 152, photo: 'https://i.pravatar.cc/150?img=6' },
+            { name: 'Isabella C.', count: 139, photo: 'https://i.pravatar.cc/150?img=7' },
+            { name: 'Carlos G.', count: 121, photo: 'https://i.pravatar.cc/150?img=8' },
+            { name: 'Fatima Z.', count: 115, photo: 'https://i.pravatar.cc/150?img=9' },
+            { name: 'David L.', count: 98, photo: 'https://i.pravatar.cc/150?img=10' },
+        ];
+
+        let listHTML = topReferrers.map((user, index) => `
+            <div class="flex items-center justify-between p-2 neo-card rounded-lg">
+                <div class="flex items-center gap-3">
+                    <span class="font-bold text-lg w-6 text-center text-app-subtext">${index + 1}</span>
+                    <img src="${user.photo}" class="w-10 h-10 rounded-full object-cover"/>
+                    <span class="font-semibold text-app-text">${user.name}</span>
+                </div>
+                <span class="font-bold text-cyan-400">${user.count} Referrals</span>
+            </div>
+        `).join('');
+
+        container.innerHTML = listHTML;
+    }
+
 
     function startTaskCountdown() {
         const timerElement = document.getElementById('new-task-countdown');
