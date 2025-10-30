@@ -37,9 +37,16 @@
         --app-border: #334155; /* Slate-700 */
         --primary-grad: linear-gradient(135deg, #6366f1, #8b5cf6);
     }
+    body.light-theme {
+        --app-bg: #f1f5f9;
+        --app-card: #ffffff;
+        --app-text: #1e293b;
+        --app-subtext: #475569;
+        --app-border: #e2e8f0;
+    }
     body {
         background-color: var(--app-bg);
-        background-image: linear-gradient(180deg, #0f172a 0%, #0c1322 100%);
+        background-image: linear-gradient(180deg, var(--app-bg) 0%, color-mix(in srgb, var(--app-bg) 85%, #000) 100%);
         color: var(--app-text);
         font-family: 'Poppins', sans-serif;
         -webkit-tap-highlight-color: transparent;
@@ -56,7 +63,7 @@
         box-shadow: 0 8px 20px -4px rgba(99, 102, 241, 0.2);
     }
     .neo-input {
-        background: #334155; /* Slate-700 */
+        background: color-mix(in srgb, var(--app-bg) 50%, var(--app-border));
         border: 1px solid var(--app-border);
         color: var(--app-text);
         transition: all 0.3s ease;
@@ -83,14 +90,14 @@
     .dock-nav {
         position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
         width: 95%; max-width: 400px;
-        background: rgba(30, 41, 59, 0.8); /* Slate-800 with transparency */
+        background: color-mix(in srgb, var(--app-card) 80%, transparent);
         backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        border-radius: 24px; border: 1px solid rgba(51, 65, 85, 0.5);
+        border-radius: 24px; border: 1px solid color-mix(in srgb, var(--app-border) 50%, transparent);
         display: flex; justify-content: space-evenly; padding: 12px; z-index: 50;
         box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
     }
     .dock-item {
-        color: #94a3b8; display: flex; flex-direction: column; align-items: center;
+        color: var(--app-subtext); display: flex; flex-direction: column; align-items: center;
         font-size: 10px; gap: 4px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative; padding: 0 8px;
     }
@@ -115,14 +122,14 @@
     }
     .side-panel {
         position: fixed; left: 0; top: 0; bottom: 0; width: 85%; max-width: 320px;
-        background: #0f172a; z-index: 90; transform: translateX(-105%); color: #e2e8f0;
+        background: var(--app-bg); z-index: 90; transform: translateX(-105%); color: #e2e8f0;
         transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); border-right: 1px solid #334155;
     }
     .side-panel.open { transform: translateX(0); }
     .side-panel-overlay.open { opacity: 1; visibility: visible; }
 
     .glass-modal {
-        background: rgba(30, 41, 59, 0.9); /* Slate-800 with transparency */
+        background: color-mix(in srgb, var(--app-card) 90%, transparent);
         backdrop-filter: blur(10px);
         border: 1px solid rgba(99, 102, 241, 0.3);
         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
@@ -155,8 +162,8 @@
             <i data-lucide="dollar-sign" class="w-6 h-6 text-green-500"></i>
         </div>
     </div>
-    <h1 class="mt-6 text-2xl font-bold tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-green-500">REWARD CLAIM</h1>
-    <p id="loading-msg" class="text-app-subtext text-sm mt-2 animate-pulse">Establishing Secure Connection...</p>
+    <h1 class="mt-6 text-2xl font-bold tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-green-500" data-lang-key="reward_claim_title">REWARD CLAIM</h1>
+    <p id="loading-msg" class="text-app-subtext text-sm mt-2 animate-pulse" data-lang-key="establishing_connection">Establishing Secure Connection...</p>
 </div>
 
 <!-- SIDE PANEL -->
@@ -168,8 +175,8 @@
                 <i data-lucide="shield-check" class="w-7 h-7 text-white"></i>
             </div>
             <div>
-                <h3 class="font-bold text-lg text-slate-100">Help Center</h3>
-                <p class="text-xs text-slate-400">24/7 Priority Support</p>
+                <h3 class="font-bold text-lg text-slate-100" data-lang-key="help_center">Help Center</h3>
+                <p class="text-xs text-slate-400" data-lang-key="priority_support">24/7 Priority Support</p>
             </div>
         </div>
     </div>
@@ -177,35 +184,35 @@
         <button onclick="closeSidePanel(); switchView('view-deposit');" class="neo-card bg-slate-800/50 border-slate-700 w-full p-4 rounded-xl flex items-center justify-between hover:bg-slate-700/60 transition">
             <div class="flex items-center gap-3">
                 <div class="p-2 rounded-lg bg-emerald-500/10 text-emerald-400"><i data-lucide="arrow-down-left" class="w-5 h-5"></i></div>
-                <span class="font-medium text-slate-200">Deposit</span>
+                <span class="font-medium text-slate-200" data-lang-key="deposit">Deposit</span>
             </div>
             <i data-lucide="chevron-right" class="w-5 h-5 text-slate-600"></i>
         </button>
          <button onclick="closeSidePanel(); switchView('view-withdrawal');" class="neo-card bg-slate-800/50 border-slate-700 w-full p-4 rounded-xl flex items-center justify-between hover:bg-slate-700/60 transition">
             <div class="flex items-center gap-3">
                 <div class="p-2 rounded-lg bg-cyan-500/10 text-cyan-400"><i data-lucide="arrow-up-right" class="w-5 h-5"></i></div>
-                <span class="font-medium text-slate-200">Withdrawal</span>
+                <span class="font-medium text-slate-200" data-lang-key="withdrawal">Withdrawal</span>
             </div>
             <i data-lucide="chevron-right" class="w-5 h-5 text-slate-600"></i>
         </button>
         <button onclick="openSupport()" class="neo-card bg-slate-800/50 border-slate-700 w-full p-4 rounded-xl flex items-center justify-between hover:bg-slate-700/60 transition">
              <div class="flex items-center gap-3">
                 <div class="p-2 rounded-lg bg-blue-500/10 text-blue-400"><i data-lucide="life-buoy" class="w-5 h-5"></i></div>
-                <span class="font-medium text-slate-200">Support Hub</span>
+                <span class="font-medium text-slate-200" data-lang-key="support_hub">Support Hub</span>
             </div>
             <i data-lucide="external-link" class="w-5 h-5 text-slate-600"></i>
         </button>
         <button onclick="visitWebsite()" class="neo-card bg-slate-800/50 border-slate-700 w-full p-4 rounded-xl flex items-center justify-between hover:bg-slate-700/60 transition">
             <div class="flex items-center gap-3">
                 <div class="p-2 rounded-lg bg-purple-500/10 text-purple-400"><i data-lucide="globe" class="w-5 h-5"></i></div>
-                <span class="font-medium text-slate-200">Visit Website</span>
+                <span class="font-medium text-slate-200" data-lang-key="visit_website">Visit Website</span>
             </div>
             <i data-lucide="external-link" class="w-5 h-5 text-slate-600"></i>
         </button>
         <button onclick="openExtraIncomePage()" class="neo-card bg-slate-800/50 border-slate-700 w-full p-4 rounded-xl flex items-center justify-between hover:bg-slate-700/60 transition mt-4 border-t border-slate-700 pt-6">
             <div class="flex items-center gap-3">
                 <div class="p-2 rounded-lg bg-yellow-500/10 text-yellow-400"><i data-lucide="zap" class="w-5 h-5"></i></div>
-                <span class="font-medium text-slate-200">Extra Income</span>
+                <span class="font-medium text-slate-200" data-lang-key="extra_income">Extra Income</span>
             </div>
             <i data-lucide="chevron-right" class="w-5 h-5 text-slate-600"></i>
         </button>
@@ -227,13 +234,13 @@
             <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-app-bg rounded-full"></div>
         </div>
         <div>
-            <p id="welcome-text" class="text-xs text-app-subtext font-medium">Welcome back,</p>
+            <p id="welcome-text" class="text-xs text-app-subtext font-medium" data-lang-key="welcome_back">Welcome back,</p>
             <p id="user-balance-top" class="text-sm font-bold text-emerald-400">$0.00</p>
         </div>
     </div>
     <div class="flex items-center gap-2">
         <button onclick="switchView('view-deposit')" class="action-btn px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5">
-            <i data-lucide="plus" class="w-4 h-4"></i>FUND
+            <i data-lucide="plus" class="w-4 h-4"></i><span data-lang-key="fund">FUND</span>
         </button>
         <button id="btn-notifications" class="relative p-2 text-app-subtext hover:text-app-text transition bg-slate-800 rounded-full">
             <i data-lucide="bell" class="w-5 h-5"></i>
@@ -250,45 +257,55 @@
 <!-- (NEW) LANDING VIEW FOR NEW USERS -->
 <div id="view-landing" class="app-view space-y-6">
     <div class="text-center pt-4">
-        <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">Welcome!</h1>
-        <p class="text-app-subtext mt-2">Unlock Your Earning Potential</p>
+        <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400" data-lang-key="welcome">Welcome!</h1>
+        <p class="text-app-subtext mt-2" data-lang-key="unlock_potential">Unlock Your Earning Potential</p>
     </div>
 
-    <!-- Fake Dashboard -->
+    <!-- Animated Statistics -->
     <div class="neo-card p-6 rounded-3xl text-center relative border-2 border-indigo-500/50 shadow-lg shadow-indigo-500/10">
         <div class="absolute inset-0 bg-grid-slate-800/50 [mask-image:linear-gradient(0deg,#000000,rgba(0,0,0,0))]"></div>
-        <p class="text-lg font-semibold text-app-subtext">Potential Daily Earnings</p>
-        <h2 class="my-3 text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-green-400 tracking-tight">$25.00+</h2>
-        <div class="grid grid-cols-3 gap-3 text-center mt-6">
+        <div class="grid grid-cols-2 gap-4 text-center">
             <div class="bg-slate-900/50 p-3 rounded-xl">
-                <p class="text-xs text-app-subtext">Daily Tasks</p>
-                <p class="font-bold text-app-text text-lg">10</p>
+                <p class="text-xs text-app-subtext" data-lang-key="total_active_members">TOTAL ACTIVE MEMBERS</p>
+                <p class="font-bold text-app-text text-2xl stat-number" data-target="1578">0</p>
             </div>
             <div class="bg-slate-900/50 p-3 rounded-xl">
-                <p class="text-xs text-app-subtext">Refer Bonus</p>
-                <p class="font-bold text-app-text text-lg">$1.00</p>
+                <p class="text-xs text-app-subtext" data-lang-key="total_visit">TOTAL VISIT</p>
+                <p class="font-bold text-app-text text-2xl stat-number" data-target="10234">0</p>
             </div>
             <div class="bg-slate-900/50 p-3 rounded-xl">
-                <p class="text-xs text-app-subtext">Monthly</p>
-                <p class="font-bold text-app-text text-lg">$750+</p>
+                <p class="text-xs text-app-subtext" data-lang-key="total_user">TOTAL USER</p>
+                <p class="font-bold text-app-text text-2xl stat-number" data-target="2350">0</p>
+            </div>
+            <div class="bg-slate-900/50 p-3 rounded-xl">
+                <p class="text-xs text-app-subtext" data-lang-key="total_income">TOTAL INCOME</p>
+                <p class="font-bold text-emerald-400 text-2xl stat-number" data-target="5680" data-currency-prefix="$">0</p>
             </div>
         </div>
          <button onclick="showUnlockModal()" class="action-btn w-full py-4 mt-6 rounded-2xl text-lg font-bold flex items-center justify-center gap-2">
             <i data-lucide="unlock" class="w-5 h-5"></i>
-            UNLOCK FULL DASHBOARD
+            <span data-lang-key="unlock_dashboard">UNLOCK FULL DASHBOARD</span>
         </button>
     </div>
     
-    <!-- Top Lists Buttons -->
-    <div class="grid grid-cols-2 gap-4">
-        <button onclick="showTopEarnersModal()" class="neo-card p-4 rounded-xl flex items-center justify-center gap-2 hover:border-yellow-400/50 transition">
-            <i data-lucide="trophy" class="w-5 h-5 text-yellow-400"></i>
-            <span class="font-semibold">Top Earners</span>
-        </button>
-        <button onclick="showTopReferrersModal()" class="neo-card p-4 rounded-xl flex items-center justify-center gap-2 hover:border-cyan-400/50 transition">
-            <i data-lucide="users" class="w-5 h-5 text-cyan-400"></i>
-            <span class="font-semibold">Top Referrers</span>
-        </button>
+    <!-- Top Lists Sections -->
+    <div class="space-y-6">
+        <div>
+            <h3 class="text-lg font-semibold text-app-text px-2 flex items-center gap-2 mb-3">
+                <i data-lucide="trophy" class="w-5 h-5 text-yellow-400"></i> <span data-lang-key="top_earners">Top Earners</span>
+            </h3>
+            <div id="top-earners-list" class="space-y-2">
+                <!-- Top earners will be injected here -->
+            </div>
+        </div>
+        <div>
+            <h3 class="text-lg font-semibold text-app-text px-2 flex items-center gap-2 mb-3">
+                <i data-lucide="users" class="w-5 h-5 text-cyan-400"></i> <span data-lang-key="top_referrers">Top Referrers</span>
+            </h3>
+            <div id="top-referrers-list" class="space-y-2">
+                 <!-- Top referrers will be injected here -->
+            </div>
+        </div>
     </div>
 </div>
 
@@ -312,14 +329,14 @@
 <!-- Main Balance Card -->
 <div class="neo-card p-6 rounded-3xl relative overflow-hidden">
     <div class="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl"></div>
-    <p class="text-app-subtext font-medium mb-2 flex items-center gap-2"><i data-lucide="wallet" class="w-4 h-4"></i> Available Balance</p>
+    <p class="text-app-subtext font-medium mb-2 flex items-center gap-2"><i data-lucide="wallet" class="w-4 h-4"></i> <span data-lang-key="available_balance">Available Balance</span></p>
     <h2 id="main-balance-display" class="text-4xl font-bold text-app-text tracking-tight mb-6">$0.00</h2>
     <div class="grid grid-cols-2 gap-3">
         <button onclick="switchView('view-deposit')" class="action-btn py-3 rounded-xl flex items-center justify-center gap-2">
-            <i data-lucide="plus-circle" class="w-5 h-5"></i> DEPOSIT
+            <i data-lucide="plus-circle" class="w-5 h-5"></i> <span data-lang-key="deposit">DEPOSIT</span>
         </button>
          <button onclick="switchView('view-withdrawal')" class="action-btn py-3 rounded-xl flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-500">
-            <i data-lucide="arrow-up-circle" class="w-5 h-5"></i> WITHDRAW
+            <i data-lucide="arrow-up-circle" class="w-5 h-5"></i> <span data-lang-key="withdraw">WITHDRAW</span>
         </button>
     </div>
 </div>
@@ -328,7 +345,7 @@
 <div id="live-withdrawal-feed" class="space-y-3">
     <h3 class="text-lg font-semibold text-app-text px-2 flex items-center gap-2">
         <i data-lucide="arrow-up-right" class="w-5 h-5 text-cyan-400"></i>
-        Live Withdrawals
+        <span data-lang-key="live_withdrawals">Live Withdrawals</span>
     </h3>
     <div id="withdrawal-feed-container" class="h-48 overflow-hidden relative space-y-3">
         <!-- Feed items will be injected here -->
@@ -339,8 +356,8 @@
 <!-- TASKS VIEW -->
 <div id="view-tasks" class="app-view space-y-6">
     <div class="text-center">
-       <h2 class="text-2xl font-bold text-app-text">Daily Tasks</h2>
-       <p class="text-app-subtext text-sm">Complete simple tasks to earn rewards</p>
+       <h2 class="text-2xl font-bold text-app-text" data-lang-key="daily_tasks">Daily Tasks</h2>
+       <p class="text-app-subtext text-sm" data-lang-key="complete_tasks_to_earn">Complete simple tasks to earn rewards</p>
    </div>
    <div id="task-list" class="space-y-4">
        <!-- Tasks will be dynamically inserted here -->
@@ -350,25 +367,25 @@
 <!-- REFER VIEW -->
 <div id="view-refer" class="app-view space-y-6">
     <div id="referral-input-section" class="neo-card p-5 rounded-2xl text-center space-y-3">
-        <h3 class="font-semibold text-app-text text-lg">Have a Referral Code?</h3>
-        <p class="text-xs text-app-subtext">Enter your friend's code below. You both will receive <span id="referral-bonus-text" class="text-emerald-400 font-bold">$1.00</span> instantly!</p>
+        <h3 class="font-semibold text-app-text text-lg" data-lang-key="have_referral_code">Have a Referral Code?</h3>
+        <p class="text-xs text-app-subtext" data-lang-key="enter_friend_code">Enter your friend's code below. You both will receive <span id="referral-bonus-text" class="text-emerald-400 font-bold">$1.00</span> instantly!</p>
         <div class="relative">
             <input type="text" id="referral-code-input" placeholder="Enter Code Here" class="neo-input w-full p-3 rounded-xl text-center font-mono">
         </div>
-        <button id="btn-verify-referral" class="action-btn w-full py-3 rounded-xl">VERIFY & CLAIM <span id="referral-claim-bonus-text">$1.00</span></button>
+        <button id="btn-verify-referral" class="action-btn w-full py-3 rounded-xl"><span data-lang-key="verify_claim">VERIFY & CLAIM</span> <span id="referral-claim-bonus-text">$1.00</span></button>
     </div>
     <div class="grid grid-cols-2 gap-4 text-center">
         <div class="neo-card p-4 rounded-xl">
-            <p class="text-sm text-app-subtext">Total Referrals</p>
+            <p class="text-sm text-app-subtext" data-lang-key="total_referrals">Total Referrals</p>
             <p id="ref-stat-count" class="text-2xl font-bold text-app-text">0</p>
         </div>
         <div class="neo-card p-4 rounded-xl">
-            <p class="text-sm text-app-subtext">Referral Earnings</p>
+            <p class="text-sm text-app-subtext" data-lang-key="referral_earnings">Referral Earnings</p>
             <p id="ref-stat-earnings" class="text-2xl font-bold text-emerald-400">$0.00</p>
         </div>
     </div>
     <div class="neo-card p-5 rounded-2xl text-center">
-        <h3 class="font-semibold text-app-subtext mb-2">Your Unique Referral Link</h3>
+        <h3 class="font-semibold text-app-subtext mb-2" data-lang-key="your_referral_link">Your Unique Referral Link</h3>
         <div class="relative">
             <input type="text" id="referral-link-display" readonly class="neo-input w-full p-3 rounded-xl text-center bg-slate-700 font-mono text-sm" value="Loading...">
             <button onclick="copyText(document.getElementById('referral-link-display').value)" class="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-slate-600">
@@ -379,7 +396,7 @@
     <div id="your-referrals-section" class="space-y-3">
         <h3 class="text-lg font-semibold text-app-text px-2 flex items-center gap-2">
             <i data-lucide="users" class="w-5 h-5 text-nexus-primary"></i>
-            Your Referrals
+            <span data-lang-key="your_referrals">Your Referrals</span>
         </h3>
         <div id="my-referrals-list" class="space-y-3"></div>
     </div>
@@ -388,15 +405,15 @@
 <!-- DEPOSIT VIEW -->
 <div id="view-deposit" class="app-view space-y-6">
     <div class="text-center mb-6">
-        <h2 class="text-2xl font-bold text-app-text">Add Funds</h2>
-        <p class="text-app-subtext text-sm">Secure & Fast Balance Top-up</p>
+        <h2 class="text-2xl font-bold text-app-text" data-lang-key="add_funds">Add Funds</h2>
+        <p class="text-app-subtext text-sm" data-lang-key="secure_top_up">Secure & Fast Balance Top-up</p>
     </div>
     <div class="neo-card p-5 rounded-2xl bg-indigo-500/10 border-indigo-500/20">
         <div class="flex items-start gap-3">
             <i data-lucide="alert-circle" class="w-6 h-6 text-indigo-400 shrink-0 mt-1"></i>
             <div>
-                 <h4 class="font-bold text-indigo-300 mb-1">IMPORTANT NOTE</h4>
-                 <p class="text-xs text-indigo-400 leading-relaxed">
+                 <h4 class="font-bold text-indigo-300 mb-1" data-lang-key="important_note">IMPORTANT NOTE</h4>
+                 <p class="text-xs text-indigo-400 leading-relaxed" data-lang-key="deposit_note">
                     Please use a valid payment method. Minimum deposit is <span id="min-deposit-text" class="text-indigo-300 font-bold">$10.00</span>.
                  </p>
             </div>
@@ -406,32 +423,32 @@
          <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('0x82f67a0590e10f679c062f8e2c235af4ea980bc9', 'USDT')">
              <img src="https://i.postimg.cc/dkyYkPk2/usdt-logo.png" class="w-8 h-8 mb-2 rounded-full" alt="USDT">
              <span class="font-mono text-xs text-app-text">USDT (TRC20)</span>
-             <span class="text-[10px] text-app-subtext mt-1">Tap to Copy</span>
+             <span class="text-[10px] text-app-subtext mt-1" data-lang-key="tap_to_copy">Tap to Copy</span>
          </div>
          <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('1RBJu6cHBetMCYHxDZH1x8nw41buXVxJX', 'BTC')">
              <img src="https://i.postimg.cc/gxWnGs7Z/btc-logo.png" class="w-8 h-8 mb-2 rounded-full" alt="BTC">
              <span class="font-mono text-xs text-app-text">Bitcoin</span>
-             <span class="text-[10px] text-app-subtext mt-1">Tap to Copy</span>
+             <span class="text-[10px] text-app-subtext mt-1" data-lang-key="tap_to_copy">Tap to Copy</span>
          </div>
          <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('900749799', 'Binance')">
              <img src="https://i.postimg.cc/21r8s6bf/binance-logo.png" class="w-8 h-8 mb-2 rounded-full bg-white p-1" alt="Binance">
              <span class="font-mono text-xs text-app-text">Binance Pay</span>
-             <span class="text-[10px] text-app-subtext mt-1">Tap to Copy</span>
+             <span class="text-[10px] text-app-subtext mt-1" data-lang-key="tap_to_copy">Tap to Copy</span>
          </div>
     </div>
     <div class="neo-card p-5 rounded-2xl space-y-4">
-        <h3 class="font-semibold text-app-text">Submit Verification Info</h3>
+        <h3 class="font-semibold text-app-text" data-lang-key="submit_verification_info">Submit Verification Info</h3>
         <input type="hidden" id="dep-method" value="">
         <button id="dep-method-selector" class="neo-input w-full p-3 rounded-xl text-left text-app-subtext flex justify-between items-center">
-            <span id="dep-method-text">Select Payment Method</span>
+            <span id="dep-method-text" data-lang-key="select_payment_method">Select Payment Method</span>
             <i data-lucide="chevron-down" class="w-5 h-5"></i>
         </button>
         <input type="number" id="dep-amount" placeholder="Amount (USD)" class="neo-input w-full p-3 rounded-xl">
         <input type="text" id="dep-sender" placeholder="Your Wallet Address / Binance ID" class="neo-input w-full p-3 rounded-xl">
-        <button id="btn-submit-deposit" class="action-btn w-full py-4 rounded-xl text-lg">VERIFY DEPOSIT</button>
+        <button id="btn-submit-deposit" class="action-btn w-full py-4 rounded-xl text-lg" data-lang-key="verify_deposit">VERIFY DEPOSIT</button>
     </div>
     <div class="pt-4">
-        <h3 class="text-sm font-bold text-app-subtext mb-3 px-2">Transaction History</h3>
+        <h3 class="text-sm font-bold text-app-subtext mb-3 px-2" data-lang-key="transaction_history">Transaction History</h3>
         <div id="deposit-history-log" class="space-y-2"></div>
     </div>
 </div>
@@ -439,33 +456,33 @@
 <!-- WITHDRAWAL VIEW -->
 <div id="view-withdrawal" class="app-view space-y-6">
     <div class="text-center mb-6">
-        <h2 class="text-2xl font-bold text-app-text">Withdraw Funds</h2>
-        <p class="text-app-subtext text-sm">Request a withdrawal to your wallet</p>
+        <h2 class="text-2xl font-bold text-app-text" data-lang-key="withdraw_funds">Withdraw Funds</h2>
+        <p class="text-app-subtext text-sm" data-lang-key="request_withdrawal_to_wallet">Request a withdrawal to your wallet</p>
     </div>
     <div class="neo-card p-5 rounded-2xl bg-cyan-500/10 border-cyan-500/20">
         <div class="flex items-start gap-3">
             <i data-lucide="info" class="w-6 h-6 text-cyan-400 shrink-0 mt-1"></i>
             <div>
-                 <h4 class="font-bold text-cyan-300 mb-1">WITHDRAWAL INFO</h4>
-                 <p id="withdrawal-info-text" class="text-xs text-cyan-400 leading-relaxed">
+                 <h4 class="font-bold text-cyan-300 mb-1" data-lang-key="withdrawal_info">WITHDRAWAL INFO</h4>
+                 <p id="withdrawal-info-text" class="text-xs text-cyan-400 leading-relaxed" data-lang-key="withdrawal_info_details">
                     Withdrawals are processed within 24 hours. Minimum withdrawal is <span id="min-withdrawal-text" class="text-cyan-300 font-bold">$5.00</span>.
                  </p>
             </div>
         </div>
     </div>
     <div class="neo-card p-5 rounded-2xl space-y-4">
-        <h3 class="font-semibold text-app-text">Enter Withdrawal Details</h3>
+        <h3 class="font-semibold text-app-text" data-lang-key="enter_withdrawal_details">Enter Withdrawal Details</h3>
         <input type="hidden" id="wd-method" value="">
         <button id="wd-method-selector" class="neo-input w-full p-3 rounded-xl text-left text-app-subtext flex justify-between items-center">
-            <span id="wd-method-text">Select Withdrawal Method</span>
+            <span id="wd-method-text" data-lang-key="select_withdrawal_method">Select Withdrawal Method</span>
             <i data-lucide="chevron-down" class="w-5 h-5"></i>
         </button>
         <input type="text" id="wd-address" placeholder="Your Wallet Address / Binance ID" class="neo-input w-full p-3 rounded-xl">
         <input type="number" id="wd-amount" placeholder="Amount to Withdraw (USD)" class="neo-input w-full p-3 rounded-xl">
-        <button id="btn-submit-withdrawal" class="action-btn w-full py-4 rounded-xl text-lg bg-gradient-to-r from-cyan-500 to-blue-500">SUBMIT WITHDRAWAL</button>
+        <button id="btn-submit-withdrawal" class="action-btn w-full py-4 rounded-xl text-lg bg-gradient-to-r from-cyan-500 to-blue-500" data-lang-key="submit_withdrawal">SUBMIT WITHDRAWAL</button>
     </div>
     <div class="pt-4">
-        <h3 class="text-sm font-bold text-app-subtext mb-3 px-2">Withdrawal History</h3>
+        <h3 class="text-sm font-bold text-app-subtext mb-3 px-2" data-lang-key="withdrawal_history">Withdrawal History</h3>
         <div id="withdrawal-history-log" class="space-y-2"></div>
     </div>
 </div>
@@ -486,15 +503,15 @@
     </div>
     <div class="grid grid-cols-3 gap-3 text-center">
         <div class="neo-card p-3 rounded-xl bg-slate-800/50">
-            <p class="text-[11px] text-app-subtext uppercase">Total Tasks</p>
+            <p class="text-[11px] text-app-subtext uppercase" data-lang-key="total_tasks">Total Tasks</p>
             <p id="stat-tasks" class="text-md font-bold text-cyan-400">0</p>
         </div>
         <div class="neo-card p-3 rounded-xl bg-slate-800/50">
-            <p class="text-[11px] text-app-subtext uppercase">Total Income</p>
+            <p class="text-[11px] text-app-subtext uppercase" data-lang-key="total_income_stat">Total Income</p>
             <p id="stat-income" class="text-md font-bold text-yellow-400">$0.00</p>
         </div>
         <div class="neo-card p-3 rounded-xl bg-slate-800/50">
-            <p class="text-[11px] text-app-subtext uppercase">Total Referrals</p>
+            <p class="text-[11px] text-app-subtext uppercase" data-lang-key="total_referrals">Total Referrals</p>
             <p id="stat-referrals" class="text-md font-bold text-emerald-400">0</p>
         </div>
     </div>
@@ -502,42 +519,86 @@
         <button onclick="switchView('view-features')" class="neo-card w-full p-4 rounded-xl flex items-center justify-between transition hover:bg-slate-700/50">
             <div class="flex items-center gap-3">
                 <div class="p-2 rounded-lg bg-orange-500/10 text-orange-400"><i data-lucide="zap" class="w-5 h-5"></i></div>
-                <span class="font-medium text-app-text">Advanced Features</span>
+                <span class="font-medium text-app-text" data-lang-key="advanced_features">Advanced Features</span>
+            </div>
+            <i data-lucide="chevron-right" class="w-5 h-5 text-slate-500"></i>
+        </button>
+         <button onclick="switchView('view-settings')" class="neo-card w-full p-4 rounded-xl flex items-center justify-between transition hover:bg-slate-700/50">
+            <div class="flex items-center gap-3">
+                <div class="p-2 rounded-lg bg-gray-500/10 text-gray-400"><i data-lucide="settings" class="w-5 h-5"></i></div>
+                <span class="font-medium text-app-text" data-lang-key="settings">Settings</span>
             </div>
             <i data-lucide="chevron-right" class="w-5 h-5 text-slate-500"></i>
         </button>
         <button onclick="openSupport()" class="neo-card w-full p-4 rounded-xl flex items-center justify-between transition hover:bg-slate-700/50">
              <div class="flex items-center gap-3">
                 <div class="p-2 rounded-lg bg-cyan-500/10 text-cyan-400"><i data-lucide="life-buoy" class="w-5 h-5"></i></div>
-                <span class="font-medium text-app-text">Support Hub</span>
+                <span class="font-medium text-app-text" data-lang-key="support_hub">Support Hub</span>
             </div>
             <i data-lucide="external-link" class="w-5 h-5 text-slate-500"></i>
         </button>
     </div>
 </div>
 
+<!-- SETTINGS VIEW -->
+<div id="view-settings" class="app-view space-y-6">
+    <div class="flex items-center gap-3 mb-6">
+        <button onclick="switchView('view-profile')" class="p-2 rounded-full bg-slate-800 text-app-subtext"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+        <h2 class="text-xl font-bold text-app-text" data-lang-key="settings">Settings</h2>
+    </div>
+    <div class="neo-card p-5 rounded-2xl space-y-4">
+        <div>
+            <label class="text-sm font-medium text-app-subtext" data-lang-key="language">Language</label>
+            <select id="language-switcher" class="neo-input w-full p-3 rounded-xl mt-2">
+                <option value="en">English</option>
+                <option value="bn">বাংলা</option>
+                <option value="hi">हिंदी</option>
+            </select>
+        </div>
+        <div>
+            <label class="text-sm font-medium text-app-subtext" data-lang-key="currency">Currency</label>
+            <select id="currency-switcher" class="neo-input w-full p-3 rounded-xl mt-2">
+                <option value="USD">USD ($)</option>
+                <option value="INR">INR (₹)</option>
+                <option value="BDT">BDT (৳)</option>
+            </select>
+        </div>
+        <div>
+            <label class="text-sm font-medium text-app-subtext" data-lang-key="theme">Theme</label>
+            <select id="theme-switcher" class="neo-input w-full p-3 rounded-xl mt-2">
+                <option value="dark" data-lang-key="dark">Dark</option>
+                <option value="light" data-lang-key="light">Light</option>
+            </select>
+        </div>
+        <button onclick="openContact()" class="action-btn w-full py-3 rounded-xl flex items-center justify-center gap-2">
+            <i data-lucide="mail" class="w-5 h-5"></i><span data-lang-key="contact">CONTACT</span>
+        </button>
+    </div>
+</div>
+
+
 <!-- FEATURES VIEW (Transfer) -->
 <div id="view-features" class="app-view space-y-6">
      <div class="flex items-center gap-3 mb-6">
         <button onclick="switchView('view-profile')" class="p-2 rounded-full bg-slate-800 text-app-subtext"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
-        <h2 class="text-xl font-bold text-app-text">Tools & Services</h2>
+        <h2 class="text-xl font-bold text-app-text" data-lang-key="tools_services">Tools & Services</h2>
     </div>
     <div class="grid grid-cols-2 gap-4">
         <button onclick="switchView('subview-send')" class="neo-card p-5 rounded-2xl flex flex-col items-center gap-3 hover:border-indigo-400 transition group">
             <div class="w-14 h-14 rounded-full bg-indigo-500/10 flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-all text-indigo-400">
                 <i data-lucide="send" class="w-7 h-7 ml-1"></i>
             </div>
-            <span class="font-semibold text-app-text">P2P Transfer</span>
+            <span class="font-semibold text-app-text" data-lang-key="p2p_transfer">P2P Transfer</span>
         </button>
         <button onclick="switchView('view-extra-income')" class="neo-card p-5 rounded-2xl flex flex-col items-center gap-3 transition group attractive-glow-button">
             <div class="w-14 h-14 rounded-full bg-yellow-500/10 flex items-center justify-center group-hover:bg-yellow-500 group-hover:text-white transition-all text-yellow-400">
                 <i data-lucide="trending-up" class="w-7 h-7"></i>
             </div>
-            <span class="font-semibold text-app-text">Extra Income</span>
+            <span class="font-semibold text-app-text" data-lang-key="extra_income">Extra Income</span>
         </button>
     </div>
     <div class="neo-card p-5 rounded-2xl mt-4 bg-slate-800/50">
-         <h3 class="font-bold text-app-text mb-4 flex items-center gap-2"><i data-lucide="activity" class="w-4 h-4"></i> Recent Activities</h3>
+         <h3 class="font-bold text-app-text mb-4 flex items-center gap-2"><i data-lucide="activity" class="w-4 h-4"></i> <span data-lang-key="recent_activities">Recent Activities</span></h3>
          <div id="activity-log" class="space-y-3 text-sm text-app-subtext text-center py-4 max-h-60 overflow-y-auto">
              No recent activities found.
          </div>
@@ -548,23 +609,23 @@
 <div id="subview-send" class="app-view space-y-6">
      <div class="flex items-center gap-3 mb-6">
         <button onclick="switchView('view-features')" class="p-2 rounded-full bg-slate-800 text-app-subtext"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
-        <h2 class="text-xl font-bold text-app-text">Transfer Balance</h2>
+        <h2 class="text-xl font-bold text-app-text" data-lang-key="transfer_balance">Transfer Balance</h2>
     </div>
     <div class="neo-card p-6 rounded-3xl space-y-5">
         <div class="bg-yellow-500/10 text-yellow-300 p-3 rounded-xl text-sm flex gap-2 items-start">
             <i data-lucide="alert-triangle" class="w-5 h-5 shrink-0"></i>
-            <p>Default transfer fee is <strong>5%</strong>. Minimum transfer is <strong>$0.50</strong>. Upgraded members get fee discounts.</p>
+            <p data-lang-key="transfer_fee_note">Default transfer fee is <strong>5%</strong>. Minimum transfer is <strong>$0.50</strong>. Upgraded members get fee discounts.</p>
         </div>
         <div>
-            <label class="text-xs text-app-subtext ml-2 mb-1 block">Recipient UID</label>
+            <label class="text-xs text-app-subtext ml-2 mb-1 block" data-lang-key="recipient_uid">Recipient UID</label>
             <input type="text" id="p2p-uid" placeholder="Enter User ID" class="neo-input w-full p-4 rounded-xl font-mono">
         </div>
          <div>
-            <label class="text-xs text-app-subtext ml-2 mb-1 block">Amount</label>
+            <label class="text-xs text-app-subtext ml-2 mb-1 block" data-lang-key="amount">Amount</label>
             <input type="number" id="p2p-amount" placeholder="0.00" class="neo-input w-full p-4 rounded-xl font-bold text-lg">
             <p id="p2p-fee-calc" class="text-right text-xs text-app-subtext mt-2 h-4"></p>
         </div>
-        <button id="btn-exec-p2p" class="action-btn w-full py-4 rounded-xl text-lg">CONFIRM TRANSFER</button>
+        <button id="btn-exec-p2p" class="action-btn w-full py-4 rounded-xl text-lg" data-lang-key="confirm_transfer">CONFIRM TRANSFER</button>
     </div>
 </div>
 
@@ -572,7 +633,7 @@
 <div id="view-extra-income" class="app-view space-y-6">
     <div class="flex items-center gap-3 mb-6">
        <button onclick="switchView('view-profile')" class="p-2 rounded-full bg-slate-800 text-app-subtext"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
-       <h2 class="text-xl font-bold text-app-text">Extra Income Tiers</h2>
+       <h2 class="text-xl font-bold text-app-text" data-lang-key="extra_income_tiers">Extra Income Tiers</h2>
     </div>
     <div id="income-tiers-container" class="space-y-4">
         <!-- Tiers will be dynamically loaded here -->
@@ -581,7 +642,7 @@
 
 <!-- NEWS VIEW -->
 <div id="view-news" class="app-view space-y-4">
-    <h2 class="text-2xl font-bold px-2 text-app-text">Latest News</h2>
+    <h2 class="text-2xl font-bold px-2 text-app-text" data-lang-key="latest_news">Latest News</h2>
     <div id="news-feed" class="space-y-4">
         <!-- News will be loaded here from Firebase -->
     </div>
@@ -593,23 +654,23 @@
 <nav class="dock-nav">
     <button class="dock-item nav-active" data-target="view-dashboard">
         <i data-lucide="home" class="w-6 h-6"></i>
-        <span>Home</span>
+        <span data-lang-key="home">Home</span>
     </button>
     <button class="dock-item" data-target="view-tasks">
         <i data-lucide="clipboard-check" class="w-6 h-6"></i>
-        <span>Tasks</span>
+        <span data-lang-key="tasks">Tasks</span>
     </button>
      <button class="dock-item" data-target="view-refer">
         <i data-lucide="users" class="w-6 h-6"></i>
-        <span>Refer</span>
+        <span data-lang-key="refer">Refer</span>
     </button>
     <button class="dock-item" data-target="view-news">
         <i data-lucide="rss" class="w-6 h-6"></i>
-        <span>News</span>
+        <span data-lang-key="news">News</span>
     </button>
     <button class="dock-item" data-target="view-profile">
         <i data-lucide="user-circle" class="w-6 h-6"></i>
-        <span>Account</span>
+        <span data-lang-key="account">Account</span>
     </button>
 </nav>
 </div>
@@ -639,6 +700,7 @@
     const P2P_FEE_PERCENT = 0.05; // 5%
     const MIN_P2P_AMT = 0.5;
     const ADMIN_ID = "CUb4r6eg1RV6Ljkj5U2V1cSswng1";
+    const USD_TO_BDT_RATE = 126;
 
     let membershipTiers = {
         free: { name: 'Free', price: 0,  level: 0, duration: 3, taskLimit: 1, benefits: { feeReduction: 0, benefit_text_1: "Daily Task Limit: 1" } },
@@ -666,8 +728,305 @@
     let activeTimers = [];
     let firebaseUser = null;
 
+    // --- LANGUAGE & CURRENCY ---
+    const translations = {
+        en: {
+            reward_claim_title: "REWARD CLAIM",
+            establishing_connection: "Establishing Secure Connection...",
+            help_center: "Help Center",
+            priority_support: "24/7 Priority Support",
+            deposit: "Deposit",
+            withdrawal: "Withdrawal",
+            support_hub: "Support Hub",
+            visit_website: "Visit Website",
+            extra_income: "Extra Income",
+            welcome_back: "Welcome back,",
+            fund: "FUND",
+            welcome: "Welcome!",
+            unlock_potential: "Unlock Your Earning Potential",
+            total_active_members: "TOTAL ACTIVE MEMBERS",
+            total_visit: "TOTAL VISIT",
+            total_user: "TOTAL USER",
+            total_income: "TOTAL INCOME",
+            unlock_dashboard: "UNLOCK FULL DASHBOARD",
+            top_earners: "Top Earners",
+            top_referrers: "Top Referrers",
+            available_balance: "Available Balance",
+            withdraw: "WITHDRAW",
+            live_withdrawals: "Live Withdrawals",
+            daily_tasks: "Daily Tasks",
+            complete_tasks_to_earn: "Complete simple tasks to earn rewards",
+            have_referral_code: "Have a Referral Code?",
+            enter_friend_code: "Enter your friend's code below. You both will receive <span id='referral-bonus-text' class='text-emerald-400 font-bold'>$1.00</span> instantly!",
+            verify_claim: "VERIFY & CLAIM",
+            total_referrals: "Total Referrals",
+            referral_earnings: "Referral Earnings",
+            your_referral_link: "Your Unique Referral Link",
+            your_referrals: "Your Referrals",
+            add_funds: "Add Funds",
+            secure_top_up: "Secure & Fast Balance Top-up",
+            important_note: "IMPORTANT NOTE",
+            deposit_note: "Please use a valid payment method. Minimum deposit is <span id='min-deposit-text' class='text-indigo-300 font-bold'>$10.00</span>.",
+            tap_to_copy: "Tap to Copy",
+            submit_verification_info: "Submit Verification Info",
+            select_payment_method: "Select Payment Method",
+            verify_deposit: "VERIFY DEPOSIT",
+            transaction_history: "Transaction History",
+            withdraw_funds: "Withdraw Funds",
+            request_withdrawal_to_wallet: "Request a withdrawal to your wallet",
+            withdrawal_info: "WITHDRAWAL INFO",
+            withdrawal_info_details: "Withdrawals are processed within 24 hours. Minimum withdrawal is <span id='min-withdrawal-text' class='text-cyan-300 font-bold'>$5.00</span>.",
+            enter_withdrawal_details: "Enter Withdrawal Details",
+            select_withdrawal_method: "Select Withdrawal Method",
+            submit_withdrawal: "SUBMIT WITHDRAWAL",
+            withdrawal_history: "Withdrawal History",
+            total_tasks: "Total Tasks",
+            total_income_stat: "Total Income",
+            advanced_features: "Advanced Features",
+            settings: "Settings",
+            language: "Language",
+            currency: "Currency",
+            theme: "Theme",
+            dark: "Dark",
+            light: "Light",
+            contact: "CONTACT",
+            tools_services: "Tools & Services",
+            p2p_transfer: "P2P Transfer",
+            recent_activities: "Recent Activities",
+            transfer_balance: "Transfer Balance",
+            transfer_fee_note: "Default transfer fee is <strong>5%</strong>. Minimum transfer is <strong>$0.50</strong>. Upgraded members get fee discounts.",
+            recipient_uid: "Recipient UID",
+            amount: "Amount",
+            confirm_transfer: "CONFIRM TRANSFER",
+            extra_income_tiers: "Extra Income Tiers",
+            latest_news: "Latest News",
+            home: "Home",
+            tasks: "Tasks",
+            refer: "Refer",
+            news: "News",
+            account: "Account"
+        },
+        bn: {
+            reward_claim_title: "পুরস্কার দাবি",
+            establishing_connection: "নিরাপদ সংযোগ স্থাপন করা হচ্ছে...",
+            help_center: "সহায়তা কেন্দ্র",
+            priority_support: "২৪/৭ অগ্রাধিকার সমর্থন",
+            deposit: "জমা",
+            withdrawal: "উত্তোলন",
+            support_hub: "সাপোর্ট হাব",
+            visit_website: "ওয়েবসাইট দেখুন",
+            extra_income: "অতিরিক্ত আয়",
+            welcome_back: "ফিরে আসার জন্য স্বাগতম,",
+            fund: "অর্থ",
+            welcome: "স্বাগতম!",
+            unlock_potential: "আপনার আয়ের সম্ভাবনা আনলক করুন",
+            total_active_members: "মোট সক্রিয় সদস্য",
+            total_visit: "মোট পরিদর্শন",
+            total_user: "মোট ব্যবহারকারী",
+            total_income: "মোট আয়",
+            unlock_dashboard: "সম্পূর্ণ ড্যাশবোর্ড আনলক করুন",
+            top_earners: "শীর্ষ উপার্জনকারী",
+            top_referrers: "শীর্ষ রেফারকারী",
+            available_balance: "বর্তমান ব্যালেন্স",
+            withdraw: "উত্তোলন",
+            live_withdrawals: "লাইভ উত্তোলন",
+            daily_tasks: "দৈনিক কাজ",
+            complete_tasks_to_earn: "পুরস্কার অর্জনের জন্য সহজ কাজগুলি সম্পন্ন করুন",
+            have_referral_code: "আপনার কি রেফারেল কোড আছে?",
+            enter_friend_code: "নিচে আপনার বন্ধুর কোড লিখুন। আপনারা উভয়েই তাৎক্ষণিকভাবে <span id='referral-bonus-text' class='text-emerald-400 font-bold'>৳১০০</span> পাবেন!",
+            verify_claim: "যাচাই করুন এবং দাবি করুন",
+            total_referrals: "মোট রেফারেল",
+            referral_earnings: "রেফারেল থেকে আয়",
+            your_referral_link: "আপনার বিশেষ রেফারেল লিঙ্ক",
+            your_referrals: "আপনার রেফারেলগুলো",
+            add_funds: "অর্থ যোগ করুন",
+            secure_top_up: "নিরাপদ এবং দ্রুত ব্যালেন্স টপ-আপ",
+            important_note: "গুরুত্বপূর্ণ নোট",
+            deposit_note: "অনুগ্রহ করে একটি বৈধ অর্থপ্রদানের পদ্ধতি ব্যবহার করুন। সর্বনিম্ন জমা হল <span id='min-deposit-text' class='text-indigo-300 font-bold'>৳১০০০</span>।",
+            tap_to_copy: "কপি করতে আলতো চাপুন",
+            submit_verification_info: "যাচাইকরণ তথ্য জমা দিন",
+            select_payment_method: "অর্থপ্রদানের পদ্ধতি নির্বাচন করুন",
+            verify_deposit: "জমা যাচাই করুন",
+            transaction_history: "লেনদেনের ইতিহাস",
+            withdraw_funds: "অর্থ উত্তোলন করুন",
+            request_withdrawal_to_wallet: "আপনার ওয়ালেটে উত্তোলনের জন্য অনুরোধ করুন",
+            withdrawal_info: "উত্তোলন তথ্য",
+            withdrawal_info_details: "উত্তোলন ২৪ ঘণ্টার মধ্যে প্রক্রিয়া করা হয়। সর্বনিম্ন উত্তোলন হল <span id='min-withdrawal-text' class='text-cyan-300 font-bold'>৳৫০০</span>।",
+            enter_withdrawal_details: "উত্তোলনের বিবরণ লিখুন",
+            select_withdrawal_method: "উত্তোলন পদ্ধতি নির্বাচন করুন",
+            submit_withdrawal: "উত্তোলনের জন্য জমা দিন",
+            withdrawal_history: "উত্তোলনের ইতিহাস",
+            total_tasks: "মোট কাজ",
+            total_income_stat: "মোট আয়",
+            advanced_features: "উন্নত বৈশিষ্ট্য",
+            settings: "সেটিং",
+            language: "ভাষা",
+            currency: "মুদ্রা",
+            theme: "থিম",
+            dark: "ডার্ক",
+            light: "লাইট",
+            contact: "যোগাযোগ",
+            tools_services: "সরঞ্জাম এবং পরিষেবা",
+            p2p_transfer: "P2P স্থানান্তর",
+            recent_activities: "সাম্প্রতিক কার্যকলাপ",
+            transfer_balance: "ব্যালেন্স স্থানান্তর করুন",
+            transfer_fee_note: "ডিফল্ট স্থানান্তর ফি <strong>৫%</strong>। সর্বনিম্ন স্থানান্তর হল <strong>৳৫০</strong>। আপগ্রেড করা সদস্যরা ফি ছাড় পান।",
+            recipient_uid: "প্রাপকের UID",
+            amount: "পরিমাণ",
+            confirm_transfer: "স্থানান্তর নিশ্চিত করুন",
+            extra_income_tiers: "অতিরিক্ত আয়ের স্তর",
+            latest_news: "সর্বশেষ খবর",
+            home: "হোম",
+            tasks: "কাজ",
+            refer: "রেফার",
+            news: "খবর",
+            account: "অ্যাকাউন্ট"
+        },
+        hi: {
+            reward_claim_title: "इनाम का दावा",
+            establishing_connection: "सुरक्षित कनेक्शन स्थापित हो रहा है...",
+            help_center: "सहायता केंद्र",
+            priority_support: "24/7 प्राथमिकता समर्थन",
+            deposit: "जमा",
+            withdrawal: "निकासी",
+            support_hub: "समर्थन हब",
+            visit_website: "वेबसाइट पर जाएं",
+            extra_income: "अतिरिक्त आय",
+            welcome_back: "वापस स्वागत है,",
+            fund: "फंड",
+            welcome: "स्वागत है!",
+            unlock_potential: "अपनी कमाई की क्षमता को अनलॉक करें",
+            total_active_members: "कुल सक्रिय सदस्य",
+            total_visit: "कुल विज़िट",
+            total_user: "कुल उपयोगकर्ता",
+            total_income: "कुल आय",
+            unlock_dashboard: "पूर्ण डैशबोर्ड अनलॉक करें",
+            top_earners: "शीर्ष अर्जक",
+            top_referrers: "शीर्ष रेफरर्स",
+            available_balance: "उपलब्ध शेष राशि",
+            withdraw: "निकालें",
+            live_withdrawals: "लाइव निकासी",
+            daily_tasks: "दैनिक कार्य",
+            complete_tasks_to_earn: "पुरस्कार अर्जित करने के लिए सरल कार्यों को पूरा करें",
+            have_referral_code: "क्या आपके पास रेफरल कोड है?",
+            enter_friend_code: "नीचे अपने मित्र का कोड दर्ज करें। आप दोनों को तुरंत <span id='referral-bonus-text' class='text-emerald-400 font-bold'>₹80</span> मिलेंगे!",
+            verify_claim: "सत्यापित करें और दावा करें",
+            total_referrals: "कुल रेफरल",
+            referral_earnings: "रेफरल आय",
+            your_referral_link: "आपका अनूठा रेफरल लिंक",
+            your_referrals: "आपके रेफरल",
+            add_funds: "धन जोड़ें",
+            secure_top_up: "सुरक्षित और तेज़ बैलेंस टॉप-अप",
+            important_note: "महत्वपूर्ण लेख",
+            deposit_note: "कृपया एक वैध भुगतान विधि का उपयोग करें। न्यूनतम जमा <span id='min-deposit-text' class='text-indigo-300 font-bold'>₹800</span> है।",
+            tap_to_copy: "कॉपी करने के लिए टैप करें",
+            submit_verification_info: "सत्यापन जानकारी जमा करें",
+            select_payment_method: "भुगतान विधि चुनें",
+            verify_deposit: "जमा सत्यापित करें",
+            transaction_history: "लेनदेन का इतिहास",
+            withdraw_funds: "धन निकालना",
+            request_withdrawal_to_wallet: "अपने वॉलेट में निकासी का अनुरोध करें",
+            withdrawal_info: "निकासी की जानकारी",
+            withdrawal_info_details: "निकासी 24 घंटों के भीतर संसाधित की जाती है। न्यूनतम निकासी <span id='min-withdrawal-text' class='text-cyan-300 font-bold'>₹400</span> है।",
+            enter_withdrawal_details: "निकासी विवरण दर्ज करें",
+            select_withdrawal_method: "निकासी विधि चुनें",
+            submit_withdrawal: "निकासी जमा करें",
+            withdrawal_history: "निकासी का इतिहास",
+            total_tasks: "कुल कार्य",
+            total_income_stat: "कुल आय",
+            advanced_features: "उन्नत विशेषताएँ",
+            settings: "सेटिंग्स",
+            language: "भाषा",
+            currency: "मुद्रा",
+            theme: "थीम",
+            dark: "डार्क",
+            light: "लाइट",
+            contact: "संपर्क",
+            tools_services: "उपकरण और सेवाएं",
+            p2p_transfer: "P2P स्थानांतरण",
+            recent_activities: "हाल की गतिविधियाँ",
+            transfer_balance: "शेष राशि स्थानांतरित करें",
+            transfer_fee_note: "डिफ़ॉल्ट स्थानांतरण शुल्क <strong>5%</strong> है। न्यूनतम स्थानांतरण <strong>₹40</strong> है। उन्नत सदस्यों को शुल्क छूट मिलती है।",
+            recipient_uid: "प्राप्तकर्ता यूआईडी",
+            amount: "रकम",
+            confirm_transfer: "स्थानांतरण की पुष्टि करें",
+            extra_income_tiers: "अतिरिक्त आय स्तर",
+            latest_news: "ताज़ा खबर",
+            home: "होम",
+            tasks: "कार्य",
+            refer: "रेफर",
+            news: "समाचार",
+            account: "खाता"
+        }
+    };
+    let currentLanguage = 'en';
+    let currentCurrency = 'USD';
+
+    function setLanguage(lang) {
+        currentLanguage = lang;
+        localStorage.setItem('language', lang);
+        document.querySelectorAll('[data-lang-key]').forEach(el => {
+            const key = el.dataset.langKey;
+            if (translations[lang][key]) {
+                el.innerHTML = translations[lang][key];
+            }
+        });
+        updateAllCurrencyDisplays();
+    }
+
+    function setCurrency(currency) {
+        currentCurrency = currency;
+        localStorage.setItem('currency', currency);
+        updateAllCurrencyDisplays();
+    }
+
+    function formatCurrency(amount) {
+        let convertedAmount = amount;
+        let symbol = '$';
+        switch (currentCurrency) {
+            case 'INR':
+                convertedAmount = amount * (USD_TO_BDT_RATE / 1.5); // Approximate conversion
+                symbol = '₹';
+                break;
+            case 'BDT':
+                convertedAmount = amount * USD_TO_BDT_RATE;
+                symbol = '৳';
+                break;
+        }
+        return `${symbol}${convertedAmount.toFixed(2)}`;
+    }
+
+    function updateAllCurrencyDisplays() {
+        if(userData) {
+            const bal = userData.balance;
+            document.getElementById('main-balance-display').textContent = formatCurrency(bal);
+            document.getElementById('user-balance-top').textContent = formatCurrency(bal);
+        }
+    }
+
+    function setTheme(theme) {
+        localStorage.setItem('theme', theme);
+        if (theme === 'light') {
+            document.body.classList.add('light-theme');
+        } else {
+            document.body.classList.remove('light-theme');
+        }
+    }
+
+
     // --- CORE FUNCTIONS ---
     window.onload = async () => {
+        // Load preferences
+        const savedLang = localStorage.getItem('language') || 'en';
+        const savedCurrency = localStorage.getItem('currency') || 'USD';
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+
+        document.getElementById('language-switcher').value = savedLang;
+        document.getElementById('currency-switcher').value = savedCurrency;
+        document.getElementById('theme-switcher').value = savedTheme;
+        
+        setTheme(savedTheme);
+
         try {
             if(window.Telegram?.WebApp) {
                 window.Telegram.WebApp.ready();
@@ -699,6 +1058,8 @@
             const userCredential = await signInAnonymously(auth);
             firebaseUser = userCredential.user;
             await initializeAppLogic();
+            setLanguage(savedLang);
+            setCurrency(savedCurrency);
         } catch (error) {
             console.error("Firebase Anonymous Auth Failed:", error);
             document.getElementById('loading-msg').innerText = 'Connection Error. Please restart.';
@@ -711,6 +1072,30 @@
         setupInteractions();
         lucide.createIcons();
         initLiveWithdrawalFeed();
+        
+        // Setup animated counters
+        const stats = document.querySelectorAll('.stat-number');
+        stats.forEach(stat => {
+            const target = +stat.dataset.target;
+            const prefix = stat.dataset.currencyPrefix || '';
+            let current = 0;
+            const increment = target / 100;
+
+            const updateCount = () => {
+                if(current < target) {
+                    current += increment;
+                    stat.innerText = prefix + Math.ceil(current);
+                    requestAnimationFrame(updateCount);
+                } else {
+                    stat.innerText = prefix + target;
+                }
+            };
+            updateCount();
+        });
+        
+        // Setup Top Earners/Referrers lists
+        showTopEarnersList();
+        showTopReferrersList();
 
         const depositsQuery = query(collection(db, "deposits"), where("userId", "==", userData.tgChatId), where("status", "==", "approved"), limit(1));
         const depositSnap = await getDocs(depositsQuery);
@@ -809,9 +1194,7 @@
 
     function updateDashboard() {
         if(!userData) return;
-        const bal = userData.balance.toFixed(2);
-        document.getElementById('main-balance-display').textContent = `$${bal}`;
-        document.getElementById('user-balance-top').textContent = `$${bal}`;
+        updateAllCurrencyDisplays();
 
         const initials = (tgSession.first_name?.[0] || 'U') + (tgSession.last_name?.[0] || '');
         document.getElementById('nav-user-initials').textContent = initials.toUpperCase();
@@ -892,7 +1275,7 @@
         
         const topDepositBtn = document.querySelector('header .flex.items-center.gap-2 > button:first-child');
         if (topDepositBtn) {
-           topDepositBtn.style.display = (viewId === 'view-deposit' || viewId === 'view-withdrawal') ? 'none' : 'inline-flex';
+           topDepositBtn.style.display = (viewId === 'view-deposit' || viewId === 'view-withdrawal' || viewId === 'view-settings') ? 'none' : 'inline-flex';
         }
         
         if(viewId === 'view-tasks') loadTasksView();
@@ -946,8 +1329,8 @@
                          </div>
                     </div>
                     <div class="text-right">
-                        <p class="font-bold text-lg text-emerald-400">$${(fullReferredUserData.balance || 0).toFixed(2)}</p>
-                        <p class="text-xs text-app-subtext">Balance</p>
+                        <p class="font-bold text-lg text-emerald-400">${formatCurrency(fullReferredUserData.balance || 0)}</p>
+                        <p class="text-xs text-app-subtext" data-lang-key="balance">Balance</p>
                     </div>
                 </div>
                 `;
@@ -1025,7 +1408,7 @@
                         </div>
                         <div>
                             <h3 class="font-semibold text-md text-app-text">${task.title}</h3>
-                            <p class="text-yellow-400 font-bold text-sm">Reward: $${task.reward.toFixed(2)}</p>
+                            <p class="text-yellow-400 font-bold text-sm">Reward: ${formatCurrency(task.reward)}</p>
                         </div>
                     </div>
                     ${buttonHTML}
@@ -1098,7 +1481,7 @@
                     </div>
                     <div>
                         <p class="text-sm font-semibold text-app-text">
-                            ${name} just withdrew <span class="text-cyan-400">$${activity.amount}</span>
+                            ${name} just withdrew <span class="text-cyan-400">${formatCurrency(activity.amount)}</span>
                         </p>
                         <p class="text-xs text-app-subtext">${timeAgo} seconds ago</p>
                     </div>`;
@@ -1137,7 +1520,7 @@
             return `
             <div class="neo-card flex justify-between items-center p-3 rounded-xl">
                 <div>
-                    <p class="text-sm font-medium text-app-text">${data.method} - $${data.amount}</p>
+                    <p class="text-sm font-medium text-app-text">${data.method} - ${formatCurrency(data.amount)}</p>
                     <p class="text-[10px] text-app-subtext font-mono">${date}</p>
                 </div>
                 <span class="text-xs font-bold ${statusColors[data.status] || 'text-app-subtext'} uppercase">${data.status}</span>
@@ -1159,7 +1542,7 @@
             return `
             <div class="neo-card flex justify-between items-center p-3 rounded-xl">
                 <div>
-                    <p class="text-sm font-medium text-app-text">${data.method} - $${data.amount}</p>
+                    <p class="text-sm font-medium text-app-text">${data.method} - ${formatCurrency(data.amount)}</p>
                     <p class="text-[10px] text-app-subtext font-mono">${data.address}</p>
                 </div>
                 <span class="text-xs font-bold ${statusColors[data.status] || 'text-app-subtext'} uppercase">${data.status}</span>
@@ -1201,8 +1584,8 @@
         document.getElementById('modal-go-to-tiers').onclick = () => { switchView('view-extra-income'); closeModal(); };
     }
 
-    window.showTopEarnersModal = function() {
-        // Fake data for demonstration
+    window.showTopEarnersList = function() {
+        const container = document.getElementById('top-earners-list');
         const topEarners = [
             { name: 'John D.', amount: 2345.67, photo: 'https://i.pravatar.cc/150?img=1' },
             { name: 'Maria S.', amount: 2109.45, photo: 'https://i.pravatar.cc/150?img=2' },
@@ -1212,29 +1595,21 @@
         ];
 
         let listHTML = topEarners.map((user, index) => `
-            <div class="flex items-center justify-between p-2 bg-slate-900/50 rounded-lg">
+            <div class="flex items-center justify-between p-2 neo-card rounded-lg">
                 <div class="flex items-center gap-3">
-                    <span class="font-bold text-lg w-6 text-center">${index + 1}</span>
+                    <span class="font-bold text-lg w-6 text-center text-app-subtext">${index + 1}</span>
                     <img src="${user.photo}" class="w-10 h-10 rounded-full object-cover"/>
                     <span class="font-semibold text-app-text">${user.name}</span>
                 </div>
-                <span class="font-bold text-emerald-400">$${user.amount.toFixed(2)}</span>
+                <span class="font-bold text-emerald-400">${formatCurrency(user.amount)}</span>
             </div>
         `).join('');
 
-        const modalHTML = `
-            <div class="space-y-3">
-                <h3 class="text-lg font-bold text-center mb-4 flex items-center justify-center gap-2"><i data-lucide="trophy" class="w-5 h-5 text-yellow-400"></i> Top Earners</h3>
-                <div class="space-y-2 max-h-80 overflow-y-auto pr-2">
-                    ${listHTML}
-                </div>
-            </div>
-        `;
-        showModal(modalHTML);
+        container.innerHTML = listHTML;
     }
 
-    window.showTopReferrersModal = function() {
-        // Fake data for demonstration
+    window.showTopReferrersList = function() {
+        const container = document.getElementById('top-referrers-list');
         const topReferrers = [
             { name: 'Mike T.', count: 152, photo: 'https://i.pravatar.cc/150?img=6' },
             { name: 'Isabella C.', count: 139, photo: 'https://i.pravatar.cc/150?img=7' },
@@ -1244,9 +1619,9 @@
         ];
 
         let listHTML = topReferrers.map((user, index) => `
-            <div class="flex items-center justify-between p-2 bg-slate-900/50 rounded-lg">
+            <div class="flex items-center justify-between p-2 neo-card rounded-lg">
                 <div class="flex items-center gap-3">
-                    <span class="font-bold text-lg w-6 text-center">${index + 1}</span>
+                    <span class="font-bold text-lg w-6 text-center text-app-subtext">${index + 1}</span>
                     <img src="${user.photo}" class="w-10 h-10 rounded-full object-cover"/>
                     <span class="font-semibold text-app-text">${user.name}</span>
                 </div>
@@ -1254,16 +1629,9 @@
             </div>
         `).join('');
 
-        const modalHTML = `
-            <div class="space-y-3">
-                <h3 class="text-lg font-bold text-center mb-4 flex items-center justify-center gap-2"><i data-lucide="users" class="w-5 h-5 text-cyan-400"></i> Top Referrers</h3>
-                <div class="space-y-2 max-h-80 overflow-y-auto pr-2">
-                    ${listHTML}
-                </div>
-            </div>
-        `;
-        showModal(modalHTML);
+        container.innerHTML = listHTML;
     }
+
 
     function startTaskCountdown() {
         const timerElement = document.getElementById('new-task-countdown');
@@ -1338,8 +1706,8 @@
                     dailyCompletedTasks: updatedCompletedTasks
                 });
             });
-            showToast(`Congratulations! You've earned $${task.reward.toFixed(2)}`, 'success');
-            logPublicActivity(`earned $${task.reward.toFixed(2)} from a task.`);
+            showToast(`Congratulations! You've earned ${formatCurrency(task.reward)}`, 'success');
+            logPublicActivity(`earned ${formatCurrency(task.reward)} from a task.`);
         } catch (e) {
             console.error("Error completing task:", e);
             showToast(`Error: ${e.message || e}`, 'error');
@@ -1351,7 +1719,7 @@
 
     async function submitDepositRequest(amount, sender, method, btn, callback) {
         if(!method || !amount || !sender) return showToast("Please fill all fields", "warning");
-        if(amount < MIN_DEPOSIT_AMT) return showModal(`<div class="text-center text-red-400 space-y-3"><i data-lucide="alert-octagon" class="w-12 h-12 mx-auto"></i><h3 class="font-bold text-lg">Invalid Amount</h3><p class="text-app-text">Minimum deposit amount is <span class="font-bold text-app-text">$${MIN_DEPOSIT_AMT.toFixed(2)}</span>.</p><button onclick="closeModal()" class="neo-card w-full py-2 rounded-xl mt-4">OK</button></div>`);
+        if(amount < MIN_DEPOSIT_AMT) return showModal(`<div class="text-center text-red-400 space-y-3"><i data-lucide="alert-octagon" class="w-12 h-12 mx-auto"></i><h3 class="font-bold text-lg">Invalid Amount</h3><p class="text-app-text">Minimum deposit amount is <span class="font-bold text-app-text">${formatCurrency(MIN_DEPOSIT_AMT)}</span>.</p><button onclick="closeModal()" class="neo-card w-full py-2 rounded-xl mt-4">OK</button></div>`);
 
         btn.disabled = true; btn.innerText = "VERIFYING...";
 
@@ -1367,7 +1735,7 @@
                 requestedAt: serverTimestamp()
             });
             
-            showModal(`<div class="text-center space-y-3"><i data-lucide="check-circle" class="w-12 h-12 text-emerald-400 mx-auto"></i><h3 class="text-lg font-bold text-app-text">Submitted!</h3><p class="text-app-subtext">Your deposit of $${amount} is under review. You will be notified upon approval.</p><button onclick="window.location.reload()" class="action-btn w-full py-2 rounded-xl">OK</button></div>`);
+            showModal(`<div class="text-center space-y-3"><i data-lucide="check-circle" class="w-12 h-12 text-emerald-400 mx-auto"></i><h3 class="text-lg font-bold text-app-text">Submitted!</h3><p class="text-app-subtext">Your deposit of ${formatCurrency(amount)} is under review. You will be notified upon approval.</p><button onclick="window.location.reload()" class="action-btn w-full py-2 rounded-xl">OK</button></div>`);
             
             if (callback) callback();
 
@@ -1382,8 +1750,8 @@
         const refCountEl = document.getElementById('ref-stat-count');
         const refEarningsEl = document.getElementById('ref-stat-earnings');
         
-        document.getElementById('referral-bonus-text').textContent = `$${REFERRAL_BONUS.toFixed(2)}`;
-        document.getElementById('referral-claim-bonus-text').textContent = `$${REFERRAL_BONUS.toFixed(2)}`;
+        document.getElementById('referral-bonus-text').textContent = formatCurrency(REFERRAL_BONUS);
+        document.getElementById('referral-claim-bonus-text').textContent = formatCurrency(REFERRAL_BONUS);
         
         const referralLink = `https://t.me/Reward_Claimlbot/eaen?start=${userData.tgChatId}`;
         linkInput.value = referralLink;
@@ -1411,7 +1779,7 @@
                 
                 refCountEl.textContent = snap.docs.length;
                 const referralEarnings = snap.docs.length * REFERRAL_BONUS;
-                refEarningsEl.textContent = `$${referralEarnings.toFixed(2)}`;
+                refEarningsEl.textContent = formatCurrency(referralEarnings);
                 
             } catch (error) {
                 console.error("Error loading referral data:", error);
@@ -1470,7 +1838,7 @@
                 });
             });
 
-            showToast(`Success! You and your friend both earned $${rewardAmount.toFixed(2)}.`, 'success');
+            showToast(`Success! You and your friend both earned ${formatCurrency(rewardAmount)}.`, 'success');
             userData.balance += rewardAmount;
             userData.referredBy = code;
             updateDashboard();
@@ -1479,7 +1847,7 @@
         } catch (e) {
             showToast("Error: " + e.message, "error");
             btn.disabled = false;
-            btn.innerHTML = `VERIFY & CLAIM <span id="referral-claim-bonus-text">$${REFERRAL_BONUS.toFixed(2)}</span>`;
+            btn.innerHTML = `VERIFY & CLAIM <span id="referral-claim-bonus-text">${formatCurrency(REFERRAL_BONUS)}</span>`;
         }
     }
     
@@ -1579,6 +1947,10 @@
         const websiteUrl = sysConfig.websiteUrl || "#";
         window.open(websiteUrl, '_blank');
     };
+    window.openContact = () => {
+        const contactLink = sysConfig.contactLink || "https://t.me/yourcontact";
+        window.open(contactLink, '_blank');
+    };
     window.closeSidePanel = () => {
         document.getElementById('main-side-panel').classList.remove('open');
         document.getElementById('panel-overlay').classList.remove('open');
@@ -1625,7 +1997,7 @@
 
         if (!recipientUid || !amount) return showToast("Please enter UID and amount.", "warning");
         if (recipientUid === userData.tgChatId) return showToast("You cannot transfer to yourself.", "error");
-        if (amount < MIN_P2P_AMT) return showToast(`Minimum transfer amount is $${MIN_P2P_AMT.toFixed(2)}.`, "warning");
+        if (amount < MIN_P2P_AMT) return showToast(`Minimum transfer amount is ${formatCurrency(MIN_P2P_AMT)}.`, "warning");
         
         let feePercent = P2P_FEE_PERCENT;
         const isMemberExpired = userData.membershipExpiry && userData.membershipExpiry.toDate() < new Date();
@@ -1635,7 +2007,7 @@
         const fee = amount * feePercent;
         const totalCost = amount + fee;
 
-        if (userData.balance < totalCost) return showToast(`Insufficient balance. You need $${totalCost.toFixed(2)}.`, "error");
+        if (userData.balance < totalCost) return showToast(`Insufficient balance. You need ${formatCurrency(totalCost)}.`, "error");
 
         btn.disabled = true; btn.textContent = 'PROCESSING...';
         try {
@@ -1665,7 +2037,7 @@
                 });
             });
 
-            showModal(`<div class="text-center space-y-3"><i data-lucide="check-circle" class="w-12 h-12 text-emerald-400 mx-auto"></i><h3 class="text-lg font-bold text-app-text">Transfer Successful!</h3><p class="text-app-subtext">Successfully sent $${amount} to UID ${recipientUid}.</p><button onclick="closeModal(); switchView('view-features');" class="action-btn w-full py-2 rounded-xl">OK</button></div>`);
+            showModal(`<div class="text-center space-y-3"><i data-lucide="check-circle" class="w-12 h-12 text-emerald-400 mx-auto"></i><h3 class="text-lg font-bold text-app-text">Transfer Successful!</h3><p class="text-app-subtext">Successfully sent ${formatCurrency(amount)} to UID ${recipientUid}.</p><button onclick="closeModal(); switchView('view-features');" class="action-btn w-full py-2 rounded-xl">OK</button></div>`);
             document.getElementById('p2p-uid').value = '';
             document.getElementById('p2p-amount').value = '';
         } catch (e) {
@@ -1693,6 +2065,12 @@
         document.getElementById('btn-notifications').addEventListener('click', loadNotifications);
         document.getElementById('modal-close').addEventListener('click', closeModal);
         document.getElementById('modal-backdrop').addEventListener('click', closeModal);
+
+        // Settings
+        document.getElementById('language-switcher').addEventListener('change', (e) => setLanguage(e.target.value));
+        document.getElementById('currency-switcher').addEventListener('change', (e) => setCurrency(e.target.value));
+        document.getElementById('theme-switcher').addEventListener('change', (e) => setTheme(e.target.value));
+
 
         // Copy UID
         document.getElementById('btn-copy-uid').addEventListener('click', () => copyText(userData.tgChatId));
@@ -1738,7 +2116,7 @@
                     throw new Error(`You need at least ${MIN_REFERRALS_FOR_WITHDRAWAL} referrals to withdraw.`);
                 }
                 if (!method || !address || isNaN(amount)) throw new Error("Please fill all fields correctly.");
-                if (amount < MIN_WITHDRAWAL_AMT) throw new Error(`Minimum withdrawal is $${MIN_WITHDRAWAL_AMT.toFixed(2)}.`);
+                if (amount < MIN_WITHDRAWAL_AMT) throw new Error(`Minimum withdrawal is ${formatCurrency(MIN_WITHDRAWAL_AMT)}.`);
                 if (userData.balance < amount) throw new Error("Insufficient balance.");
 
                 await runTransaction(db, async (transaction) => {
@@ -1751,7 +2129,7 @@
                     transaction.set(withdrawalRef, { userId: userData.tgChatId, userName: userData.name, method, address, amount, status: "pending", requestedAt: serverTimestamp() });
                 });
 
-                showModal(`<div class="text-center space-y-3"><i data-lucide="check-circle" class="w-12 h-12 text-emerald-400 mx-auto"></i><h3 class="text-lg font-bold text-app-text">Withdrawal Submitted!</h3><p class="text-app-subtext">Your request for $${amount} will be processed within 24 hours.</p><button onclick="closeModal()" class="action-btn w-full py-2 rounded-xl">OK</button></div>`);
+                showModal(`<div class="text-center space-y-3"><i data-lucide="check-circle" class="w-12 h-12 text-emerald-400 mx-auto"></i><h3 class="text-lg font-bold text-app-text">Withdrawal Submitted!</h3><p class="text-app-subtext">Your request for ${formatCurrency(amount)} will be processed within 24 hours.</p><button onclick="closeModal()" class="action-btn w-full py-2 rounded-xl">OK</button></div>`);
                 document.getElementById('wd-method').value = ''; document.getElementById('wd-method-text').textContent = 'Select Withdrawal Method'; document.getElementById('wd-address').value = ''; document.getElementById('wd-amount').value = '';
                 loadWithdrawalHistory();
             } catch(e) { showToast(e.message, "error");
@@ -1777,7 +2155,7 @@
                 feePercent -= membershipTiers[userData.membershipTier].benefits.feeReduction;
             }
             const fee = val * feePercent;
-            document.getElementById('p2p-fee-calc').textContent = val > 0 ? `Fee (${(feePercent*100).toFixed(0)}%): $${fee.toFixed(2)}` : '';
+            document.getElementById('p2p-fee-calc').textContent = val > 0 ? `Fee (${(feePercent*100).toFixed(0)}%): ${formatCurrency(fee)}` : '';
         });
 
         // Promo Slider
@@ -1843,7 +2221,7 @@
     
             const taskReward = TASK_REWARD;
             const totalTaskEarnings = totalTasks * taskReward;
-            statIncomeEl.textContent = `$${totalTaskEarnings.toFixed(2)}`;
+            statIncomeEl.textContent = formatCurrency(totalTaskEarnings);
     
             const referralsQuery = query(collection(db, "users"), where("referredBy", "==", uid));
             const referralsSnap = await getDocs(referralsQuery);
@@ -1881,7 +2259,7 @@
             const date = log.createdAt.toDate().toLocaleDateString();
             if (log.type === 'p2p') {
                 return `<div class="text-left p-2 rounded-lg bg-slate-700">
-                            <p class="text-app-text">Sent $${log.amount} to <span class="font-mono">${log.toId}</span></p>
+                            <p class="text-app-text">Sent ${formatCurrency(log.amount)} to <span class="font-mono">${log.toId}</span></p>
                             <p class="text-app-subtext text-xs">${date}</p>
                         </div>`;
             }
@@ -1976,7 +2354,7 @@
             return `
             <div class="neo-card p-5 rounded-2xl ${isCurrentTier ? 'border-yellow-400' : 'border-app-border'}">
                 <h3 class="text-2xl font-bold text-yellow-400">${tier.name}</h3>
-                <p class="text-3xl font-bold my-3 text-app-text">$${tier.price} <span class="text-lg text-app-subtext">/ ${tier.duration} days</span></p>
+                <p class="text-3xl font-bold my-3 text-app-text">${formatCurrency(tier.price)} <span class="text-lg text-app-subtext">/ ${tier.duration} days</span></p>
                 <ul class="text-sm text-app-subtext space-y-2 my-4 text-left pl-2">
                     ${benefitsList.join('')}
                 </ul>
@@ -1989,13 +2367,13 @@
     window.purchaseTier = async function(tierKey) {
         const tier = membershipTiers[tierKey];
         if (userData.balance < tier.price) {
-            return showToast(`Insufficient balance. You need $${tier.price}.`, 'error');
+            return showToast(`Insufficient balance. You need ${formatCurrency(tier.price)}.`, 'error');
         }
 
         showModal(`
             <div class="text-center space-y-4">
                 <h3 class="text-xl font-bold text-app-text">Confirm Purchase</h3>
-                <p class="text-app-subtext">Are you sure you want to buy the ${tier.name} tier for $${tier.price} (${tier.duration} days)?</p>
+                <p class="text-app-subtext">Are you sure you want to buy the ${tier.name} tier for ${formatCurrency(tier.price)} (${tier.duration} days)?</p>
                 <button id="confirm-tier-purchase" class="action-btn w-full py-3 rounded-xl">Confirm</button>
                 <button onclick="closeModal()" class="neo-card w-full py-2 rounded-xl mt-2">Cancel</button>
             </div>
