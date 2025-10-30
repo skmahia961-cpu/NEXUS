@@ -134,6 +134,7 @@
         0%, 100% { box-shadow: 0 0 5px #6366f1, 0 0 10px #6366f1, 0 0 15px #8b5cf6; }
         50% { box-shadow: 0 0 10px #8b5cf6, 0 0 20px #8b5cf6, 0 0 30px #6366f1; }
     }
+    .form-step { display: none; }
 </style>
 </head>
 <body class="max-w-md mx-auto min-h-screen overflow-x-hidden no-select pb-28">
@@ -242,59 +243,74 @@
 <div id="view-landing" class="app-view space-y-6">
     <div class="text-center pt-4">
         <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">Welcome!</h1>
-        <p class="text-app-subtext mt-2">To get started, please fund your account or choose a premium plan.</p>
+        <p class="text-app-subtext mt-2">To get started, please fund your account or choose a popular plan.</p>
     </div>
 
     <!-- Deposit Section -->
     <div id="landing-deposit-section">
         <h2 class="text-xl font-bold text-app-text mb-4">1. Add Funds</h2>
-        <div class="neo-card p-5 rounded-2xl bg-indigo-500/10 border-indigo-500/20">
-            <div class="flex items-start gap-3">
-                <i data-lucide="alert-circle" class="w-6 h-6 text-indigo-400 shrink-0 mt-1"></i>
-                <div>
-                     <h4 class="font-bold text-indigo-300 mb-1">IMPORTANT NOTE</h4>
-                     <p class="text-xs text-indigo-400 leading-relaxed">
-                        Please use a valid payment method. Minimum deposit is <span id="min-deposit-text-landing" class="text-indigo-300 font-bold">$10.00</span>.
-                     </p>
-                </div>
-            </div>
-        </div>
-        <div class="grid grid-cols-3 gap-3 text-center mt-4">
-             <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('0x82f67a0590e10f679c062f8e2c235af4ea980bc9', 'USDT')">
+        <div class="grid grid-cols-3 gap-3 text-center">
+             <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('0x82f67a0590e10f679c062f8e2c235af4ea980bc9', 'USDT', 'landing')">
                  <img src="https://i.postimg.cc/dkyYkPk2/usdt-logo.png" class="w-8 h-8 mb-2 rounded-full" alt="USDT">
                  <span class="font-mono text-xs text-app-text">USDT (TRC20)</span>
                  <span class="text-[10px] text-app-subtext mt-1">Tap to Copy</span>
              </div>
-             <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('1RBJu6cHBetMCYHxDZH1x8nw41buXVxJX', 'BTC')">
+             <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('1RBJu6cHBetMCYHxDZH1x8nw41buXVxJX', 'BTC', 'landing')">
                  <img src="https://i.postimg.cc/gxWnGs7Z/btc-logo.png" class="w-8 h-8 mb-2 rounded-full" alt="BTC">
                  <span class="font-mono text-xs text-app-text">Bitcoin</span>
                  <span class="text-[10px] text-app-subtext mt-1">Tap to Copy</span>
              </div>
-             <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('900749799', 'Binance')">
+             <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('900749799', 'Binance', 'landing')">
                  <img src="https://i.postimg.cc/21r8s6bf/binance-logo.png" class="w-8 h-8 mb-2 rounded-full bg-white p-1" alt="Binance">
                  <span class="font-mono text-xs text-app-text">Binance Pay</span>
                  <span class="text-[10px] text-app-subtext mt-1">Tap to Copy</span>
              </div>
         </div>
         <div class="neo-card p-5 rounded-2xl space-y-4 mt-4">
-            <h3 class="font-semibold text-app-text">Submit Verification Info</h3>
-            <input type="number" id="dep-amount-landing" placeholder="Amount (USD)" class="neo-input w-full p-3 rounded-xl">
-            <input type="text" id="dep-sender-landing" placeholder="Your Wallet Address / Binance ID" class="neo-input w-full p-3 rounded-xl">
-            <button id="btn-submit-deposit-landing" class="action-btn w-full py-4 rounded-xl text-lg">VERIFY DEPOSIT</button>
+            <div id="dep-amount-wrapper-landing" class="form-step">
+                <input type="number" id="dep-amount-landing" placeholder="Amount (USD)" class="neo-input w-full p-3 rounded-xl">
+            </div>
+            <div id="dep-sender-wrapper-landing" class="form-step">
+                <input type="text" id="dep-sender-landing" placeholder="Your Wallet Address / Binance ID" class="neo-input w-full p-3 rounded-xl">
+            </div>
+            <div id="dep-button-wrapper-landing" class="form-step">
+                <button id="btn-submit-deposit-landing" class="action-btn w-full py-4 rounded-xl text-lg">VERIFY DEPOSIT</button>
+            </div>
         </div>
     </div>
     
     <!-- Premium Section -->
     <div id="landing-premium-section" class="pt-6">
-        <h2 class="text-xl font-bold text-app-text mb-4">2. Or, Choose a Plan</h2>
-        <div id="premium-tiers-container-landing" class="space-y-4">
-            <!-- Tiers will be dynamically loaded here -->
+        <h2 class="text-xl font-bold text-app-text mb-4">Popular Plans</h2>
+        <div id="premium-tiers-container-landing" class="grid grid-cols-3 gap-2">
+            <!-- Tiers will be dynamically loaded here in a grid -->
+        </div>
+    </div>
+    
+    <!-- Leaderboards Section -->
+    <div id="leaderboards-section" class="pt-6">
+        <h2 class="text-xl font-bold text-app-text mb-4">Leaderboards</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Top Earners -->
+            <div class="neo-card p-4 rounded-xl">
+                <h3 class="font-semibold text-center mb-3 text-yellow-400 flex items-center justify-center gap-2"><i data-lucide="trending-up" class="w-4 h-4"></i> Top Earners</h3>
+                <div id="top-earners-list" class="space-y-2">
+                    <!-- Loaded by JS -->
+                </div>
+            </div>
+            <!-- Top Referrers -->
+            <div class="neo-card p-4 rounded-xl">
+                <h3 class="font-semibold text-center mb-3 text-cyan-400 flex items-center justify-center gap-2"><i data-lucide="users" class="w-4 h-4"></i> Top Referrers</h3>
+                <div id="top-referrers-list" class="space-y-2">
+                    <!-- Loaded by JS -->
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <!-- DASHBOARD VIEW -->
-<div id="view-dashboard" class="app-view active-view space-y-6">
+<div id="view-dashboard" class="app-view space-y-6">
     <!-- Promo Slider -->
     <div class="rounded-2xl overflow-hidden relative aspect-video shadow-lg shadow-black/20">
         <div id="promo-slider" class="h-full flex transition-transform duration-500 ease-out">
@@ -305,36 +321,32 @@
                 <img src="https://i.postimg.cc/W1syFD8p/Grey-Blue-Illustration-Refer-a-Friend-Instagram-Post-1080-x-720-px-20250917-223749-0000.png" class="w-full h-full object-cover" alt="Promo 2">
             </div>
         </div>
-        <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2" id="slider-dots">
-            <!-- Dots here -->
+        <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2" id="slider-dots"></div>
+    </div>
+
+    <!-- Main Balance Card -->
+    <div class="neo-card p-6 rounded-3xl relative overflow-hidden">
+        <div class="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl"></div>
+        <p class="text-app-subtext font-medium mb-2 flex items-center gap-2"><i data-lucide="wallet" class="w-4 h-4"></i> Available Balance</p>
+        <h2 id="main-balance-display" class="text-4xl font-bold text-app-text tracking-tight mb-6">$0.00</h2>
+        <div class="grid grid-cols-2 gap-3">
+            <button onclick="switchView('view-deposit')" class="action-btn py-3 rounded-xl flex items-center justify-center gap-2">
+                <i data-lucide="plus-circle" class="w-5 h-5"></i> DEPOSIT
+            </button>
+             <button onclick="switchView('view-withdrawal')" class="action-btn py-3 rounded-xl flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-500">
+                <i data-lucide="arrow-up-circle" class="w-5 h-5"></i> WITHDRAW
+            </button>
         </div>
     </div>
 
-<!-- Main Balance Card -->
-<div class="neo-card p-6 rounded-3xl relative overflow-hidden">
-    <div class="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl"></div>
-    <p class="text-app-subtext font-medium mb-2 flex items-center gap-2"><i data-lucide="wallet" class="w-4 h-4"></i> Available Balance</p>
-    <h2 id="main-balance-display" class="text-4xl font-bold text-app-text tracking-tight mb-6">$0.00</h2>
-    <div class="grid grid-cols-2 gap-3">
-        <button onclick="switchView('view-deposit')" class="action-btn py-3 rounded-xl flex items-center justify-center gap-2">
-            <i data-lucide="plus-circle" class="w-5 h-5"></i> DEPOSIT
-        </button>
-         <button onclick="switchView('view-withdrawal')" class="action-btn py-3 rounded-xl flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-500">
-            <i data-lucide="arrow-up-circle" class="w-5 h-5"></i> WITHDRAW
-        </button>
+    <!-- Live Withdrawal Feed -->
+    <div id="live-withdrawal-feed" class="space-y-3">
+        <h3 class="text-lg font-semibold text-app-text px-2 flex items-center gap-2">
+            <i data-lucide="arrow-up-right" class="w-5 h-5 text-cyan-400"></i>
+            Live Withdrawals
+        </h3>
+        <div id="withdrawal-feed-container" class="h-48 overflow-hidden relative space-y-3"></div>
     </div>
-</div>
-
-<!-- Live Withdrawal Feed -->
-<div id="live-withdrawal-feed" class="space-y-3">
-    <h3 class="text-lg font-semibold text-app-text px-2 flex items-center gap-2">
-        <i data-lucide="arrow-up-right" class="w-5 h-5 text-cyan-400"></i>
-        Live Withdrawals
-    </h3>
-    <div id="withdrawal-feed-container" class="h-48 overflow-hidden relative space-y-3">
-        <!-- Feed items will be injected here -->
-    </div>
-</div>
 </div>
 
 <!-- TASKS VIEW -->
@@ -343,9 +355,7 @@
        <h2 class="text-2xl font-bold text-app-text">Daily Tasks</h2>
        <p class="text-app-subtext text-sm">Complete simple tasks to earn rewards</p>
    </div>
-   <div id="task-list" class="space-y-4">
-       <!-- Tasks will be dynamically inserted here -->
-   </div>
+   <div id="task-list" class="space-y-4"></div>
 </div>
 
 <!-- REFER VIEW -->
@@ -392,29 +402,18 @@
         <h2 class="text-2xl font-bold text-app-text">Add Funds</h2>
         <p class="text-app-subtext text-sm">Secure & Fast Balance Top-up</p>
     </div>
-    <div class="neo-card p-5 rounded-2xl bg-indigo-500/10 border-indigo-500/20">
-        <div class="flex items-start gap-3">
-            <i data-lucide="alert-circle" class="w-6 h-6 text-indigo-400 shrink-0 mt-1"></i>
-            <div>
-                 <h4 class="font-bold text-indigo-300 mb-1">IMPORTANT NOTE</h4>
-                 <p class="text-xs text-indigo-400 leading-relaxed">
-                    Please use a valid payment method. Minimum deposit is <span id="min-deposit-text" class="text-indigo-300 font-bold">$10.00</span>.
-                 </p>
-            </div>
-        </div>
-    </div>
     <div class="grid grid-cols-3 gap-3 text-center">
-         <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('0x82f67a0590e10f679c062f8e2c235af4ea980bc9', 'USDT')">
+         <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('0x82f67a0590e10f679c062f8e2c235af4ea980bc9', 'USDT', 'main')">
              <img src="https://i.postimg.cc/dkyYkPk2/usdt-logo.png" class="w-8 h-8 mb-2 rounded-full" alt="USDT">
              <span class="font-mono text-xs text-app-text">USDT (TRC20)</span>
              <span class="text-[10px] text-app-subtext mt-1">Tap to Copy</span>
          </div>
-         <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('1RBJu6cHBetMCYHxDZH1x8nw41buXVxJX', 'BTC')">
+         <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('1RBJu6cHBetMCYHxDZH1x8nw41buXVxJX', 'BTC', 'main')">
              <img src="https://i.postimg.cc/gxWnGs7Z/btc-logo.png" class="w-8 h-8 mb-2 rounded-full" alt="BTC">
              <span class="font-mono text-xs text-app-text">Bitcoin</span>
              <span class="text-[10px] text-app-subtext mt-1">Tap to Copy</span>
          </div>
-         <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('900749799', 'Binance')">
+         <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('900749799', 'Binance', 'main')">
              <img src="https://i.postimg.cc/21r8s6bf/binance-logo.png" class="w-8 h-8 mb-2 rounded-full bg-white p-1" alt="Binance">
              <span class="font-mono text-xs text-app-text">Binance Pay</span>
              <span class="text-[10px] text-app-subtext mt-1">Tap to Copy</span>
@@ -422,14 +421,15 @@
     </div>
     <div class="neo-card p-5 rounded-2xl space-y-4">
         <h3 class="font-semibold text-app-text">Submit Verification Info</h3>
-        <input type="hidden" id="dep-method" value="">
-        <button id="dep-method-selector" class="neo-input w-full p-3 rounded-xl text-left text-app-subtext flex justify-between items-center">
-            <span id="dep-method-text">Select Payment Method</span>
-            <i data-lucide="chevron-down" class="w-5 h-5"></i>
-        </button>
-        <input type="number" id="dep-amount" placeholder="Amount (USD)" class="neo-input w-full p-3 rounded-xl">
-        <input type="text" id="dep-sender" placeholder="Your Wallet Address / Binance ID" class="neo-input w-full p-3 rounded-xl">
-        <button id="btn-submit-deposit" class="action-btn w-full py-4 rounded-xl text-lg">VERIFY DEPOSIT</button>
+        <div id="dep-amount-wrapper-main" class="form-step">
+            <input type="number" id="dep-amount" placeholder="Amount (USD)" class="neo-input w-full p-3 rounded-xl">
+        </div>
+        <div id="dep-sender-wrapper-main" class="form-step">
+            <input type="text" id="dep-sender" placeholder="Your Wallet Address / Binance ID" class="neo-input w-full p-3 rounded-xl">
+        </div>
+        <div id="dep-button-wrapper-main" class="form-step">
+             <button id="btn-submit-deposit" class="action-btn w-full py-4 rounded-xl text-lg">VERIFY DEPOSIT</button>
+        </div>
     </div>
     <div class="pt-4">
         <h3 class="text-sm font-bold text-app-subtext mb-3 px-2">Transaction History</h3>
@@ -651,15 +651,15 @@
     };
 
     // FIREBASE CONFIG
-const firebaseConfig = {
-  apiKey: "AIzaSyBIc-NOutYozH8KdfA5Je3FvDxuSrDZlIk",
-  authDomain: "next-task-62007.firebaseapp.com",
-  databaseURL: "https://next-task-62007-default-rtdb.firebaseio.com",
-  projectId: "next-task-62007",
-  storageBucket: "next-task-62007.firebasestorage.app",
-  messagingSenderId: "459990176243",
-  appId: "1:459990176243:web:9274f38a3e4826fb0dc286"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyBvbP66g1BYLQEj2XOJRA21meZN4ioJKpc",
+      authDomain: "reward-claim-2cc72.firebaseapp.com",
+      databaseURL: "https://reward-claim-2cc72-default-rtdb.firebaseio.com",
+      projectId: "reward-claim-2cc72",
+      storageBucket: "reward-claim-2cc72.firebasestorage.app",
+      messagingSenderId: "158110437555",
+      appId: "1:158110437555:web:e7c671b33fc0b7b24120c6"
+    };
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
@@ -699,6 +699,7 @@ const firebaseConfig = {
         }
 
         try {
+            // Use signInAnonymously for session-based authentication
             const userCredential = await signInAnonymously(auth);
             firebaseUser = userCredential.user;
             await initializeAppLogic();
@@ -715,7 +716,6 @@ const firebaseConfig = {
         lucide.createIcons();
         initLiveWithdrawalFeed();
 
-        // ** NEW LOGIC FOR LANDING PAGE **
         const depositsQuery = query(collection(db, "deposits"), where("userId", "==", userData.tgChatId), where("status", "==", "approved"), limit(1));
         const depositSnap = await getDocs(depositsQuery);
         const hasApprovedDeposit = !depositSnap.empty;
@@ -723,7 +723,6 @@ const firebaseConfig = {
         const isPremiumExpired = userData.premiumExpiry && userData.premiumExpiry.toDate() < new Date();
         const hasActivePlan = userData.isPremium && userData.premiumTier !== 'plan0' && !isPremiumExpired;
         
-        // Show landing page only if user has never deposited AND does not have an active premium plan
         if (!hasApprovedDeposit && !hasActivePlan) {
             switchView('view-landing');
         } else {
@@ -741,8 +740,9 @@ const firebaseConfig = {
 
         if (snap.exists()) {
             userData = snap.data();
+            // Associate the current anonymous auth UID with the user data
             if (!userData.firebaseUid || userData.firebaseUid !== firebaseUser.uid) {
-                await updateDoc(userRef, { firebaseUid: firebaseUser.uid });
+                await updateDoc(userRef, { firebaseUid: firebaseUser.uid, lastLogin: serverTimestamp() });
                 userData.firebaseUid = firebaseUser.uid;
             }
         } else {
@@ -751,6 +751,7 @@ const firebaseConfig = {
                 firebaseUid: firebaseUser.uid,
                 name: `${tgSession.first_name} ${tgSession.last_name || ''}`.trim(),
                 username: tgSession.username || null,
+                photoUrl: tgSession.photo_url || null,
                 balance: 0,
                 createdAt: serverTimestamp(),
                 isPremium: false,
@@ -788,8 +789,6 @@ const firebaseConfig = {
                 REFERRAL_BONUS = sysConfig.referralBonus || 1;
                 TASK_REWARD = sysConfig.taskReward || 0.5;
 
-                document.getElementById('min-deposit-text').textContent = `$${MIN_DEPOSIT_AMT.toFixed(2)}`;
-                document.getElementById('min-deposit-text-landing').textContent = `$${MIN_DEPOSIT_AMT.toFixed(2)}`;
                 document.getElementById('min-withdrawal-text').textContent = `$${MIN_WITHDRAWAL_AMT.toFixed(2)}`;
                 const withdrawalInfoText = `Withdrawals are processed within 24 hours. Minimum withdrawal is <span class="font-bold">$${MIN_WITHDRAWAL_AMT.toFixed(2)}</span>. You need at least <span class="font-bold">${MIN_REFERRALS_FOR_WITHDRAWAL}</span> referrals to withdraw.`;
                 document.getElementById('withdrawal-info-text').innerHTML = withdrawalInfoText;
@@ -823,11 +822,11 @@ const firebaseConfig = {
         document.getElementById('nav-user-initials').textContent = initials.toUpperCase();
         document.getElementById('profile-user-initials').textContent = initials.toUpperCase();
 
-        if(tgSession.photo_url) {
-            document.getElementById('nav-user-img').src = tgSession.photo_url;
+        if(userData.photoUrl) {
+            document.getElementById('nav-user-img').src = userData.photoUrl;
             document.getElementById('nav-user-img').classList.remove('hidden');
             document.getElementById('nav-user-initials').classList.add('hidden');
-            document.getElementById('profile-user-img').src = tgSession.photo_url;
+            document.getElementById('profile-user-img').src = userData.photoUrl;
             document.getElementById('profile-user-img').classList.remove('hidden');
             document.getElementById('profile-user-initials').classList.add('hidden');
         }
@@ -839,7 +838,7 @@ const firebaseConfig = {
              profileNameEl.innerHTML = `
                 <span>${userData.name}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6" fill="currentColor">
-                  <path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12c0 1.357-.6 2.573-1.549 3.397a4.49 4.49 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.306 4.491 4.491 0 01-1.307-3.498A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.491 4.491 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" style="color: #3b82f6;"></path>
+                  <path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12c0 1.357-.6 2.573-1.549 3.397a4.49 4.49 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.306 4.491 4.491 0 01-1.307-3.498A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.491 4.491 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-d(2),3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" style="color: #3b82f6;"></path>
                 </svg>`;
         } else {
             if(userData.isPremium && isPremiumExpired){
@@ -881,7 +880,6 @@ const firebaseConfig = {
         const dockNav = document.querySelector('.dock-nav');
         const header = document.querySelector('header');
         
-        // ** UPDATED LOGIC FOR NAV BAR VISIBILITY **
         if (viewId === 'view-landing') {
             if (dockNav) dockNav.style.display = 'none';
             if (header) header.style.display = 'none';
@@ -899,11 +897,12 @@ const firebaseConfig = {
         
         const topDepositBtn = document.querySelector('header .flex.items-center.gap-2 > button:first-child');
         if (topDepositBtn) {
-           topDepositBtn.style.display = (viewId === 'view-deposit' || viewId === 'view-withdrawal') ? 'none' : 'inline-flex';
+           topDepositBtn.style.display = (viewId === 'view-deposit' || viewId === 'view-withdrawal' || viewId === 'view-landing') ? 'none' : 'inline-flex';
         }
         
         if(viewId === 'view-landing') {
             loadPremiumTiers('premium-tiers-container-landing');
+            loadLeaderboards();
         }
         if(viewId === 'view-tasks') loadTasksView();
         if(viewId === 'view-deposit') loadDepositHistory();
@@ -920,6 +919,151 @@ const firebaseConfig = {
         window.scrollTo(0,0);
     }
     
+    window.copyNumber = (num, name, formType) => {
+        navigator.clipboard.writeText(num);
+        showToast(`${name} address copied!`);
+        document.getElementById(`dep-amount-wrapper-${formType}`).style.display = 'block';
+    };
+
+    async function loadLeaderboards() {
+        const earnersList = document.getElementById('top-earners-list');
+        const referrersList = document.getElementById('top-referrers-list');
+        earnersList.innerHTML = '<p class="text-center text-sm text-app-subtext">Loading...</p>';
+        referrersList.innerHTML = '<p class="text-center text-sm text-app-subtext">Loading...</p>';
+
+        try {
+            // Load Top Earners by balance
+            const earnersQuery = query(collection(db, "users"), orderBy("balance", "desc"), limit(5));
+            const earnersSnap = await getDocs(earnersQuery);
+            let earnersHtml = '';
+            if (earnersSnap.empty) {
+                earnersHtml = '<p class="text-center text-sm text-app-subtext">No data yet.</p>';
+            } else {
+                earnersSnap.forEach(doc => {
+                    const user = doc.data();
+                    const userInitials = (user.name.split(' ')[0]?.[0] || 'U') + (user.name.split(' ')[1]?.[0] || '');
+                    const photoEl = user.photoUrl 
+                        ? `<img src="${user.photoUrl}" class="w-8 h-8 rounded-full object-cover">`
+                        : `<div class="w-8 h-8 rounded-full bg-slate-700 flex-shrink-0 flex items-center justify-center font-bold text-slate-300 text-xs">${userInitials}</div>`;
+                    
+                    earnersHtml += `
+                        <div class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-700/50">
+                            <div class="flex items-center gap-2">
+                                ${photoEl}
+                                <span class="text-sm font-medium">${user.name}</span>
+                            </div>
+                            <span class="font-bold text-sm text-yellow-400">$${user.balance.toFixed(2)}</span>
+                        </div>`;
+                });
+            }
+            earnersList.innerHTML = earnersHtml;
+
+            // Load Top Referrers
+            const usersSnap = await getDocs(query(collection(db, "users"), where("referredBy", "!=", null)));
+            const referralCounts = {};
+            usersSnap.forEach(doc => {
+                const referredBy = doc.data().referredBy;
+                if (referredBy) {
+                    referralCounts[referredBy] = (referralCounts[referredBy] || 0) + 1;
+                }
+            });
+
+            const sortedReferrers = Object.entries(referralCounts)
+                .sort(([,a],[,b]) => b-a)
+                .slice(0, 5);
+
+            let referrersHtml = '';
+            if (sortedReferrers.length === 0) {
+                referrersHtml = '<p class="text-center text-sm text-app-subtext">No data yet.</p>';
+            } else {
+                for (const [userId, count] of sortedReferrers) {
+                    const userDoc = await getDoc(doc(db, "users", userId));
+                    if (userDoc.exists()) {
+                        const user = userDoc.data();
+                        const userInitials = (user.name.split(' ')[0]?.[0] || 'U') + (user.name.split(' ')[1]?.[0] || '');
+                         const photoEl = user.photoUrl 
+                            ? `<img src="${user.photoUrl}" class="w-8 h-8 rounded-full object-cover">`
+                            : `<div class="w-8 h-8 rounded-full bg-slate-700 flex-shrink-0 flex items-center justify-center font-bold text-slate-300 text-xs">${userInitials}</div>`;
+
+                        referrersHtml += `
+                             <div class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-700/50">
+                                <div class="flex items-center gap-2">
+                                    ${photoEl}
+                                    <span class="text-sm font-medium">${user.name}</span>
+                                </div>
+                                <span class="font-bold text-sm text-cyan-400">${count} Referrals</span>
+                            </div>`;
+                    }
+                }
+            }
+            referrersList.innerHTML = referrersHtml;
+
+        } catch (error) {
+            console.error("Error loading leaderboards:", error);
+            earnersList.innerHTML = '<p class="text-center text-sm text-red-400">Could not load.</p>';
+            referrersList.innerHTML = '<p class="text-center text-sm text-red-400">Could not load.</p>';
+        }
+    }
+
+    async function loadPremiumTiers(containerId) {
+        const container = document.getElementById(containerId);
+        const isLanding = containerId === 'premium-tiers-container-landing';
+        const tierKeys = Object.keys(premiumTiers).sort((a,b) => premiumTiers[a].level - premiumTiers[b].level);
+        const isPremiumExpired = userData.premiumExpiry && userData.premiumExpiry.toDate() < new Date();
+        const currentUserLevel = (userData.isPremium && !isPremiumExpired) ? premiumTiers[userData.premiumTier]?.level || 0 : 0;
+        
+        let html = '';
+        if (isLanding) {
+            html = tierKeys.map(key => {
+                const tier = premiumTiers[key];
+                if (tier.level === 0) return '';
+                return `
+                <div class="neo-card p-3 rounded-xl text-center flex flex-col justify-between h-full">
+                    <div>
+                        <h4 class="font-bold text-sm text-yellow-400">${tier.name}</h4>
+                        <p class="text-lg font-bold my-1 text-app-text">$${tier.price}</p>
+                    </div>
+                    <button onclick="purchasePremium('${key}')" class="action-btn w-full py-1.5 rounded-lg text-xs mt-2">UPGRADE</button>
+                </div>`;
+            }).join('');
+        } else {
+            html = tierKeys.map(key => {
+                const tier = premiumTiers[key];
+                if (tier.level === 0) return '';
+                
+                let benefitsList = [];
+                for (const bKey in tier.benefits) { if (bKey.startsWith('benefit_text_')) { benefitsList.push(`<li><i class="inline-block w-4 h-4 mr-2 text-green-400" data-lucide="check"></i>${tier.benefits[bKey]}</li>`); } }
+                if (tier.benefits.feeReduction > 0) { const reducedFee = (P2P_FEE_PERCENT - tier.benefits.feeReduction) * 100; benefitsList.push(`<li><i class="inline-block w-4 h-4 mr-2 text-green-400" data-lucide="check"></i>P2P Fee reduced to <strong>${reducedFee.toFixed(0)}%</strong></li>`); }
+                
+                let buttonHtml;
+                const isCurrentPlan = tier.level === currentUserLevel && !isPremiumExpired;
+                
+                if (isCurrentPlan) { 
+                    buttonHtml = `<div class="text-center font-semibold text-lg text-green-400 py-3">CURRENT PLAN</div>`; 
+                    if(userData.premiumExpiry) {
+                        const expiryElId = `countdown-${key}`;
+                        buttonHtml += `<div id="${expiryElId}" class="text-center font-mono text-sm text-cyan-400 pb-3"></div>`;
+                        const countdownInterval = setInterval(() => {
+                            const expiryEl = document.getElementById(expiryElId);
+                            if (!expiryEl) { clearInterval(countdownInterval); return; }
+                            const now = new Date().getTime(); const expiryTime = userData.premiumExpiry.toDate().getTime(); const distance = expiryTime - now;
+                            if (distance < 0) { clearInterval(countdownInterval); expiryEl.innerHTML = "EXPIRED"; return; }
+                            const days = Math.floor(distance / (1000*60*60*24)); const hours = Math.floor((distance % (1000*60*60*24))/(1000*60*60)); const minutes = Math.floor((distance % (1000*60*60))/(1000*60)); const seconds = Math.floor((distance % (1000*60))/1000);
+                            expiryEl.innerHTML = `Expires in: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+                        }, 1000);
+                        activeTimers.push(countdownInterval);
+                    }
+                }
+                else if (tier.level < currentUserLevel && !isPremiumExpired) { buttonHtml = `<button class="action-btn w-full py-3 rounded-xl" disabled>Activated</button>`; }
+                else { buttonHtml = `<button onclick="purchasePremium('${key}')" class="action-btn w-full py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500">UPGRADE</button>`; }
+
+                return `<div class="neo-card p-5 rounded-2xl ${isCurrentPlan ? 'border-yellow-400' : 'border-app-border'}"><h3 class="text-2xl font-bold text-yellow-400">${tier.name}</h3><p class="text-3xl font-bold my-3 text-app-text">$${tier.price} <span class="text-lg text-app-subtext">/ ${tier.duration} days</span></p><ul class="text-sm text-app-subtext space-y-2 my-4 text-left pl-2">${benefitsList.join('')}</ul>${buttonHtml}</div>`;
+            }).join('');
+        }
+        container.innerHTML = html;
+        lucide.createIcons();
+    }
+
     async function loadMyReferrals() {
         const container = document.getElementById('my-referrals-list');
         if (!container) return;
@@ -1075,16 +1219,11 @@ const firebaseConfig = {
         try {
             const fakeQ = query(collection(db, "fake_deposits"), limit(20));
             const fakeSnap = await getDocs(fakeQ);
-            fakeSnap.forEach(doc => {
-                allActivities.push({ ...doc.data(), isFake: true });
-            });
+            fakeSnap.forEach(doc => { allActivities.push({ ...doc.data(), isFake: true }); });
 
             const realQ = query(collection(db, "withdrawals"), where("status", "==", "approved"), orderBy("requestedAt", "desc"), limit(10));
             const realSnap = await getDocs(realQ);
-            realSnap.forEach(doc => {
-                const data = doc.data();
-                allActivities.push({ name: data.userName, amount: data.amount, isFake: false });
-            });
+            realSnap.forEach(doc => { allActivities.push({ name: doc.data().userName, amount: doc.data().amount, isFake: false }); });
 
             allActivities.sort(() => 0.5 - Math.random());
 
@@ -1116,10 +1255,7 @@ const firebaseConfig = {
                 container.prepend(item);
                 lucide.createIcons();
 
-                if (container.children.length > 10) {
-                    container.lastChild.remove();
-                }
-
+                if (container.children.length > 10) { container.lastChild.remove(); }
                 currentIndex = (currentIndex + 1) % allActivities.length;
             }
 
@@ -1127,10 +1263,7 @@ const firebaseConfig = {
             const feedInterval = setInterval(showNextActivity, Math.random() * (8000 - 4000) + 4000);
             activeTimers.push(feedInterval);
 
-        } catch (e) {
-            console.error("Failed to load activity feed:", e);
-            container.innerHTML = '<p class="text-center text-red-500 text-sm">Could not load feed.</p>';
-        }
+        } catch (e) { console.error("Failed to load activity feed:", e); }
     }
     
     async function loadDepositHistory() {
@@ -1278,8 +1411,9 @@ const firebaseConfig = {
         }
     }
 
-    async function submitDepositRequest(amount, sender, method, btn, callback) {
-        if(!method || !amount || !sender) return showToast("Please fill all fields", "warning");
+    async function submitDepositRequest(amount, sender, btn, callback) {
+        const method = "Crypto"; // Method is implicitly chosen by tapping the copy button
+        if(!amount || !sender) return showToast("Please fill all fields", "warning");
         if(amount < MIN_DEPOSIT_AMT) return showModal(`<div class="text-center text-red-400 space-y-3"><i data-lucide="alert-octagon" class="w-12 h-12 mx-auto"></i><h3 class="font-bold text-lg">Invalid Amount</h3><p class="text-app-text">Minimum deposit amount is <span class="font-bold text-app-text">$${MIN_DEPOSIT_AMT.toFixed(2)}</span>.</p><button onclick="closeModal()" class="neo-card w-full py-2 rounded-xl mt-4">OK</button></div>`);
 
         btn.disabled = true; btn.innerText = "VERIFYING...";
@@ -1518,7 +1652,6 @@ const firebaseConfig = {
          else { alert(msg); }
     };
     window.copyText = (text) => { navigator.clipboard.writeText(text); showToast("Copied to clipboard!"); };
-    window.copyNumber = (num, name) => { copyText(num); showToast(`${name} address copied!`); };
     
     function showMethodSelector(targetInputId, targetTextId, title, options) {
         let optionsHTML = options.map(opt =>
@@ -1606,64 +1739,61 @@ const firebaseConfig = {
     }
 
     function setupInteractions() {
-        // Dock Navigation
         document.querySelectorAll('.dock-item').forEach(item => {
             item.addEventListener('click', () => switchView(item.dataset.target));
         });
-
-        // Side Panel
         document.getElementById('btn-menu').addEventListener('click', () => {
             document.getElementById('main-side-panel').classList.add('open');
             document.getElementById('panel-overlay').classList.add('open');
         });
         document.getElementById('panel-overlay').addEventListener('click', closeSidePanel);
-
-        // Modals & Notifications
         document.getElementById('btn-notifications').addEventListener('click', loadNotifications);
         document.getElementById('modal-close').addEventListener('click', closeModal);
         document.getElementById('modal-backdrop').addEventListener('click', closeModal);
-
-        // Copy UID
         document.getElementById('btn-copy-uid').addEventListener('click', () => copyText(userData.tgChatId));
-        
-        // P2P Transfer
         document.getElementById('btn-exec-p2p').addEventListener('click', executeP2PTransfer);
         
-        // Referral Verification
         const verifyBtn = document.getElementById('btn-verify-referral');
         if (verifyBtn) {
             verifyBtn.addEventListener('click', verifyReferralCode);
         }
 
-        // Deposit from Landing Page
-        document.getElementById('btn-submit-deposit-landing').addEventListener('click', () => {
-            const amount = parseFloat(document.getElementById('dep-amount-landing').value);
-            const sender = document.getElementById('dep-sender-landing').value.trim();
-            const btn = document.getElementById('btn-submit-deposit-landing');
-            // Assuming a default method or you can add a selector here too
-            submitDepositRequest(amount, sender, 'Crypto', btn, () => {
-                document.getElementById('dep-amount-landing').value = '';
-                document.getElementById('dep-sender-landing').value = '';
-            });
-        });
+        ['landing', 'main'].forEach(formType => {
+            const amountInput = document.getElementById(`dep-amount-${formType}`);
+            const senderInput = document.getElementById(`dep-sender-${formType}`);
+            const submitBtn = document.getElementById(`btn-submit-deposit-${formType}`);
 
-        // Deposit from Deposit Page
-        document.getElementById('btn-submit-deposit').addEventListener('click', () => {
-            const method = document.getElementById('dep-method').value;
-            const amount = parseFloat(document.getElementById('dep-amount').value);
-            const sender = document.getElementById('dep-sender').value.trim();
-            const btn = document.getElementById('btn-submit-deposit');
-            submitDepositRequest(method, amount, sender, btn, () => {
-                document.getElementById('dep-method').value = '';
-                document.getElementById('dep-method-text').textContent = 'Select Payment Method';
-                document.getElementById('dep-method-selector').classList.add('text-app-subtext');
-                document.getElementById('dep-amount').value = '';
-                document.getElementById('dep-sender').value = '';
-                loadDepositHistory();
-            });
+            if(amountInput) {
+                amountInput.addEventListener('input', () => {
+                    if (amountInput.value.length > 0 && parseFloat(amountInput.value) >= MIN_DEPOSIT_AMT) {
+                        document.getElementById(`dep-sender-wrapper-${formType}`).style.display = 'block';
+                    } else {
+                        document.getElementById(`dep-sender-wrapper-${formType}`).style.display = 'none';
+                        document.getElementById(`dep-button-wrapper-${formType}`).style.display = 'none';
+                    }
+                });
+            }
+            if(senderInput) {
+                senderInput.addEventListener('input', () => {
+                    if (senderInput.value.length > 0) {
+                        document.getElementById(`dep-button-wrapper-${formType}`).style.display = 'block';
+                    } else {
+                        document.getElementById(`dep-button-wrapper-${formType}`).style.display = 'none';
+                    }
+                });
+            }
+            if(submitBtn) {
+                 submitBtn.addEventListener('click', () => {
+                    const amount = parseFloat(amountInput.value);
+                    const sender = senderInput.value.trim();
+                    submitDepositRequest(amount, sender, submitBtn, () => {
+                        amountInput.value = '';
+                        senderInput.value = '';
+                    });
+                });
+            }
         });
         
-        // Withdrawal
         document.getElementById('btn-submit-withdrawal').addEventListener('click', async () => {
             const method = document.getElementById('wd-method').value;
             const address = document.getElementById('wd-address').value.trim();
@@ -1699,17 +1829,11 @@ const firebaseConfig = {
             } finally { btn.disabled = false; btn.innerText = "SUBMIT WITHDRAWAL"; lucide.createIcons(); }
         });
 
-        // Method Selectors
-        document.getElementById('dep-method-selector').addEventListener('click', () => {
-            const options = [ { value: 'USDT', text: 'USDT (TRC20)' }, { value: 'BTC', text: 'BTC' }, { value: 'Binance', text: 'Binance Pay' } ];
-            showMethodSelector('dep-method', 'dep-method-text', 'Select Payment Method', options);
-        });
         document.getElementById('wd-method-selector').addEventListener('click', () => {
             const options = [ { value: 'USDT', text: 'USDT (TRC20)' }, { value: 'BTC', text: 'BTC' }, { value: 'Binance', text: 'Binance Pay ID' } ];
             showMethodSelector('wd-method', 'wd-method-text', 'Select Withdrawal Method', options);
         });
 
-        // P2P Fee Calculator
         document.getElementById('p2p-amount').addEventListener('input', (e) => {
             const val = parseFloat(e.target.value) || 0;
             let feePercent = P2P_FEE_PERCENT;
@@ -1721,13 +1845,11 @@ const firebaseConfig = {
             document.getElementById('p2p-fee-calc').textContent = val > 0 ? `Fee (${(feePercent*100).toFixed(0)}%): $${fee.toFixed(2)}` : '';
         });
 
-        // Promo Slider
         const slider = document.getElementById('promo-slider');
         const dotsContainer = document.getElementById('slider-dots');
         if (slider && slider.children.length > 1) {
             const slides = slider.children;
             let currentSlide = 0;
-            // Create dots
             for (let i = 0; i < slides.length; i++) {
                 const dot = document.createElement('span');
                 dot.className = 'w-2 h-2 rounded-full bg-black/20 backdrop-blur-sm transition-all';
@@ -1743,7 +1865,7 @@ const firebaseConfig = {
                     dot.classList.toggle('bg-white/90', index === currentSlide);
                     dot.classList.toggle('bg-black/20', index !== currentSlide);
                 });
-            }, 5000); // Change slide every 5 seconds
+            }, 5000);
         }
     }
 
@@ -1761,7 +1883,7 @@ const firebaseConfig = {
                     loadTasksView();
                 }
                 if(document.getElementById('view-refer').classList.contains('active-view')) {
-                    loadMyReferrals(); // Refresh referral list on data change
+                    loadMyReferrals();
                 }
             }
         });
@@ -1856,81 +1978,10 @@ const firebaseConfig = {
             el.innerHTML = '<p class="text-red-500 text-center">Could not load news feed.</p>';
         }
     }
-
-    async function loadPremiumTiers(containerId) {
-        const container = document.getElementById(containerId);
-        const tierKeys = Object.keys(premiumTiers).sort((a,b) => premiumTiers[a].level - premiumTiers[b].level);
-        const isPremiumExpired = userData.premiumExpiry && userData.premiumExpiry.toDate() < new Date();
-        const currentUserLevel = (userData.isPremium && !isPremiumExpired) ? premiumTiers[userData.premiumTier]?.level || 0 : 0;
-        
-        let html = tierKeys.map(key => {
-            const tier = premiumTiers[key];
-            if (tier.level === 0) return '';
-            
-            let benefitsList = [];
-            for (const bKey in tier.benefits) {
-                if (bKey.startsWith('benefit_text_')) {
-                    benefitsList.push(`<li><i class="inline-block w-4 h-4 mr-2 text-green-400" data-lucide="check"></i>${tier.benefits[bKey]}</li>`);
-                }
-            }
-            if (tier.benefits.feeReduction > 0) {
-                 const reducedFee = (P2P_FEE_PERCENT - tier.benefits.feeReduction) * 100;
-                 benefitsList.push(`<li><i class="inline-block w-4 h-4 mr-2 text-green-400" data-lucide="check"></i>P2P Fee reduced to <strong>${reducedFee.toFixed(0)}%</strong></li>`);
-            }
-            
-            let buttonHtml;
-            const isCurrentPlan = tier.level === currentUserLevel && !isPremiumExpired;
-            
-            if (isCurrentPlan) {
-                buttonHtml = `<div class="text-center font-semibold text-lg text-green-400 py-3">CURRENT PLAN</div>`;
-                if(userData.premiumExpiry) {
-                    const expiryElId = `countdown-${key}-${containerId}`;
-                    buttonHtml += `<div id="${expiryElId}" class="text-center font-mono text-sm text-cyan-400 pb-3"></div>`;
-                    const countdownInterval = setInterval(() => {
-                        const expiryEl = document.getElementById(expiryElId);
-                        if (!expiryEl) { clearInterval(countdownInterval); return; }
-                        const now = new Date().getTime();
-                        const expiryTime = userData.premiumExpiry.toDate().getTime();
-                        const distance = expiryTime - now;
-
-                        if (distance < 0) {
-                            clearInterval(countdownInterval);
-                            expiryEl.innerHTML = "EXPIRED";
-                            return;
-                        }
-
-                        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                        
-                        expiryEl.innerHTML = `Expires in: ${days}d ${hours}h ${minutes}m ${seconds}s`;
-                    }, 1000);
-                    activeTimers.push(countdownInterval);
-                }
-            } else if (tier.level < currentUserLevel && !isPremiumExpired) {
-                buttonHtml = `<button class="action-btn w-full py-3 rounded-xl" disabled>Activated</button>`;
-            } else {
-                buttonHtml = `<button onclick="purchasePremium('${key}')" class="action-btn w-full py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500">UPGRADE</button>`;
-            }
-
-            return `
-            <div class="neo-card p-5 rounded-2xl ${isCurrentPlan ? 'border-yellow-400' : 'border-app-border'}">
-                <h3 class="text-2xl font-bold text-yellow-400">${tier.name}</h3>
-                <p class="text-3xl font-bold my-3 text-app-text">$${tier.price} <span class="text-lg text-app-subtext">/ ${tier.duration} days</span></p>
-                <ul class="text-sm text-app-subtext space-y-2 my-4 text-left pl-2">
-                    ${benefitsList.join('')}
-                </ul>
-                ${buttonHtml}
-            </div>`;
-        }).join('');
-        container.innerHTML = html;
-        lucide.createIcons();
-    }
     window.purchasePremium = async function(tierKey) {
         const tier = premiumTiers[tierKey];
         if (userData.balance < tier.price) {
-            return showToast(`Insufficient balance. You need $${tier.price}.`, 'error');
+            return showToast(`Insufficient balance. You need $${tier.price}. Please deposit funds first.`, 'error');
         }
 
         showModal(`
@@ -1967,7 +2018,6 @@ const firebaseConfig = {
                 logPublicActivity(`upgraded to ${tier.name} Premium!`);
                 closeModal();
                 showToast(`Successfully upgraded to ${tier.name}!`, 'success');
-                // Reload the app to reflect the change and bypass the landing page
                 setTimeout(() => window.location.reload(), 1500);
 
             } catch (error) {
