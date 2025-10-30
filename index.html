@@ -16,7 +16,6 @@
             extend: {
                 fontFamily: { sans: ['Poppins', 'sans-serif'], mono: ['Roboto Mono', 'monospace'] },
                 colors: {
-                    // Colors are now primarily controlled by CSS variables for the dark theme
                     nexus: {
                         primary: '#6366f1',
                         accent: '#06b6d4',
@@ -724,6 +723,7 @@
         const isPremiumExpired = userData.premiumExpiry && userData.premiumExpiry.toDate() < new Date();
         const hasActivePlan = userData.isPremium && userData.premiumTier !== 'plan0' && !isPremiumExpired;
         
+        // Show landing page only if user has never deposited AND does not have an active premium plan
         if (!hasApprovedDeposit && !hasActivePlan) {
             switchView('view-landing');
         } else {
@@ -921,27 +921,6 @@
     }
     
     async function loadMyReferrals() {
-        // This function remains the same
-    }
-    
-    function loadTasksView() {
-        // This function remains largely the same, just styling updates
-    }
-    
-    // ... Other functions like initLiveWithdrawalFeed, loadDepositHistory, loadWithdrawalHistory etc. remain the same logically.
-    // ... The styling will be automatically applied due to the new CSS variables.
-    
-    window.showModal = (html, showCloseButton = true) => {
-        // This function remains the same
-    };
-
-    window.closeModal = () => {
-        // This function remains the same
-    };
-
-    // All other JavaScript functions remain here...
-    // The following is a placeholder for the rest of the JS logic. It should be copied from the original file.
-    async function loadMyReferrals() {
         const container = document.getElementById('my-referrals-list');
         if (!container) return;
         container.innerHTML = `<p class="text-center text-app-subtext p-4">Loading your referrals...</p>`;
@@ -1096,11 +1075,16 @@
         try {
             const fakeQ = query(collection(db, "fake_deposits"), limit(20));
             const fakeSnap = await getDocs(fakeQ);
-            fakeSnap.forEach(doc => { allActivities.push({ ...doc.data(), isFake: true }); });
+            fakeSnap.forEach(doc => {
+                allActivities.push({ ...doc.data(), isFake: true });
+            });
 
             const realQ = query(collection(db, "withdrawals"), where("status", "==", "approved"), orderBy("requestedAt", "desc"), limit(10));
             const realSnap = await getDocs(realQ);
-            realSnap.forEach(doc => { allActivities.push({ name: doc.data().userName, amount: doc.data().amount, isFake: false }); });
+            realSnap.forEach(doc => {
+                const data = doc.data();
+                allActivities.push({ name: data.userName, amount: data.amount, isFake: false });
+            });
 
             allActivities.sort(() => 0.5 - Math.random());
 
@@ -1132,7 +1116,10 @@
                 container.prepend(item);
                 lucide.createIcons();
 
-                if (container.children.length > 10) { container.lastChild.remove(); }
+                if (container.children.length > 10) {
+                    container.lastChild.remove();
+                }
+
                 currentIndex = (currentIndex + 1) % allActivities.length;
             }
 
@@ -1140,7 +1127,10 @@
             const feedInterval = setInterval(showNextActivity, Math.random() * (8000 - 4000) + 4000);
             activeTimers.push(feedInterval);
 
-        } catch (e) { console.error("Failed to load activity feed:", e); }
+        } catch (e) {
+            console.error("Failed to load activity feed:", e);
+            container.innerHTML = '<p class="text-center text-red-500 text-sm">Could not load feed.</p>';
+        }
     }
     
     async function loadDepositHistory() {
@@ -1187,37 +1177,686 @@
         }).join('');
     }
     
-    function startTaskCountdown() { /* ... function logic ... */ }
-    function startTask(task, buttonElement) { /* ... function logic ... */ }
-    async function completeTask(task) { /* ... function logic ... */ }
-    async function submitDepositRequest(amount, sender, btn) {
-        if(!amount || !sender) return showToast("Please fill all fields", "warning");
+    window.showModal = (html, showCloseButton = true) => {
+        const modal = document.getElementById('nexus-modal');
+        document.getElementById('modal-body').innerHTML = html;
+        document.getElementById('modal-close').style.display = showCloseButton ? 'block' : 'none';
+        modal.style.pointerEvents = 'auto'; modal.style.opacity = '1';
+        document.getElementById('modal-content').classList.remove('scale-95');
+        document.getElementById('modal-content').classList.add('scale-100');
+        lucide.createIcons();
+    };
+
+    window.closeModal = () => {
+         const modal = document.getElementById('nexus-modal');
+         modal.style.opacity = '0'; modal.style.pointerEvents = 'none';
+         document.getElementById('modal-content').classList.add('scale-95');
+         document.getElementById('modal-content').classList.remove('scale-100');
+    };
+    
+    function startTaskCountdown() {
+        const timerElement = document.getElementById('new-task-countdown');
+        if (!timerElement) return;
+
+        const countdownInterval = setInterval(() => {
+            const now = new Date();
+            const tomorrow = new Date();
+            tomorrow.setDate(now.getDate() + 1);
+            tomorrow.setHours(0, 0, 0, 0);
+
+            const diff = tomorrow.getTime() - now.getTime();
+            if (diff <= 0) {
+                clearInterval(countdownInterval);
+                timerElement.textContent = "00:00:00";
+                loadTasksView();
+                return;
+            }
+
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            timerElement.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }, 1000);
+        activeTimers.push(countdownInterval);
+    }
+    
+    function startTask(task, buttonElement) {
+        buttonElement.disabled = true;
+        window.open(task.link, '_blank');
+
+        let countdown = 10;
+        buttonElement.textContent = `Waiting (${countdown}s)`;
+        const intervalId = setInterval(() => {
+            countdown--;
+            buttonElement.textContent = `Waiting (${countdown}s)`;
+            if (countdown <= 0) {
+                clearInterval(intervalId);
+                completeTask(task);
+            }
+        }, 1000);
+        activeTimers.push(intervalId);
+    }
+    
+    async function completeTask(task) {
+        if (!task) return;
+
+        const today = new Date().toISOString().split('T')[0];
+        const alreadyCompleted = (userData.dailyCompletedTasks || [])
+            .some(t => t.taskId === task.id && t.completedAt && new Date(t.completedAt.seconds * 1000).toISOString().split('T')[0] === today);
+
+        if (alreadyCompleted) {
+            showToast(`This task has already been completed today.`, 'info');
+            return;
+        }
+
+        try {
+            const userRef = doc(db, "users", userData.tgChatId);
+            await runTransaction(db, async (transaction) => {
+                const userDoc = await transaction.get(userRef);
+                if (!userDoc.exists()) throw "User not found.";
+
+                const currentData = userDoc.data();
+                const newBalance = currentData.balance + task.reward;
+                const newTaskEntry = { taskId: task.id, completedAt: Timestamp.fromDate(new Date()) };
+                
+                const existingTasks = Array.isArray(currentData.dailyCompletedTasks) ? currentData.dailyCompletedTasks : [];
+                const updatedCompletedTasks = [...existingTasks, newTaskEntry];
+
+                transaction.update(userRef, {
+                    balance: newBalance,
+                    dailyCompletedTasks: updatedCompletedTasks
+                });
+            });
+            showToast(`Congratulations! You've earned $${task.reward.toFixed(2)}`, 'success');
+            logPublicActivity(`earned $${task.reward.toFixed(2)} from a task.`);
+        } catch (e) {
+            console.error("Error completing task:", e);
+            showToast(`Error: ${e.message || e}`, 'error');
+            if (document.getElementById('view-tasks').classList.contains('active-view')) {
+                loadTasksView();
+            }
+        }
+    }
+
+    async function submitDepositRequest(amount, sender, method, btn, callback) {
+        if(!method || !amount || !sender) return showToast("Please fill all fields", "warning");
         if(amount < MIN_DEPOSIT_AMT) return showModal(`<div class="text-center text-red-400 space-y-3"><i data-lucide="alert-octagon" class="w-12 h-12 mx-auto"></i><h3 class="font-bold text-lg">Invalid Amount</h3><p class="text-app-text">Minimum deposit amount is <span class="font-bold text-app-text">$${MIN_DEPOSIT_AMT.toFixed(2)}</span>.</p><button onclick="closeModal()" class="neo-card w-full py-2 rounded-xl mt-4">OK</button></div>`);
 
         btn.disabled = true; btn.innerText = "VERIFYING...";
+
         try {
-            await addDoc(collection(db, "deposits"), { userId: userData.tgChatId, firebaseUid: userData.firebaseUid, userName: userData.name, method: "USDT/BTC/BNB", amount, senderNumber: sender, status: "pending", requestedAt: serverTimestamp() });
+            await addDoc(collection(db, "deposits"), {
+                userId: userData.tgChatId,
+                firebaseUid: userData.firebaseUid,
+                userName: userData.name, 
+                method, 
+                amount, 
+                senderNumber: sender,
+                status: "pending", 
+                requestedAt: serverTimestamp()
+            });
+            
             showModal(`<div class="text-center space-y-3"><i data-lucide="check-circle" class="w-12 h-12 text-emerald-400 mx-auto"></i><h3 class="text-lg font-bold text-app-text">Submitted!</h3><p class="text-app-subtext">Your deposit of $${amount} is under review. You will be notified upon approval.</p><button onclick="window.location.reload()" class="action-btn w-full py-2 rounded-xl">OK</button></div>`);
+            
+            if (callback) callback();
+
         } catch(e) { showToast(e.message, "error");
-        } finally { btn.disabled = false; btn.innerText = "VERIFY DEPOSIT"; lucide.createIcons(); }
+        } finally {
+            btn.disabled = false; btn.innerText = "VERIFY DEPOSIT"; lucide.createIcons();
+        }
     }
-    document.getElementById('btn-submit-deposit-landing').addEventListener('click', () => {
-        const amount = parseFloat(document.getElementById('dep-amount-landing').value);
-        const sender = document.getElementById('dep-sender-landing').value.trim();
-        submitDepositRequest(amount, sender, document.getElementById('btn-submit-deposit-landing'));
-    });
-    document.getElementById('btn-submit-deposit').addEventListener('click', async () => { /* ... (This is for the dedicated deposit page, logic is similar) ... */ });
-    document.getElementById('btn-submit-withdrawal').addEventListener('click', async () => { /* ... function logic ... */ });
-    async function loadReferralView() { /* ... function logic ... */ }
-    async function verifyReferralCode() { /* ... function logic ... */ }
-    async function checkNewNotifications() { /* ... function logic ... */ }
-    async function loadNotifications() { /* ... function logic ... */ }
-    async function executeP2PTransfer() { /* ... function logic ... */ }
-    function setupInteractions() { /* ... function logic ... */ }
-    function initRealtimeListeners() { /* ... function logic ... */ }
-    async function loadProfileStats() { /* ... function logic ... */ }
-    async function loadActivityLog() { /* ... function logic ... */ }
-    async function loadNewsFeed() { /* ... function logic ... */ }
+
+    async function loadReferralView() {
+        const linkInput = document.getElementById('referral-link-display');
+        const refCountEl = document.getElementById('ref-stat-count');
+        const refEarningsEl = document.getElementById('ref-stat-earnings');
+        
+        document.getElementById('referral-bonus-text').textContent = `$${REFERRAL_BONUS.toFixed(2)}`;
+        document.getElementById('referral-claim-bonus-text').textContent = `$${REFERRAL_BONUS.toFixed(2)}`;
+        
+        const referralLink = `https://t.me/Reward_Claimlbot/eaen?start=${userData.tgChatId}`;
+        linkInput.value = referralLink;
+        
+        const inputSection = document.getElementById('referral-input-section');
+        if (userData.referredBy) {
+            const referrerRef = doc(db, "users", userData.referredBy);
+            const referrerSnap = await getDoc(referrerRef);
+            let referrerName = `UID: ${userData.referredBy}`;
+            if(referrerSnap.exists()){
+                referrerName = referrerSnap.data().name || `UID: ${userData.referredBy}`;
+            }
+
+            inputSection.innerHTML = `
+                <h3 class="font-semibold text-app-text text-lg flex items-center justify-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-emerald-400"></i>Referral Claimed</h3>
+                <p class="text-sm text-app-subtext">You were referred by: <span class="font-semibold text-app-text">${referrerName}</span></p>
+            `;
+            lucide.createIcons();
+        }
+        
+        async function getReferralStats() {
+            try {
+                const q = query(collection(db, "users"), where("referredBy", "==", userData.tgChatId));
+                const snap = await getDocs(q);
+                
+                refCountEl.textContent = snap.docs.length;
+                const referralEarnings = snap.docs.length * REFERRAL_BONUS; 
+                refEarningsEl.textContent = `$${referralEarnings.toFixed(2)}`;
+                
+            } catch (error) {
+                console.error("Error loading referral data:", error);
+            }
+        }
+        
+        getReferralStats();
+    }
+
+    async function verifyReferralCode() {
+        const btn = document.getElementById('btn-verify-referral');
+        const input = document.getElementById('referral-code-input');
+        const code = input.value.trim();
+        const rewardAmount = REFERRAL_BONUS;
+
+        if (!code) return showToast("Please enter a referral code.", "warning");
+        if (userData.referredBy) return showToast("You have already used a referral code.", "error");
+        if (code === userData.tgChatId) return showToast("You cannot refer yourself.", "error");
+
+        btn.disabled = true;
+        btn.innerHTML = 'VERIFYING...';
+
+        try {
+            await runTransaction(db, async (transaction) => {
+                const currentUserRef = doc(db, "users", userData.tgChatId);
+                const referrerRef = doc(db, "users", code);
+
+                const [currentUserDoc, referrerDoc] = await Promise.all([
+                    transaction.get(currentUserRef),
+                    transaction.get(referrerRef)
+                ]);
+
+                if (!currentUserDoc.exists()) throw new Error("Your user data could not be found.");
+                if (!referrerDoc.exists()) throw new Error("The referral code is invalid or the user does not exist.");
+
+                const currentUserData = currentUserDoc.data();
+                if (currentUserData.referredBy) throw new Error("You have already claimed a referral bonus.");
+
+                transaction.update(currentUserRef, {
+                    balance: currentUserData.balance + rewardAmount,
+                    referredBy: code
+                });
+
+                transaction.update(referrerRef, {
+                    balance: referrerDoc.data().balance + rewardAmount
+                });
+
+                const logRef = doc(collection(db, "referral_logs"));
+                transaction.set(logRef, {
+                    referrerId: code,
+                    referrerName: referrerDoc.data().name || 'A user',
+                    refereeId: userData.tgChatId,
+                    refereeName: userData.name,
+                    reward: rewardAmount,
+                    timestamp: serverTimestamp()
+                });
+            });
+
+            showToast(`Success! You and your friend both earned $${rewardAmount.toFixed(2)}.`, 'success');
+            userData.balance += rewardAmount;
+            userData.referredBy = code;
+            updateDashboard();
+            loadReferralView(); 
+
+        } catch (e) {
+            showToast("Error: " + e.message, "error");
+            btn.disabled = false;
+            btn.innerHTML = `VERIFY & CLAIM <span id="referral-claim-bonus-text">$${REFERRAL_BONUS.toFixed(2)}</span>`;
+        }
+    }
+    
+    window.shareOnTelegram = function() {
+        const link = document.getElementById('referral-link-display').value;
+        const text = "Join me on REWARD CLAIM and earn money! Use my link to sign up:";
+        const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(text)}`;
+        window.open(telegramUrl, '_blank');
+    }
+
+    window.shareLive = async function() {
+        const link = document.getElementById('referral-link-display').value;
+        const shareData = {
+            title: 'Join REWARD CLAIM',
+            text: 'Join me on REWARD CLAIM and earn money! Use my link to sign up:',
+            url: link,
+        };
+        try {
+            if (navigator.share) {
+                await navigator.share(shareData);
+            } else {
+                throw new Error('Web Share API not supported');
+            }
+        } catch (err) {
+            copyText(link);
+            showToast('Share not supported, link copied instead!', 'info');
+        }
+    }
+
+    async function checkNewNotifications() {
+        const lastCheck = userData.lastNotificationCheck || Timestamp.fromDate(new Date(0));
+        const q = query(
+            collection(db, "notifications"), 
+            where("userId", "==", userData.tgChatId),
+            where("createdAt", ">", lastCheck), 
+            limit(1)
+        );
+        const snap = await getDocs(q);
+        if (!snap.empty) {
+            document.getElementById('badge-notify').classList.remove('hidden');
+        }
+    }
+
+    async function loadNotifications() {
+        const q = query(
+            collection(db, "notifications"), 
+            where("userId", "==", userData.tgChatId),
+            orderBy("createdAt", "desc"), 
+            limit(10)
+        );
+        const snap = await getDocs(q);
+
+        let content = `<h3 class="text-lg font-bold text-app-text mb-4">Notifications</h3><div class="space-y-3 max-h-80 overflow-y-auto">`;
+        if (snap.empty) {
+            content += `<p class="text-app-subtext text-center">No new notifications.</p>`;
+        } else {
+            content += snap.docs.map(doc => {
+                const n = doc.data();
+                const date = n.createdAt.toDate().toLocaleString();
+                return `<div class="p-3 bg-slate-700 rounded-lg border border-app-border">
+                            <p class="font-semibold text-app-text">${n.title}</p>
+                            <p class="text-sm text-app-subtext">${n.message}</p>
+                            <p class="text-xs text-slate-500 text-right mt-2">${date}</p>
+                       </div>`;
+            }).join('');
+        }
+        content += `</div>`;
+        showModal(content);
+        lucide.createIcons();
+
+        document.getElementById('badge-notify').classList.add('hidden');
+        await updateDoc(doc(db, "users", userData.tgChatId), {
+            lastNotificationCheck: serverTimestamp()
+        });
+    }
+    
+    async function logPublicActivity(actionText) {
+        try {
+            await addDoc(collection(db, "public_activity"), {
+                userId: userData.tgChatId,
+                userName: userData.name,
+                userPhoto: tgSession.photo_url || null,
+                action: actionText,
+                timestamp: serverTimestamp()
+            });
+        } catch (e) {
+            console.error("Failed to log public activity:", e);
+        }
+    }
+
+    window.openPremiumPage = () => { closeSidePanel(); switchView('view-premium'); };
+    window.openSupport = () => { 
+        const supportLink = sysConfig.supportLink || "https://t.me/sarahmartinBTC";
+        window.open(supportLink, '_blank'); 
+    };
+    window.visitWebsite = () => {
+        const websiteUrl = sysConfig.websiteUrl || "#";
+        window.open(websiteUrl, '_blank');
+    };
+    window.closeSidePanel = () => {
+        document.getElementById('main-side-panel').classList.remove('open');
+        document.getElementById('panel-overlay').classList.remove('open');
+    };
+    
+    window.showToast = (msg, type='info') => {
+         if(window.Telegram?.WebApp?.showPopup) { window.Telegram.WebApp.showAlert(msg); }
+         else { alert(msg); }
+    };
+    window.copyText = (text) => { navigator.clipboard.writeText(text); showToast("Copied to clipboard!"); };
+    window.copyNumber = (num, name) => { copyText(num); showToast(`${name} address copied!`); };
+    
+    function showMethodSelector(targetInputId, targetTextId, title, options) {
+        let optionsHTML = options.map(opt =>
+            `<button data-value="${opt.value}" class="select-option-btn neo-card w-full p-3 rounded-lg text-left hover:bg-slate-700/50 transition">${opt.text}</button>`
+        ).join('');
+
+        const modalHTML = `
+            <div class="space-y-2">
+                <h3 class="text-lg font-bold text-center mb-4">${title}</h3>
+                ${optionsHTML}
+            </div>
+        `;
+        showModal(modalHTML);
+
+        document.querySelectorAll('.select-option-btn').forEach(btn => {
+            btn.onclick = () => {
+                const selectedValue = btn.dataset.value;
+                const selectedText = btn.textContent;
+                document.getElementById(targetInputId).value = selectedValue;
+                const textEl = document.getElementById(targetTextId);
+                textEl.textContent = selectedText;
+                textEl.parentElement.classList.remove('text-app-subtext');
+                textEl.parentElement.classList.add('text-app-text');
+                closeModal();
+            };
+        });
+    }
+
+    async function executeP2PTransfer() {
+        const recipientUid = document.getElementById('p2p-uid').value.trim();
+        const amount = parseFloat(document.getElementById('p2p-amount').value);
+        const btn = document.getElementById('btn-exec-p2p');
+
+        if (!recipientUid || !amount) return showToast("Please enter UID and amount.", "warning");
+        if (recipientUid === userData.tgChatId) return showToast("You cannot transfer to yourself.", "error");
+        if (amount < MIN_P2P_AMT) return showToast(`Minimum transfer amount is $${MIN_P2P_AMT.toFixed(2)}.`, "warning");
+        
+        let feePercent = P2P_FEE_PERCENT;
+        const isPremiumExpired = userData.premiumExpiry && userData.premiumExpiry.toDate() < new Date();
+        if (userData.isPremium && !isPremiumExpired && premiumTiers[userData.premiumTier]?.benefits.feeReduction > 0) {
+            feePercent -= premiumTiers[userData.premiumTier].benefits.feeReduction;
+        }
+        const fee = amount * feePercent;
+        const totalCost = amount + fee;
+
+        if (userData.balance < totalCost) return showToast(`Insufficient balance. You need $${totalCost.toFixed(2)}.`, "error");
+
+        btn.disabled = true; btn.textContent = 'PROCESSING...';
+        try {
+            await runTransaction(db, async (transaction) => {
+                const senderRef = doc(db, "users", userData.tgChatId);
+                const recipientRef = doc(db, "users", recipientUid);
+
+                const [senderDoc, recipientDoc] = await Promise.all([
+                    transaction.get(senderRef),
+                    transaction.get(recipientRef)
+                ]);
+
+                if (!senderDoc.exists()) throw new Error("Your user data could not be found.");
+                if (!recipientDoc.exists()) throw new Error("Recipient User ID not found.");
+                
+                const senderData = senderDoc.data();
+                if (senderData.balance < totalCost) throw new Error("Insufficient balance for this transaction.");
+
+                transaction.update(senderRef, { balance: senderData.balance - totalCost });
+                transaction.update(recipientRef, { balance: recipientDoc.data().balance + amount });
+
+                const logRef = doc(collection(db, "p2p_logs"));
+                transaction.set(logRef, {
+                    fromId: userData.tgChatId, fromName: userData.name,
+                    toId: recipientUid, toName: recipientDoc.data().name || 'N/A',
+                    amount: amount, fee: fee, status: "completed", createdAt: serverTimestamp()
+                });
+            });
+
+            showModal(`<div class="text-center space-y-3"><i data-lucide="check-circle" class="w-12 h-12 text-emerald-400 mx-auto"></i><h3 class="text-lg font-bold text-app-text">Transfer Successful!</h3><p class="text-app-subtext">Successfully sent $${amount} to UID ${recipientUid}.</p><button onclick="closeModal(); switchView('view-features');" class="action-btn w-full py-2 rounded-xl">OK</button></div>`);
+            document.getElementById('p2p-uid').value = '';
+            document.getElementById('p2p-amount').value = '';
+        } catch (e) {
+            showToast("Transfer failed: " + e.message, "error");
+        } finally {
+            btn.disabled = false; btn.textContent = 'CONFIRM TRANSFER';
+            lucide.createIcons();
+        }
+    }
+
+    function setupInteractions() {
+        // Dock Navigation
+        document.querySelectorAll('.dock-item').forEach(item => {
+            item.addEventListener('click', () => switchView(item.dataset.target));
+        });
+
+        // Side Panel
+        document.getElementById('btn-menu').addEventListener('click', () => {
+            document.getElementById('main-side-panel').classList.add('open');
+            document.getElementById('panel-overlay').classList.add('open');
+        });
+        document.getElementById('panel-overlay').addEventListener('click', closeSidePanel);
+
+        // Modals & Notifications
+        document.getElementById('btn-notifications').addEventListener('click', loadNotifications);
+        document.getElementById('modal-close').addEventListener('click', closeModal);
+        document.getElementById('modal-backdrop').addEventListener('click', closeModal);
+
+        // Copy UID
+        document.getElementById('btn-copy-uid').addEventListener('click', () => copyText(userData.tgChatId));
+        
+        // P2P Transfer
+        document.getElementById('btn-exec-p2p').addEventListener('click', executeP2PTransfer);
+        
+        // Referral Verification
+        const verifyBtn = document.getElementById('btn-verify-referral');
+        if (verifyBtn) {
+            verifyBtn.addEventListener('click', verifyReferralCode);
+        }
+
+        // Deposit from Landing Page
+        document.getElementById('btn-submit-deposit-landing').addEventListener('click', () => {
+            const amount = parseFloat(document.getElementById('dep-amount-landing').value);
+            const sender = document.getElementById('dep-sender-landing').value.trim();
+            const btn = document.getElementById('btn-submit-deposit-landing');
+            // Assuming a default method or you can add a selector here too
+            submitDepositRequest(amount, sender, 'Crypto', btn, () => {
+                document.getElementById('dep-amount-landing').value = '';
+                document.getElementById('dep-sender-landing').value = '';
+            });
+        });
+
+        // Deposit from Deposit Page
+        document.getElementById('btn-submit-deposit').addEventListener('click', () => {
+            const method = document.getElementById('dep-method').value;
+            const amount = parseFloat(document.getElementById('dep-amount').value);
+            const sender = document.getElementById('dep-sender').value.trim();
+            const btn = document.getElementById('btn-submit-deposit');
+            submitDepositRequest(method, amount, sender, btn, () => {
+                document.getElementById('dep-method').value = '';
+                document.getElementById('dep-method-text').textContent = 'Select Payment Method';
+                document.getElementById('dep-method-selector').classList.add('text-app-subtext');
+                document.getElementById('dep-amount').value = '';
+                document.getElementById('dep-sender').value = '';
+                loadDepositHistory();
+            });
+        });
+        
+        // Withdrawal
+        document.getElementById('btn-submit-withdrawal').addEventListener('click', async () => {
+            const method = document.getElementById('wd-method').value;
+            const address = document.getElementById('wd-address').value.trim();
+            const amount = parseFloat(document.getElementById('wd-amount').value);
+            const btn = document.getElementById('btn-submit-withdrawal');
+            
+            btn.disabled = true; btn.innerText = "PROCESSING...";
+
+            try {
+                const referralsQuery = query(collection(db, "users"), where("referredBy", "==", userData.tgChatId));
+                const referralsSnap = await getDocs(referralsQuery);
+                if (referralsSnap.size < MIN_REFERRALS_FOR_WITHDRAWAL) {
+                    throw new Error(`You need at least ${MIN_REFERRALS_FOR_WITHDRAWAL} referrals to withdraw.`);
+                }
+                if (!method || !address || isNaN(amount)) throw new Error("Please fill all fields correctly.");
+                if (amount < MIN_WITHDRAWAL_AMT) throw new Error(`Minimum withdrawal is $${MIN_WITHDRAWAL_AMT.toFixed(2)}.`);
+                if (userData.balance < amount) throw new Error("Insufficient balance.");
+
+                await runTransaction(db, async (transaction) => {
+                    const userRef = doc(db, "users", userData.tgChatId);
+                    const userDoc = await transaction.get(userRef);
+                    if (!userDoc.exists() || userDoc.data().balance < amount) throw new Error("Transaction failed: Insufficient funds.");
+                    
+                    transaction.update(userRef, { balance: userDoc.data().balance - amount });
+                    const withdrawalRef = doc(collection(db, "withdrawals"));
+                    transaction.set(withdrawalRef, { userId: userData.tgChatId, userName: userData.name, method, address, amount, status: "pending", requestedAt: serverTimestamp() });
+                });
+
+                showModal(`<div class="text-center space-y-3"><i data-lucide="check-circle" class="w-12 h-12 text-emerald-400 mx-auto"></i><h3 class="text-lg font-bold text-app-text">Withdrawal Submitted!</h3><p class="text-app-subtext">Your request for $${amount} will be processed within 24 hours.</p><button onclick="closeModal()" class="action-btn w-full py-2 rounded-xl">OK</button></div>`);
+                document.getElementById('wd-method').value = ''; document.getElementById('wd-method-text').textContent = 'Select Withdrawal Method'; document.getElementById('wd-address').value = ''; document.getElementById('wd-amount').value = '';
+                loadWithdrawalHistory();
+            } catch(e) { showToast(e.message, "error");
+            } finally { btn.disabled = false; btn.innerText = "SUBMIT WITHDRAWAL"; lucide.createIcons(); }
+        });
+
+        // Method Selectors
+        document.getElementById('dep-method-selector').addEventListener('click', () => {
+            const options = [ { value: 'USDT', text: 'USDT (TRC20)' }, { value: 'BTC', text: 'BTC' }, { value: 'Binance', text: 'Binance Pay' } ];
+            showMethodSelector('dep-method', 'dep-method-text', 'Select Payment Method', options);
+        });
+        document.getElementById('wd-method-selector').addEventListener('click', () => {
+            const options = [ { value: 'USDT', text: 'USDT (TRC20)' }, { value: 'BTC', text: 'BTC' }, { value: 'Binance', text: 'Binance Pay ID' } ];
+            showMethodSelector('wd-method', 'wd-method-text', 'Select Withdrawal Method', options);
+        });
+
+        // P2P Fee Calculator
+        document.getElementById('p2p-amount').addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value) || 0;
+            let feePercent = P2P_FEE_PERCENT;
+            const isPremiumExpired = userData.premiumExpiry && userData.premiumExpiry.toDate() < new Date();
+             if (userData.isPremium && !isPremiumExpired && premiumTiers[userData.premiumTier]?.benefits.feeReduction > 0) {
+                feePercent -= premiumTiers[userData.premiumTier].benefits.feeReduction;
+            }
+            const fee = val * feePercent;
+            document.getElementById('p2p-fee-calc').textContent = val > 0 ? `Fee (${(feePercent*100).toFixed(0)}%): $${fee.toFixed(2)}` : '';
+        });
+
+        // Promo Slider
+        const slider = document.getElementById('promo-slider');
+        const dotsContainer = document.getElementById('slider-dots');
+        if (slider && slider.children.length > 1) {
+            const slides = slider.children;
+            let currentSlide = 0;
+            // Create dots
+            for (let i = 0; i < slides.length; i++) {
+                const dot = document.createElement('span');
+                dot.className = 'w-2 h-2 rounded-full bg-black/20 backdrop-blur-sm transition-all';
+                dotsContainer.appendChild(dot);
+            }
+            const dots = dotsContainer.children;
+            dots[0].classList.add('bg-white/90');
+            
+            setInterval(() => {
+                currentSlide = (currentSlide + 1) % slides.length;
+                slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+                Array.from(dots).forEach((dot, index) => {
+                    dot.classList.toggle('bg-white/90', index === currentSlide);
+                    dot.classList.toggle('bg-black/20', index !== currentSlide);
+                });
+            }, 5000); // Change slide every 5 seconds
+        }
+    }
+
+    function initRealtimeListeners() {
+         onSnapshot(doc(db, "users", userData.tgChatId), (doc) => {
+            if(doc.exists()) {
+                const oldData = {...userData};
+                const newData = doc.data();
+                userData = {...userData, ...newData};
+                
+                if (oldData.balance !== newData.balance || oldData.isPremium !== newData.isPremium || oldData.premiumTier !== newData.premiumTier) {
+                     updateDashboard();
+                }
+                if (document.getElementById('view-tasks').classList.contains('active-view')) {
+                    loadTasksView();
+                }
+                if(document.getElementById('view-refer').classList.contains('active-view')) {
+                    loadMyReferrals(); // Refresh referral list on data change
+                }
+            }
+        });
+    }
+
+    async function loadProfileStats() {
+        const statTasksEl = document.getElementById('stat-tasks');
+        const statIncomeEl = document.getElementById('stat-income');
+        const statReferralsEl = document.getElementById('stat-referrals');
+    
+        statTasksEl.textContent = '...';
+        statIncomeEl.textContent = '...';
+        statReferralsEl.textContent = '...';
+    
+        const uid = userData.tgChatId;
+    
+        try {
+            const totalTasks = (userData.dailyCompletedTasks && Array.isArray(userData.dailyCompletedTasks)) ? userData.dailyCompletedTasks.length : 0;
+            statTasksEl.textContent = totalTasks;
+    
+            const taskReward = TASK_REWARD; 
+            const totalTaskEarnings = totalTasks * taskReward;
+            statIncomeEl.textContent = `$${totalTaskEarnings.toFixed(2)}`;
+    
+            const referralsQuery = query(collection(db, "users"), where("referredBy", "==", uid));
+            const referralsSnap = await getDocs(referralsQuery);
+            statReferralsEl.textContent = referralsSnap.size;
+    
+        } catch (error) {
+            console.error("Error loading profile stats:", error);
+            statTasksEl.textContent = 'Error';
+            statIncomeEl.textContent = 'Error';
+            statReferralsEl.textContent = 'Error';
+        }
+    }
+
+    async function loadActivityLog() {
+        const el = document.getElementById('activity-log');
+        el.innerHTML = '<div class="loader-ring w-6 h-6 border-2 mx-auto"></div>';
+        
+        let allLogs = [];
+
+        try {
+            const p2pQuery = query(collection(db, "p2p_logs"), where("fromId", "==", userData.tgChatId), orderBy("createdAt", "desc"), limit(5));
+            const p2pSnap = await getDocs(p2pQuery);
+            p2pSnap.forEach(d => { if(d.data().createdAt) allLogs.push({ ...d.data(), type: 'p2p' }); });
+        } catch (error) { console.error("Error loading P2P logs:", error); }
+        
+        allLogs.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+        const recentLogs = allLogs.slice(0, 10);
+
+        if (recentLogs.length === 0) {
+            el.innerHTML = 'No recent activities found.';
+            return;
+        }
+
+        el.innerHTML = recentLogs.map(log => {
+            const date = log.createdAt.toDate().toLocaleDateString();
+            if (log.type === 'p2p') {
+                return `<div class="text-left p-2 rounded-lg bg-slate-700">
+                            <p class="text-app-text">Sent $${log.amount} to <span class="font-mono">${log.toId}</span></p>
+                            <p class="text-app-subtext text-xs">${date}</p>
+                        </div>`;
+            }
+            return '';
+        }).join('');
+    }
+
+    async function loadNewsFeed() {
+        const el = document.getElementById('news-feed');
+        el.innerHTML = '<div class="flex justify-center p-8"><div class="loader-ring w-8 h-8 border-2"></div></div>';
+        try {
+            const q = query(collection(db, "news"), orderBy("createdAt", "desc"), limit(5));
+            const snap = await getDocs(q);
+            if (snap.empty) {
+                el.innerHTML = '<p class="text-app-subtext text-center">No news available right now.</p>';
+                return;
+            }
+            el.innerHTML = snap.docs.map(doc => {
+                const news = doc.data();
+                const date = news.createdAt.toDate().toLocaleString();
+                return `
+                <div class="neo-card p-4 rounded-2xl">
+                    ${news.imageUrl ? `<img src="${news.imageUrl}" class="w-full h-40 object-cover rounded-xl mb-3" alt="news">` : ''}
+                    <h3 class="font-bold text-lg text-app-text">${news.title}</h3>
+                    <p class="text-app-subtext text-sm mt-2">${news.content}</p>
+                    <p class="text-xs text-slate-500 mt-3">${date}</p>
+                </div>`;
+            }).join('');
+        } catch (error) {
+            console.error("Error loading news:", error);
+            el.innerHTML = '<p class="text-red-500 text-center">Could not load news feed.</p>';
+        }
+    }
+
     async function loadPremiumTiers(containerId) {
         const container = document.getElementById(containerId);
         const tierKeys = Object.keys(premiumTiers).sort((a,b) => premiumTiers[a].level - premiumTiers[b].level);
@@ -1229,46 +1868,114 @@
             if (tier.level === 0) return '';
             
             let benefitsList = [];
-            for (const bKey in tier.benefits) { if (bKey.startsWith('benefit_text_')) { benefitsList.push(`<li><i class="inline-block w-4 h-4 mr-2 text-green-400" data-lucide="check"></i>${tier.benefits[bKey]}</li>`); } }
-            if (tier.benefits.feeReduction > 0) { const reducedFee = (P2P_FEE_PERCENT - tier.benefits.feeReduction) * 100; benefitsList.push(`<li><i class="inline-block w-4 h-4 mr-2 text-green-400" data-lucide="check"></i>P2P Fee reduced to <strong>${reducedFee.toFixed(0)}%</strong></li>`); }
+            for (const bKey in tier.benefits) {
+                if (bKey.startsWith('benefit_text_')) {
+                    benefitsList.push(`<li><i class="inline-block w-4 h-4 mr-2 text-green-400" data-lucide="check"></i>${tier.benefits[bKey]}</li>`);
+                }
+            }
+            if (tier.benefits.feeReduction > 0) {
+                 const reducedFee = (P2P_FEE_PERCENT - tier.benefits.feeReduction) * 100;
+                 benefitsList.push(`<li><i class="inline-block w-4 h-4 mr-2 text-green-400" data-lucide="check"></i>P2P Fee reduced to <strong>${reducedFee.toFixed(0)}%</strong></li>`);
+            }
             
             let buttonHtml;
             const isCurrentPlan = tier.level === currentUserLevel && !isPremiumExpired;
             
-            if (isCurrentPlan) { buttonHtml = `<div class="text-center font-semibold text-lg text-green-400 py-3">CURRENT PLAN</div>`; }
-            else if (tier.level < currentUserLevel && !isPremiumExpired) { buttonHtml = `<button class="action-btn w-full py-3 rounded-xl" disabled>Activated</button>`; }
-            else { buttonHtml = `<button onclick="purchasePremium('${key}')" class="action-btn w-full py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500">UPGRADE</button>`; }
+            if (isCurrentPlan) {
+                buttonHtml = `<div class="text-center font-semibold text-lg text-green-400 py-3">CURRENT PLAN</div>`;
+                if(userData.premiumExpiry) {
+                    const expiryElId = `countdown-${key}-${containerId}`;
+                    buttonHtml += `<div id="${expiryElId}" class="text-center font-mono text-sm text-cyan-400 pb-3"></div>`;
+                    const countdownInterval = setInterval(() => {
+                        const expiryEl = document.getElementById(expiryElId);
+                        if (!expiryEl) { clearInterval(countdownInterval); return; }
+                        const now = new Date().getTime();
+                        const expiryTime = userData.premiumExpiry.toDate().getTime();
+                        const distance = expiryTime - now;
 
-            return `<div class="neo-card p-5 rounded-2xl ${isCurrentPlan ? 'border-yellow-400' : 'border-app-border'}"><h3 class="text-2xl font-bold text-yellow-400">${tier.name}</h3><p class="text-3xl font-bold my-3 text-app-text">$${tier.price} <span class="text-lg text-app-subtext">/ ${tier.duration} days</span></p><ul class="text-sm text-app-subtext space-y-2 my-4 text-left pl-2">${benefitsList.join('')}</ul>${buttonHtml}</div>`;
+                        if (distance < 0) {
+                            clearInterval(countdownInterval);
+                            expiryEl.innerHTML = "EXPIRED";
+                            return;
+                        }
+
+                        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                        
+                        expiryEl.innerHTML = `Expires in: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+                    }, 1000);
+                    activeTimers.push(countdownInterval);
+                }
+            } else if (tier.level < currentUserLevel && !isPremiumExpired) {
+                buttonHtml = `<button class="action-btn w-full py-3 rounded-xl" disabled>Activated</button>`;
+            } else {
+                buttonHtml = `<button onclick="purchasePremium('${key}')" class="action-btn w-full py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500">UPGRADE</button>`;
+            }
+
+            return `
+            <div class="neo-card p-5 rounded-2xl ${isCurrentPlan ? 'border-yellow-400' : 'border-app-border'}">
+                <h3 class="text-2xl font-bold text-yellow-400">${tier.name}</h3>
+                <p class="text-3xl font-bold my-3 text-app-text">$${tier.price} <span class="text-lg text-app-subtext">/ ${tier.duration} days</span></p>
+                <ul class="text-sm text-app-subtext space-y-2 my-4 text-left pl-2">
+                    ${benefitsList.join('')}
+                </ul>
+                ${buttonHtml}
+            </div>`;
         }).join('');
         container.innerHTML = html;
         lucide.createIcons();
     }
     window.purchasePremium = async function(tierKey) {
         const tier = premiumTiers[tierKey];
-        if (userData.balance < tier.price) return showToast(`Insufficient balance. You need $${tier.price}.`, 'error');
+        if (userData.balance < tier.price) {
+            return showToast(`Insufficient balance. You need $${tier.price}.`, 'error');
+        }
 
-        showModal(`<div class="text-center space-y-4"><h3 class="text-xl font-bold text-app-text">Confirm Purchase</h3><p class="text-app-subtext">Are you sure you want to buy ${tier.name} for $${tier.price}?</p><button id="confirm-premium-purchase" class="action-btn w-full py-3 rounded-xl">Confirm</button><button onclick="closeModal()" class="neo-card w-full py-2 rounded-xl mt-2">Cancel</button></div>`);
+        showModal(`
+            <div class="text-center space-y-4">
+                <h3 class="text-xl font-bold text-app-text">Confirm Purchase</h3>
+                <p class="text-app-subtext">Are you sure you want to buy the ${tier.name} plan for $${tier.price} (${tier.duration} days)?</p>
+                <button id="confirm-premium-purchase" class="action-btn w-full py-3 rounded-xl">Confirm</button>
+                <button onclick="closeModal()" class="neo-card w-full py-2 rounded-xl mt-2">Cancel</button>
+            </div>
+        `);
 
         document.getElementById('confirm-premium-purchase').onclick = async function() {
             this.disabled = true; this.textContent = "PROCESSING...";
             try {
-                // Firestore transaction logic...
+                const userRef = doc(db, "users", userData.tgChatId);
                 await runTransaction(db, async (transaction) => {
-                    const userRef = doc(db, "users", userData.tgChatId);
                     const userDoc = await transaction.get(userRef);
-                    if (!userDoc.exists() || userDoc.data().balance < tier.price) { throw "Insufficient funds."; }
+                    if (!userDoc.exists() || userDoc.data().balance < tier.price) {
+                        throw "Transaction failed: Insufficient funds.";
+                    }
+                    
                     const newBalance = userDoc.data().balance - tier.price;
                     const expiryDate = new Date();
                     expiryDate.setDate(expiryDate.getDate() + tier.duration);
-                    transaction.update(userRef, { balance: newBalance, isPremium: true, premiumTier: tierKey, premiumExpiry: Timestamp.fromDate(expiryDate) });
+                    
+                    transaction.update(userRef, {
+                        balance: newBalance,
+                        isPremium: true,
+                        premiumTier: tierKey,
+                        premiumExpiry: Timestamp.fromDate(expiryDate)
+                    });
                 });
+                
+                logPublicActivity(`upgraded to ${tier.name} Premium!`);
+                closeModal();
                 showToast(`Successfully upgraded to ${tier.name}!`, 'success');
+                // Reload the app to reflect the change and bypass the landing page
                 setTimeout(() => window.location.reload(), 1500);
-            } catch (error) { closeModal(); showToast(error.toString(), 'error'); }
-        };
-    };
 
+            } catch (error) {
+                closeModal();
+                showToast(error.toString(), 'error');
+            }
+        };
+    }
 </script>
 
 </body>
