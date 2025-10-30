@@ -251,54 +251,44 @@
 <div id="view-landing" class="app-view space-y-6">
     <div class="text-center pt-4">
         <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">Welcome!</h1>
-        <p class="text-app-subtext mt-2">To get started, please fund your account or choose an income tier.</p>
+        <p class="text-app-subtext mt-2">Unlock Your Earning Potential</p>
     </div>
 
-    <!-- Deposit Section -->
-    <div id="landing-deposit-section" class="neo-card p-5 rounded-2xl border border-indigo-500/30">
-        <h2 class="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">1. Add Funds</h2>
-        <div class="p-4 rounded-xl bg-indigo-500/10 border-indigo-500/20">
-            <div class="flex items-start gap-3">
-                <i data-lucide="alert-circle" class="w-6 h-6 text-indigo-400 shrink-0 mt-1"></i>
-                <div>
-                     <h4 class="font-bold text-indigo-300 mb-1">IMPORTANT NOTE</h4>
-                     <p class="text-xs text-indigo-400 leading-relaxed">
-                        Please use a valid payment method. Minimum deposit is <span id="min-deposit-text-landing" class="text-indigo-300 font-bold">$10.00</span>.
-                     </p>
-                </div>
+    <!-- Fake Dashboard -->
+    <div class="neo-card p-6 rounded-3xl text-center relative border-2 border-indigo-500/50 shadow-lg shadow-indigo-500/10">
+        <div class="absolute inset-0 bg-grid-slate-800/50 [mask-image:linear-gradient(0deg,#000000,rgba(0,0,0,0))]"></div>
+        <p class="text-lg font-semibold text-app-subtext">Potential Daily Earnings</p>
+        <h2 class="my-3 text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-green-400 tracking-tight">$25.00+</h2>
+        <div class="grid grid-cols-3 gap-3 text-center mt-6">
+            <div class="bg-slate-900/50 p-3 rounded-xl">
+                <p class="text-xs text-app-subtext">Daily Tasks</p>
+                <p class="font-bold text-app-text text-lg">10</p>
+            </div>
+            <div class="bg-slate-900/50 p-3 rounded-xl">
+                <p class="text-xs text-app-subtext">Refer Bonus</p>
+                <p class="font-bold text-app-text text-lg">$1.00</p>
+            </div>
+            <div class="bg-slate-900/50 p-3 rounded-xl">
+                <p class="text-xs text-app-subtext">Monthly</p>
+                <p class="font-bold text-app-text text-lg">$750+</p>
             </div>
         </div>
-        <div class="grid grid-cols-3 gap-3 text-center mt-4">
-             <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('0x82f67a0590e10f679c062f8e2c235af4ea980bc9', 'USDT')">
-                 <img src="https://i.postimg.cc/dkyYkPk2/usdt-logo.png" class="w-8 h-8 mb-2 rounded-full" alt="USDT">
-                 <span class="font-mono text-xs text-app-text">USDT (TRC20)</span>
-                 <span class="text-[10px] text-app-subtext mt-1">Tap to Copy</span>
-             </div>
-             <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('1RBJu6cHBetMCYHxDZH1x8nw41buXVxJX', 'BTC')">
-                 <img src="https://i.postimg.cc/gxWnGs7Z/btc-logo.png" class="w-8 h-8 mb-2 rounded-full" alt="BTC">
-                 <span class="font-mono text-xs text-app-text">Bitcoin</span>
-                 <span class="text-[10px] text-app-subtext mt-1">Tap to Copy</span>
-             </div>
-             <div class="neo-card p-3 rounded-xl flex flex-col items-center cursor-pointer hover:bg-slate-700/50" onclick="copyNumber('900749799', 'Binance')">
-                 <img src="https://i.postimg.cc/21r8s6bf/binance-logo.png" class="w-8 h-8 mb-2 rounded-full bg-white p-1" alt="Binance">
-                 <span class="font-mono text-xs text-app-text">Binance Pay</span>
-                 <span class="text-[10px] text-app-subtext mt-1">Tap to Copy</span>
-             </div>
-        </div>
-        <div class="p-5 rounded-2xl space-y-4 mt-4 bg-slate-900/50">
-            <h3 class="font-semibold text-app-text">Submit Verification Info</h3>
-            <input type="number" id="dep-amount-landing" placeholder="Amount (USD)" class="neo-input w-full p-3 rounded-xl">
-            <input type="text" id="dep-sender-landing" placeholder="Your Wallet Address / Binance ID" class="neo-input w-full p-3 rounded-xl">
-            <button id="btn-submit-deposit-landing" class="action-btn w-full py-4 rounded-xl text-lg">VERIFY DEPOSIT</button>
-        </div>
+         <button onclick="showUnlockModal()" class="action-btn w-full py-4 mt-6 rounded-2xl text-lg font-bold flex items-center justify-center gap-2">
+            <i data-lucide="unlock" class="w-5 h-5"></i>
+            UNLOCK FULL DASHBOARD
+        </button>
     </div>
     
-    <!-- Tiers Section -->
-    <div id="landing-tiers-section" class="pt-6 neo-card p-5 rounded-2xl border border-yellow-500/30">
-        <h2 class="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-orange-400">2. Or, Choose a Tier</h2>
-        <div id="income-tiers-container-landing" class="space-y-4">
-            <!-- Tiers will be dynamically loaded here -->
-        </div>
+    <!-- Top Lists Buttons -->
+    <div class="grid grid-cols-2 gap-4">
+        <button onclick="showTopEarnersModal()" class="neo-card p-4 rounded-xl flex items-center justify-center gap-2 hover:border-yellow-400/50 transition">
+            <i data-lucide="trophy" class="w-5 h-5 text-yellow-400"></i>
+            <span class="font-semibold">Top Earners</span>
+        </button>
+        <button onclick="showTopReferrersModal()" class="neo-card p-4 rounded-xl flex items-center justify-center gap-2 hover:border-cyan-400/50 transition">
+            <i data-lucide="users" class="w-5 h-5 text-cyan-400"></i>
+            <span class="font-semibold">Top Referrers</span>
+        </button>
     </div>
 </div>
 
@@ -794,7 +784,6 @@
                 TASK_REWARD = sysConfig.taskReward || 0.5;
 
                 document.getElementById('min-deposit-text').textContent = `$${MIN_DEPOSIT_AMT.toFixed(2)}`;
-                document.getElementById('min-deposit-text-landing').textContent = `$${MIN_DEPOSIT_AMT.toFixed(2)}`;
                 document.getElementById('min-withdrawal-text').textContent = `$${MIN_WITHDRAWAL_AMT.toFixed(2)}`;
                 const withdrawalInfoText = `Withdrawals are processed within 24 hours. Minimum withdrawal is <span class="font-bold">$${MIN_WITHDRAWAL_AMT.toFixed(2)}</span>. You need at least <span class="font-bold">${MIN_REFERRALS_FOR_WITHDRAWAL}</span> referrals to withdraw.`;
                 document.getElementById('withdrawal-info-text').innerHTML = withdrawalInfoText;
@@ -906,9 +895,6 @@
            topDepositBtn.style.display = (viewId === 'view-deposit' || viewId === 'view-withdrawal') ? 'none' : 'inline-flex';
         }
         
-        if(viewId === 'view-landing') {
-            loadIncomeTiers('income-tiers-container-landing');
-        }
         if(viewId === 'view-tasks') loadTasksView();
         if(viewId === 'view-deposit') loadDepositHistory();
         if(viewId === 'view-withdrawal') loadWithdrawalHistory();
@@ -1197,7 +1183,88 @@
          document.getElementById('modal-content').classList.add('scale-95');
          document.getElementById('modal-content').classList.remove('scale-100');
     };
-    
+
+    window.showUnlockModal = function() {
+        const modalHTML = `
+            <div class="text-center space-y-4">
+                <i data-lucide="zap" class="w-12 h-12 mx-auto text-yellow-400"></i>
+                <h3 class="text-xl font-bold">Activate Your Account</h3>
+                <p class="text-app-subtext">To start earning and unlock all features, please fund your account or choose an income tier.</p>
+                <div class="grid grid-cols-1 gap-3 pt-2">
+                     <button id="modal-go-to-deposit" class="action-btn w-full py-3 rounded-xl">Add Funds</button>
+                     <button id="modal-go-to-tiers" class="action-btn w-full py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500">Choose Tier</button>
+                </div>
+            </div>
+        `;
+        showModal(modalHTML);
+        document.getElementById('modal-go-to-deposit').onclick = () => { switchView('view-deposit'); closeModal(); };
+        document.getElementById('modal-go-to-tiers').onclick = () => { switchView('view-extra-income'); closeModal(); };
+    }
+
+    window.showTopEarnersModal = function() {
+        // Fake data for demonstration
+        const topEarners = [
+            { name: 'John D.', amount: 2345.67, photo: 'https://i.pravatar.cc/150?img=1' },
+            { name: 'Maria S.', amount: 2109.45, photo: 'https://i.pravatar.cc/150?img=2' },
+            { name: 'Ahmed K.', amount: 1987.12, photo: 'https://i.pravatar.cc/150?img=3' },
+            { name: 'Li W.', amount: 1850.00, photo: 'https://i.pravatar.cc/150?img=4' },
+            { name: 'Sophia R.', amount: 1765.88, photo: 'https://i.pravatar.cc/150?img=5' },
+        ];
+
+        let listHTML = topEarners.map((user, index) => `
+            <div class="flex items-center justify-between p-2 bg-slate-900/50 rounded-lg">
+                <div class="flex items-center gap-3">
+                    <span class="font-bold text-lg w-6 text-center">${index + 1}</span>
+                    <img src="${user.photo}" class="w-10 h-10 rounded-full object-cover"/>
+                    <span class="font-semibold text-app-text">${user.name}</span>
+                </div>
+                <span class="font-bold text-emerald-400">$${user.amount.toFixed(2)}</span>
+            </div>
+        `).join('');
+
+        const modalHTML = `
+            <div class="space-y-3">
+                <h3 class="text-lg font-bold text-center mb-4 flex items-center justify-center gap-2"><i data-lucide="trophy" class="w-5 h-5 text-yellow-400"></i> Top Earners</h3>
+                <div class="space-y-2 max-h-80 overflow-y-auto pr-2">
+                    ${listHTML}
+                </div>
+            </div>
+        `;
+        showModal(modalHTML);
+    }
+
+    window.showTopReferrersModal = function() {
+        // Fake data for demonstration
+        const topReferrers = [
+            { name: 'Mike T.', count: 152, photo: 'https://i.pravatar.cc/150?img=6' },
+            { name: 'Isabella C.', count: 139, photo: 'https://i.pravatar.cc/150?img=7' },
+            { name: 'Carlos G.', count: 121, photo: 'https://i.pravatar.cc/150?img=8' },
+            { name: 'Fatima Z.', count: 115, photo: 'https://i.pravatar.cc/150?img=9' },
+            { name: 'David L.', count: 98, photo: 'https://i.pravatar.cc/150?img=10' },
+        ];
+
+        let listHTML = topReferrers.map((user, index) => `
+            <div class="flex items-center justify-between p-2 bg-slate-900/50 rounded-lg">
+                <div class="flex items-center gap-3">
+                    <span class="font-bold text-lg w-6 text-center">${index + 1}</span>
+                    <img src="${user.photo}" class="w-10 h-10 rounded-full object-cover"/>
+                    <span class="font-semibold text-app-text">${user.name}</span>
+                </div>
+                <span class="font-bold text-cyan-400">${user.count} Referrals</span>
+            </div>
+        `).join('');
+
+        const modalHTML = `
+            <div class="space-y-3">
+                <h3 class="text-lg font-bold text-center mb-4 flex items-center justify-center gap-2"><i data-lucide="users" class="w-5 h-5 text-cyan-400"></i> Top Referrers</h3>
+                <div class="space-y-2 max-h-80 overflow-y-auto pr-2">
+                    ${listHTML}
+                </div>
+            </div>
+        `;
+        showModal(modalHTML);
+    }
+
     function startTaskCountdown() {
         const timerElement = document.getElementById('new-task-countdown');
         if (!timerElement) return;
@@ -1638,18 +1705,6 @@
         if (verifyBtn) {
             verifyBtn.addEventListener('click', verifyReferralCode);
         }
-
-        // Deposit from Landing Page
-        document.getElementById('btn-submit-deposit-landing').addEventListener('click', () => {
-            const amount = parseFloat(document.getElementById('dep-amount-landing').value);
-            const sender = document.getElementById('dep-sender-landing').value.trim();
-            const btn = document.getElementById('btn-submit-deposit-landing');
-            // Assuming a default method or you can add a selector here too
-            submitDepositRequest(amount, sender, 'Crypto', btn, () => {
-                document.getElementById('dep-amount-landing').value = '';
-                document.getElementById('dep-sender-landing').value = '';
-            });
-        });
 
         // Deposit from Deposit Page
         document.getElementById('btn-submit-deposit').addEventListener('click', () => {
